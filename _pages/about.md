@@ -1,13 +1,20 @@
 ---
 permalink: /
-title: "Academic Pages is a ready-to-fork GitHub Pages template for academic personal websites"
+title: "About me - Yuhan Yang"
 author_profile: true
 redirect_from: 
   - /about/
   - /about.html
 ---
+About me
+======
+I am now a 3-th year Ph. D candidate in the College of Civil Engineering at Hunan University, superised by supervised by [Prof. Chao Zhang](https://www.researchgate.net/profile/Chao-Zhang-43). I joined Prof. Zhang's [UNSAT lab](https://chaozhanghnu.github.io/team/) in 2020 as a 3-rd year undergraduate student and completed my bachelor's degree in 2021 at the same institution. 
 
-This is the front page of a website that is powered by the [Academic Pages template](https://github.com/academicpages/academicpages.github.io) and hosted on GitHub pages. [GitHub pages](https://pages.github.com) is a free service in which websites are built and hosted from code and data stored in a GitHub repository, automatically updating when a new commit is made to the respository. This template was forked from the [Minimal Mistakes Jekyll Theme](https://mmistakes.github.io/minimal-mistakes/) created by Michael Rose, and then extended to support the kinds of content that academics have: publications, talks, teaching, a portfolio, blog posts, and a dynamically-generated CV. You can fork [this repository](https://github.com/academicpages/academicpages.github.io) right now, modify the configuration and markdown files, add your own PDFs and other content, and have your own site for free, with no ads! An older version of this template powers my own personal website at [stuartgeiger.com](http://stuartgeiger.com), which uses [this Github repository](https://github.com/staeiou/staeiou.github.io).
+My recent research passion lies in understanding **the underlying physics of desiccation cracking in porous media** (paricularly in soils), which is an ubiquitous phenomenon in both nature and industry. It is a highly non-linear process, involving multi-physics processes such as evaporation, two phase flow of vapor and water, heat transfer, build up of stress due to the capillary pressure and the adsorption between nano-particles. With such complex processes, _how can we accurately predict the initiation of desiccation cracks?_ _What is the key mechanism governing the fascinating self-organized pattern of desiccation cracks?_ _Can we manipulate the propagation of desiccaiton cracks to creat specific patterns on micro and nano scales?_ I try to integral cutting-edge insights from optical experimental techniques (e.g., digital image correlation, micron CT, high-speed photography, etc.) elastic-plastic fracture mechanics, phase transition theory in statistic physics, and fractal theory to explore the physics of crack initiation and propagation, as well as the key underlying mechanism and statistic properties of desiccation crack pattern. 
+
+In UNSAT lab, I belong to a six-member group focusing on stress state and constitutive relation for unsaturated soil. I assist Prof. Zhang in managing this group and work closely with the other five members. I deeply participate the research of others five members, e.g., clay pore structure evolution via small-angle neutron scattering and small angle scattering X-ray scattering, robots design for swimming in granular enviroment, deep-buried soil's anisotorpies in fabric and modulus, loading collapse phenonmenon in high-expansive clay, etc. 
+
+Please find my publication list here. If you are interesting with my research, feel free to discuss with me via 1) Email: yhyang@hnu.edu.cn; 2) WeChat: yyh_ce. 
 
 A data-driven personal website
 ======
