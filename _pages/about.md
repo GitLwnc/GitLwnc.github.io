@@ -78,12 +78,12 @@ News
   }
 
   .gallery-button-prev {
-    background: transparent url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj4KICA8cGF0aCBkPSJNNTAsNTAgbDEwMCw1MCAtMTAwLTUwIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWNhcHM9InJ1bGUiLz4KPC9zdmc+Cg==') no-repeat center;
+    background: transparent url('../images/LeftArrow.png') no-repeat center;
     background-size: 16px 16px;
   }
 
   .gallery-button-next {
-    background: transparent url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj4KICA8cGF0aCBkPSJNMCw1MCBsMTAsMEwgNTAuNiw1MCIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1jYXAtb3BhY2l0eT0icmVsIi8+PC9zdmc+Cg==') no-repeat center;
+    background: transparent url('../images/RightArrow.png') no-repeat center;
     background-size: 16px 16px;
   }
 </style>
