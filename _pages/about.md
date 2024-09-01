@@ -13,6 +13,9 @@ In the UNSAT lab, I belong to a six-member group focusing on stress state and co
 
 Research interests
 ======
+<div style="text-align: center;">
+  <img src="../images/DCprocess.gif" alt="Wechat" title="screen the code" width="400" />
+</div>
 My recent research passion lies in understanding **the underlying physics of desiccation cracking in porous media** (particularly in soils), which is a ubiquitous phenomenon in both nature and industry. It is a highly non-linear process, involving multi-physics processes such as evaporation, two-phase flow of vapor and water, heat transfer, and build-up of stress due to both the capillary pressure and the adsorption between nano-particles. With such complex processes:
 
 * _How can we accurately predict the initiation of desiccation cracks?_ 
@@ -24,10 +27,6 @@ My recent research passion lies in understanding **the underlying physics of des
 I try to integral cutting-edge insights from **optical experimental techniques** (e.g., digital image correlation, micron CT, high-speed photography, etc.) **elastic-plastic fracture mechanics**, **phase transition theory in statistic physics**, and **fractal theory** to explore the physics of crack initiation and propagation, as well as the key underlying mechanism and statistic properties of desiccation crack pattern. 
 
 Please find my publication list here. If you are interested in my research, please discuss it with me via email (yhyang@hnu.edu.cn) or [WeChat](../images/wechat.jpg). 
-
-<div style="text-align: center;">
-  <img src="../images/wechat.jpg" alt="Wechat" title="screen the code" width="400" />
-</div>
 
 News
 ======
