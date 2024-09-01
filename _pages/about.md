@@ -17,6 +17,7 @@ Research interests
   <img src="../images/MudCrack.png" alt="Wechat" title="screen the code" width="298" />
   <img src="../images/DCprocess.gif" alt="Wechat" title="screen the code" width="420" />
 </div>
+
 My recent research passion lies in understanding **the underlying physics of desiccation cracking in porous media** (particularly in soils), which is a ubiquitous phenomenon in both nature and industry. It is a highly non-linear process, involving multi-physics processes such as evaporation, two-phase flow of vapor and water, heat transfer, and build-up of stress due to both the capillary pressure and the adsorption between nano-particles. With such complex processes:
 
 * _How can we accurately predict the initiation of desiccation cracks?_ 
@@ -47,7 +48,7 @@ News
 
 <div class="gallery-container">
   <button onclick="prevImage()" class="gallery-button gallery-button-prev"></button>
-  <img id="gallery-image" src="../images/Interpore1.jpg" alt="Photo 1" style="max-width: 50%; height: auto;" />
+  <img id="gallery-image" src="../images/Interpore1.jpg" alt="Photo 1" style="max-width: 70%; height: auto;" />
   <button onclick="nextImage()" class="gallery-button gallery-button-next"></button>
 </div>
 
@@ -56,7 +57,7 @@ News
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
     position: relative;
   }
 
@@ -79,12 +80,12 @@ News
 
   .gallery-button-prev {
     background: transparent url('../images/LeftArrow.png') no-repeat center;
-    background-size: 16px 16px;
+    background-size: 20px 20px;
   }
 
   .gallery-button-next {
     background: transparent url('../images/RightArrow.png') no-repeat center;
-    background-size: 16px 16px;
+    background-size: 20px 20px;
   }
 </style>
 
@@ -92,8 +93,7 @@ News
   const images = [
     "../images/Interpore1.jpg",
     "../images/Interpore2.jpg",
-    "../images/Interpore3.jpg",
-    "../images/MudCrack.png"
+    "../images/Interpore3.jpg"
   ];
 
   let currentIndex = 0;
