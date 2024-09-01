@@ -1,14 +1,9 @@
 ---
-title: "Paper Title Number 3"
-collection: publications
+title: "Fabric, stress, and stiffness anisotropies in sand during high-stress oedometer test"
 category: manuscripts
 permalink: /publication/2015-10-01-paper-title-number-3
-excerpt: 'This paper is about the number 3. The number 4 is left for future work.'
-date: 2015-10-01
-venue: 'Journal 1'
-slidesurl: 'http://academicpages.github.io/files/slides3.pdf'
-paperurl: 'http://academicpages.github.io/files/paper3.pdf'
-citation: 'Your Name, You. (2015). &quot;Paper Title Number 3.&quot; <i>Journal 1</i>. 1(3).'
+excerpt: 'Under review'
+date: 2024-08-25
 ---
 
-The contents above will be part of a list of publications, if the user clicks the link for the publication than the contents of section will be rendered as a full page, allowing you to provide more information about the paper for the reader. When publications are displayed as a single page, the contents of the above "citation" field will automatically be included below this section in a smaller font.
+A series of oedometer tests were conducted to investigate the evolution of stress, stiffness, and fabric anisotropy in sands subjected to loading stresses up to 3.0 MPa. It is achieved by monitoring changes in stress and small-strain shear stiffness ratios, using a modified oedometer equipped with bender elements. A total of 36 samples, comprising three types of sand with varying particle strength, were prepared at initial relative densities of 24% and 60%. Each sample was tested in a single loading-unloading cycle, and the maximum stress covers six levels from 0.5 MPa to 3.0 MPa.
