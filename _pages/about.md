@@ -14,7 +14,7 @@ In the UNSAT lab, I belong to a six-member group focusing on stress state and co
 Research interests
 ======
 <div style="text-align: center;">
-  <img src="../images/MudCrack.png" alt="Wechat" title="screen the code" height="300" /> <img src="../images/DCprocess.gif" alt="Wechat" title="screen the code" height="300" />
+  <img src="../images/MudCrack.png" alt="Wechat" title="screen the code" height="150" /> <img src="../images/DCprocess.gif" alt="Wechat" title="screen the code" height="150" />
 </div>
 My recent research passion lies in understanding **the underlying physics of desiccation cracking in porous media** (particularly in soils), which is a ubiquitous phenomenon in both nature and industry. It is a highly non-linear process, involving multi-physics processes such as evaporation, two-phase flow of vapor and water, heat transfer, and build-up of stress due to both the capillary pressure and the adsorption between nano-particles. With such complex processes:
 
