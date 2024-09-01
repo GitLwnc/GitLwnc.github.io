@@ -43,6 +43,75 @@ News
 
 **Paper(03/24):** Our paper titled ["Role of substrate roughness in soil desiccation cracking"](https://doi.org/10.1139/cgj-2023-0638) was published in _Canadian Geotechnical Journal_.
 
+<div class="gallery">
+  <a href="#img1">
+    <img src="../images/Interpore1.jpg" alt="Photo 1" class="gallery-item">
+  </a>
+  <a href="#img2">
+    <img src="../images/Interpore2.jpg" alt="Photo 2" class="gallery-item">
+  </a>
+  <a href="#img3">
+    <img src="../images/Interpore3.jpg" alt="Photo 3" class="gallery-item">
+  </a>
+  <a href="#img4">
+    <img src="../images/MudCrack.png" alt="Photo 4" class="gallery-item">
+  </a>
+</div>
 
+<div id="img1" class="lightbox">
+  <img src="../images/Interpore1.jpg" alt="Photo 1">
+</div>
+<div id="img2" class="lightbox">
+  <img src="../images/Interpore2.jpg" alt="Photo 2">
+</div>
+<div id="img3" class="lightbox">
+  <img src="../images/Interpore3.jpg" alt="Photo 3">
+</div>
+<div id="img4" class="lightbox">
+  <img src="../images/MudCrack.png" alt="Photo 4">
+</div>
+
+<style>
+  .gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .gallery-item {
+    width: 200px;
+    height: auto;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .gallery-item:hover {
+    transform: scale(1.05);
+  }
+
+  .lightbox {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+  }
+
+  .lightbox:target {
+    display: flex;
+  }
+</style>
 
 
