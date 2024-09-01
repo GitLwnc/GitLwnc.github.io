@@ -43,62 +43,7 @@ News
 
 **Paper(03/24):** Our paper titled ["Role of substrate roughness in soil desiccation cracking"](https://doi.org/10.1139/cgj-2023-0638) was published in _Canadian Geotechnical Journal_.
 
-<div class="gallery-container">
-  <button onclick="prevImage()" class="gallery-button">Previous</button>
-  <img id="gallery-image" src="../images/Interpore1.jpg" alt="Photo 1" style="max-width: 50%; height: auto;" />
-  <button onclick="nextImage()" class="gallery-button">Next</button>
-</div>
 
-<style>
-  .gallery-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .gallery-button {
-    padding: 5px 5px;
-    font-size: 10px;
-    cursor: pointer;
-    background-color: none#007bff;
-    color: black;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-  }
-
-  .gallery-button:hover {
-    background-color: #0056b3;
-  }
-</style>
-
-<script>
-  const images = [
-    "../images/Interpore1.jpg",
-    "../images/Interpore2.jpg",
-    "../images/Interpore3.jpg",
-    "../images/MudCrack4.png"
-  ];
-
-  let currentIndex = 0;
-
-  function showImage(index) {
-    const imgElement = document.getElementById('gallery-image');
-    imgElement.src = images[index];
-    imgElement.alt = `Photo ${index + 1}`;
-  }
-
-  function nextImage() {
-    currentIndex = (currentIndex + 1) % images.length;
-    showImage(currentIndex);
-  }
-
-  function prevImage() {
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    showImage(currentIndex);
-  }
-</script>
 
 <div class="gallery-container">
   <button onclick="prevImage()" class="gallery-button gallery-button-prev"></button>
