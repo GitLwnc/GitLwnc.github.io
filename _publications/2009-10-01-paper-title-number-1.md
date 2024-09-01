@@ -6,8 +6,7 @@ permalink: /publication/2009-10-01-paper-title-number-1
 excerpt: 'Abstract'
 date: 2024-03-01
 venue: 'Canadian Geotechnical Journal'
-slidesurl: 'http://academicpages.github.io/files/slides1.pdf'
-paperurl: 'http://academicpages.github.io/files/paper2.pdf'
+paperurl: 'https://doi.org/10.1139/cgj-2023-0638'
 citation: 'Yang Y, Zhang C, Gou L, et al. Role of Substrate Roughness in Soil Desiccation Cracking[J]. Canadian Geotechnical Journal, 2024 (ja).'
 ---
 
