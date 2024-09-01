@@ -43,75 +43,63 @@ News
 
 **Paper(03/24):** Our paper titled ["Role of substrate roughness in soil desiccation cracking"](https://doi.org/10.1139/cgj-2023-0638) was published in _Canadian Geotechnical Journal_.
 
-<div class="gallery">
-  <a href="#img1">
-    <img src="../images/Interpore1.jpg" alt="Photo 1" class="gallery-item">
-  </a>
-  <a href="#img2">
-    <img src="../images/Interpore2.jpg" alt="Photo 2" class="gallery-item">
-  </a>
-  <a href="#img3">
-    <img src="../images/Interpore3.jpg" alt="Photo 3" class="gallery-item">
-  </a>
-  <a href="#img4">
-    <img src="../images/MudCrack.png" alt="Photo 4" class="gallery-item">
-  </a>
-</div>
+# Side Gallery Example
 
-<div id="img1" class="lightbox">
-  <img src="../images/Interpore1.jpg" alt="Photo 1">
-</div>
-<div id="img2" class="lightbox">
-  <img src="../images/Interpore2.jpg" alt="Photo 2">
-</div>
-<div id="img3" class="lightbox">
-  <img src="../images/Interpore3.jpg" alt="Photo 3">
-</div>
-<div id="img4" class="lightbox">
-  <img src="../images/MudCrack.png" alt="Photo 4">
+<div class="gallery-container">
+  <button onclick="prevImage()" class="gallery-button">Previous</button>
+  <img id="gallery-image" src="../images/Interpore1.jpg" alt="Photo 1" style="max-width: 100%; height: auto;" />
+  <button onclick="nextImage()" class="gallery-button">Next</button>
 </div>
 
 <style>
-  .gallery {
+  .gallery-container {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .gallery-item {
-    width: 200px;
-    height: auto;
-    border: 2px solid #ddd;
-    border-radius: 4px;
-    transition: transform 0.2s ease-in-out;
-  }
-
-  .gallery-item:hover {
-    transform: scale(1.05);
-  }
-
-  .lightbox {
-    display: none;
-    position: fixed;
-    z-index: 999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
     justify-content: center;
     align-items: center;
+    gap: 10px;
   }
 
-  .lightbox img {
-    max-width: 90%;
-    max-height: 90%;
+  .gallery-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
   }
 
-  .lightbox:target {
-    display: flex;
+  .gallery-button:hover {
+    background-color: #0056b3;
   }
 </style>
+
+<script>
+  const images = [
+    "../images/Interpore1.jpg",
+    "../images/Interpore2.jpg",
+    "../images/Interpore3.jpg",
+    "../images/MudCrack4.jpg"
+  ];
+
+  let currentIndex = 0;
+
+  function showImage(index) {
+    const imgElement = document.getElementById('gallery-image');
+    imgElement.src = images[index];
+    imgElement.alt = `Photo ${index + 1}`;
+  }
+
+  function nextImage() {
+    currentIndex = (currentIndex + 1) % images.length;
+    showImage(currentIndex);
+  }
+
+  function prevImage() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    showImage(currentIndex);
+  }
+</script>
 
 
