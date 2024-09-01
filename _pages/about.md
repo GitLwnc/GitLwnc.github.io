@@ -48,7 +48,7 @@ News
 
 <div class="gallery-container">
   <button onclick="prevImage()" class="gallery-button gallery-button-prev"></button>
-  <img id="gallery-image" src="../images/Interpore1.jpg" alt="Photo 1" style="max-width: 70%; height: auto;" />
+  <img id="gallery-image" src="../images/Interpore1.jpg" alt="Photo 1" style="max-width: 60%; height: auto;" />
   <button onclick="nextImage()" class="gallery-button gallery-button-next"></button>
 </div>
 
@@ -62,8 +62,8 @@ News
   }
 
   .gallery-button {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border: none;
     background-color: rgba(255, 255, 255, 0.3); 
     border-radius: 50%; 
