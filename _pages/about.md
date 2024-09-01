@@ -43,11 +43,9 @@ News
 
 **Paper(03/24):** Our paper titled ["Role of substrate roughness in soil desiccation cracking"](https://doi.org/10.1139/cgj-2023-0638) was published in _Canadian Geotechnical Journal_.
 
-# Side Gallery Example
-
 <div class="gallery-container">
   <button onclick="prevImage()" class="gallery-button">Previous</button>
-  <img id="gallery-image" src="../images/Interpore1.jpg" alt="Photo 1" style="max-width: 100%; height: auto;" />
+  <img id="gallery-image" src="../images/Interpore1.jpg" alt="Photo 1" style="max-width: 50%; height: auto;" />
   <button onclick="nextImage()" class="gallery-button">Next</button>
 </div>
 
@@ -60,11 +58,11 @@ News
   }
 
   .gallery-button {
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 5px 5px;
+    font-size: 10px;
     cursor: pointer;
-    background-color: #007bff;
-    color: white;
+    background-color: none#007bff;
+    color: black;
     border: none;
     border-radius: 4px;
     transition: background-color 0.3s ease;
@@ -80,7 +78,7 @@ News
     "../images/Interpore1.jpg",
     "../images/Interpore2.jpg",
     "../images/Interpore3.jpg",
-    "../images/MudCrack4.jpg"
+    "../images/MudCrack4.png"
   ];
 
   let currentIndex = 0;
@@ -102,4 +100,72 @@ News
   }
 </script>
 
+<div class="gallery-container">
+  <button onclick="prevImage()" class="gallery-button gallery-button-prev"></button>
+  <img id="gallery-image" src="../images/Interpore1.jpg" alt="Photo 1" style="max-width: 50%; height: auto;" />
+  <button onclick="nextImage()" class="gallery-button gallery-button-next"></button>
+</div>
 
+<style>
+  .gallery-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+  }
+
+  .gallery-button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.3); 
+    border-radius: 50%; 
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .gallery-button:hover {
+    background-color: rgba(255, 255, 255, 0.5); 
+  }
+
+  .gallery-button-prev {
+    background: transparent url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj4KICA8cGF0aCBkPSJNNTAsNTAgbDEwMCw1MCAtMTAwLTUwIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWNhcHM9InJ1bGUiLz4KPC9zdmc+Cg==') no-repeat center;
+    background-size: 16px 16px;
+  }
+
+  .gallery-button-next {
+    background: transparent url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj4KICA8cGF0aCBkPSJNMCw1MCBsMTAsMEwgNTAuNiw1MCIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1jYXAtb3BhY2l0eT0icmVsIi8+PC9zdmc+Cg==') no-repeat center;
+    background-size: 16px 16px;
+  }
+</style>
+
+<script>
+  const images = [
+    "../images/Interpore1.jpg",
+    "../images/Interpore2.jpg",
+    "../images/Interpore3.jpg",
+    "../images/MudCrack.png"
+  ];
+
+  let currentIndex = 0;
+
+  function showImage(index) {
+    const imgElement = document.getElementById('gallery-image');
+    imgElement.src = images[index];
+    imgElement.alt = `Photo ${index + 1}`;
+  }
+
+  function nextImage() {
+    currentIndex = (currentIndex + 1) % images.length;
+    showImage(currentIndex);
+  }
+
+  function prevImage() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    showImage(currentIndex);
+  }
+</script>
