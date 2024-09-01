@@ -14,8 +14,8 @@ In the UNSAT lab, I belong to a six-member group focusing on stress state and co
 Research interests
 ======
 <div style="text-align: center;">
-  <img src="../images/MudCrack.png" alt="Wechat" title="screen the code" width="320" />
-  <img src="../images/DCprocess.gif" alt="Wechat" title="screen the code" width="450" />
+  <img src="../images/MudCrack.png" alt="Wechat" title="screen the code" width="298" />
+  <img src="../images/DCprocess.gif" alt="Wechat" title="screen the code" width="420" />
 </div>
 My recent research passion lies in understanding **the underlying physics of desiccation cracking in porous media** (particularly in soils), which is a ubiquitous phenomenon in both nature and industry. It is a highly non-linear process, involving multi-physics processes such as evaporation, two-phase flow of vapor and water, heat transfer, and build-up of stress due to both the capillary pressure and the adsorption between nano-particles. With such complex processes:
 
@@ -42,5 +42,7 @@ News
 **Talk(05/24):** I have given an oral presentation about the "Role of substrate roughness in soil desiccation cracking" at _InterPore Annual Meeting_.
 
 **Paper(03/24):** Our paper titled ["Role of substrate roughness in soil desiccation cracking"](https://doi.org/10.1139/cgj-2023-0638) was published in _Canadian Geotechnical Journal_.
+
+
 
 
