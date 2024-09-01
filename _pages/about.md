@@ -14,8 +14,8 @@ In the UNSAT lab, I belong to a six-member group focusing on stress state and co
 Research interests
 ======
 <div style="text-align: center;">
-  <img src="../images/MudCrack.png" alt="Wechat" title="screen the code" width="298" />
-  <img src="../images/DCprocess.gif" alt="Wechat" title="screen the code" width="420" />
+  <img src="../images/MudCrack.png" alt="Wechat" title="Desiccation cracks in clay" width="298" />
+  <img src="../images/DCprocess.gif" alt="Wechat" title="Desiccation cracking process via DIC" width="420" />
 </div>
 
 My recent research passion lies in understanding **the underlying physics of desiccation cracking in porous media** (particularly in soils), which is a ubiquitous phenomenon in both nature and industry. It is a highly non-linear process, involving multi-physics processes such as evaporation, two-phase flow of vapor and water, heat transfer, and build-up of stress due to both the capillary pressure and the adsorption between nano-particles. With such complex processes:
@@ -26,9 +26,9 @@ My recent research passion lies in understanding **the underlying physics of des
 
 * _Can we manipulate the propagation of desiccation cracks to create specific patterns on micro and nano scales?_ 
 
-I try to integral cutting-edge insights from **optical experimental techniques** (e.g., digital image correlation, micron CT, high-speed photography, etc.) **elastic-plastic fracture mechanics**, **phase transition theory in statistic physics**, and **fractal theory** to explore the physics of crack initiation and propagation, as well as the key underlying mechanism and statistic properties of desiccation crack pattern. 
+Now, I am trying to integral cutting-edge insights from **optical experimental techniques** (e.g., digital image correlation, micron CT, high-speed photography, etc.) **elastic-plastic fracture mechanics**, **phase transition theory in statistic physics**, and **fractal theory** to explore the physics of crack initiation and propagation, as well as the key underlying mechanism and statistic properties of desiccation crack pattern. 
 
-Please find my publication list here. If you are interested in my research, please discuss it with me via email (yhyang@hnu.edu.cn) or [WeChat](../images/wechat.jpg). 
+I've included my publication list here. If you are interested in my research, please get in touch with me via email (yhyang@hnu.edu.cn) or [WeChat](../images/wechat.jpg). 
 
 News
 ======
