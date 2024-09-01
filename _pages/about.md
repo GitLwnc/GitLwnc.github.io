@@ -7,9 +7,9 @@ redirect_from:
   - /about.html
 ---
 
-I am now a 3-th year Ph. D candidate in the College of Civil Engineering at Hunan University, supervised by supervised by [Prof. Chao Zhang](https://www.researchgate.net/profile/Chao-Zhang-43). I joined Prof. Zhang's [UNSAT lab](https://chaozhanghnu.github.io/team/) in 2020 as a 3-rd year undergraduate student and completed my bachelor's degree in 2021 at the same institution. 
+I am now a 3-th year Ph. D candidate in the College of Civil Engineering at Hunan University, supervised by supervised by [Prof. Chao Zhang](https://www.researchgate.net/profile/Chao-Zhang-43). I joined Prof. Zhang's [UNSAT lab](https://chaozhanghnu.github.io/team/) in 2020 as a 3-rd year undergraduate student. 
 
-In UNSAT lab, I belong to a six-member group focusing on stress state and constitutive relation for unsaturated soil. I assisted Prof. Zhang in managing this group and worked closely with the other five members. In addition to my research regarding desiccation cracking in porous media, I deeply participate in the research of the other five members, e.g., clay pore structure evolution via small-angle neutron scattering and small-angle scattering X-ray scattering, robot development for swimming in granular environments, deep-buried soil's anisotropies in fabric, stress and modulus, loading collapse phenomenon in high-expansive clay, etc. 
+In the UNSAT lab, I belong to a six-member group focusing on stress state and constitutive relation for unsaturated soil. I assisted Prof. Zhang in managing this group and worked closely with the other five members. In addition to my research regarding desiccation cracking in porous media, I deeply participate in the research of the other five members, e.g., clay pore structure evolution via small-angle neutron scattering and small-angle scattering X-ray scattering, robot development for swimming in granular environments, deep-buried soil's anisotropies in fabric, stress and modulus, loading collapse phenomenon in high-expansive clay, etc. 
 
 Research interests
 ======
@@ -25,9 +25,13 @@ I try to integral cutting-edge insights from **optical experimental techniques**
 
 Please find my publication list here. If you are interested in my research, please discuss it with me via email (yhyang@hnu.edu.cn) or [WeChat](../images/wechat.jpg). 
 
+<div style="text-align: center;">
+  <img src="../images/wechat.jpg" alt="Wechat" title="screen the code" width="400" />
+</div>
+
 News
 ======
-**Conference(12/24):** I will attend the _AGU24 annual meeting_ and give a presentation or a poster titled "Nucleation-percolation transition in clay desiccation cracking".
+**Conference(12/24):** I will attend the _AGU Annual Meeting_ and give a presentation or a poster titled "Nucleation-percolation transition in clay desiccation cracking".
 
 **Conference(08/24):** I attended the _IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter_ and presented a poster.
 
@@ -35,7 +39,7 @@ News
 
 **Conference(06/24):** I attended the _1st International Yuelu Symposium on “Geotechnical and Underground Engineering”_ and presented a poster titled _"Fabric, stress, and modulus anisotropies of sands during high-stress oedometer test"_. 
 
-**Talk(05/24):** I have given an oral presentation about the "Role of substrate roughness in soil desiccation cracking" at _InterPore 2024 annual meeting_.
+**Talk(05/24):** I have given an oral presentation about the "Role of substrate roughness in soil desiccation cracking" at _InterPore Annual Meeting_.
 
 **Paper(03/24):** Our paper titled ["Role of substrate roughness in soil desiccation cracking"](https://doi.org/10.1139/cgj-2023-0638) was published in _Canadian Geotechnical Journal_.
 
