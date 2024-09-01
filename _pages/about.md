@@ -21,7 +21,7 @@ I try to integral cutting-edge insights from **optical experimental techniques**
 
 In UNSAT lab, I belong to a six-member group focusing on stress state and constitutive relation for unsaturated soil. I assisted Prof. Zhang in managing this group and worked closely with the other five members. I deeply participate in the research of the other five members, e.g., clay pore structure evolution via small-angle neutron scattering and small-angle scattering X-ray scattering, robot development for swimming in granular environments, deep-buried soil's anisotropies in fabric, stress and modulus, loading collapse phenomenon in high-expansive clay, etc. 
 
-Please find my publication list here. If you are interested in my research, feel free to discuss it with me via email (yhyang@hnu.edu.cn) or [WeChat](../image/wechat.jpg). 
+Please find my publication list here. If you are interested in my research, feel free to discuss it with me via [email](yhyang@hnu.edu.cn) or [WeChat](../images/wechat.jpg). 
 
 News
 ======
