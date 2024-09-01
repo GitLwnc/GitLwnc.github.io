@@ -18,6 +18,7 @@ Research interests
   <img src="../images/DCprocess.gif" alt="Wechat" title="Desiccation cracking process via DIC" width="420" />
 </div>
 
+
 My recent research passion lies in understanding **the underlying physics of desiccation cracking in porous media** (particularly in soils), which is a ubiquitous phenomenon in both nature and industry. It is a highly non-linear process, involving multi-physics processes such as evaporation, two-phase flow of vapor and water, heat transfer, and build-up of stress due to both the capillary pressure and the adsorption between nano-particles. With such complex processes:
 
 * _How can we accurately predict the initiation of desiccation cracks?_ 
@@ -38,7 +39,7 @@ News
 
 **Patent(06/24):** Our patent was granted (CN202410502010.9), which is about _a new device_ for measuring the fracture toughness of unsaturated clay.
 
-**Conference(06/24):** I attended the _1st International Yuelu Symposium on “Geotechnical and Underground Engineering”_ and presented a poster titled _"Fabric, stress, and modulus anisotropies of sands during high-stress oedometer test"_. 
+**Conference(06/24):** I attended the _1st International Yuelu Symposium on “Geotechnical and Underground Engineering”_ and presented a poster titled "Fabric, stress, and modulus anisotropies of sands during high-stress oedometer test". 
 
 **Talk(05/24):** I have given an oral presentation about the "Role of substrate roughness in soil desiccation cracking" at _InterPore Annual Meeting_.
 
