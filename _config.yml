@@ -12,7 +12,7 @@ title                    : "Yuhan"
 title_separator          : "-"
 name                     : &name "Yuhan Yang"
 description              : &description "Ph. D Candidate at HNU"
-URL                      : "https://GitLwnc.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+URL                      : "https://GitLwnc/Yuhan.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "GitLwnc/Yuhan.github.io"
 
