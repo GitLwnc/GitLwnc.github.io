@@ -14,8 +14,8 @@ In the UNSAT lab, I belong to a six-member group focusing on stress state and co
 Research interests
 ======
 <div style="text-align: center;">
-  <img src="../images/MudCrack.png" alt="Wechat" title="Desiccation cracks in clay" width="298" />
-  <img src="../images/DCprocess.gif" alt="Wechat" title="Desiccation cracking process via DIC" width="420" />
+  <img src="../images/MudCrack.png" alt="Mud crack pattern" title="Desiccation cracks in clay" width="298" />
+  <img src="../images/DCprocess.gif" alt="Cracking process via DIC" title="Desiccation cracking process via DIC" width="420" />
 </div>
 
 
