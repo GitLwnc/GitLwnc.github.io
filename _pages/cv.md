@@ -34,34 +34,45 @@ Publications
 
 Research Experience
 ======
-Fabric, stress, and modulus anisotropies of deep-buried soil (Jul. 2023 ~ Jul. 2024)
+Taking the lead
 ------
-*The paper is under review (first author).
-
-Nucleation-percolation transition in clay desiccation cracking (May 2023 ~ Jun. 2024)
+*A new equipment for measuring fracture toughness of soil with variable water contents (Nov. 2022 ~ present).
 ------
-*The paper is under review (first author).
-
-Measuring fracture toughness of soil with variable water contents (Nov. 2022 ~ present).
-------
-*Granted patent: Zhang, **Yang**, et al. CN118090432B, 2024-06-28.
+*Granted national invention patent: Zhang, **Yang**, Chen. CN118090432B, 2024-06-28.
 *The paper is being written (main contributor). 
 
-Role of substrate roughness on soil desiccation cracking (Jul. 2021 ~ Oct. 2022).
+*Fabric, stress, and modulus anisotropies of deep-buried soil (Jul. 2023 ~ Jul. 2024)
+------
+*The paper is under review: **Yang**, Liu, Zhang, et al. Fabric, Stress, and Modulus Anisotropies in Sand during High-Stress Oedometer Test.
+
+*Cracking mode transition in desiccating clay (May 2023 ~ Jun. 2024)
+------
+*The paper is under review: **Yang**, Zhang, Chen. Nucleation-percolation transition in clay desiccation cracking. 
+
+*Role of substrate roughness on soil desiccation cracking (Jul. 2021 ~ Oct. 2022).
 ------
 *Published paper: **Yang**, Zhang, Gou, et al. Role of Substrate Roughness in Soil Desiccation Cracking [J]. _Canadian Geotechnical Journal_, 2024 (ja).
 
-Cementation effect on soil arching evolution via discrete element method (Jan. 2021 ~ Jun. 2021).
+*Cementation effect on soil arching evolution via discrete element method (Jan. 2021 ~ Jun. 2021).
 ------
 
-Development of algorithm and system for risk and soil type identifications in real-time in autonomous excavators (Sep. 2020 ~ Dec. 2020).
+*Development of algorithm and system for risk and soil type identifications in real-time in autonomous excavators (Sep. 2020 ~ Dec. 2020).
 ------
 Developing an autonomous excavator is cruial for excavation in high-risk construction environments such as the deep ocean and exo-planets, yet it faces two challenges: 1) detecting excavation risk in real time, e.g., detecting unexpected hard rock and existing underground constractions; and 2) detecting soil types during excavation in real time for automatically adjusting excavation strategy. To solve these problems, this work developed a new real-time algorithm based on both time- and frequency- domain analyses of acceleration signals. Moreover, excavation experiment was conducted to determine the appropriate position of acceleration sensors and the hyperparameters of the proposed algorithm.
-* Granted patent: Zhang, **Yang**, et al. CN113065388B, 2022-11-01.
+*Granted national invention patent: Zhang, **Yang**, et al. CN113065388B, 2022-11-01.
 <div style="text-align: center;">
   <img src="../images/AutoExcavator1.jpg" alt="AutoExcavator1" title="Risk identification" width="450" />
   <img src="../images/AutoExcavator2.jpg" alt="AutoExcavator2" title="Soil type identification" width="450" />
 </div>
+
+Participation
+------
+*Nanopore evolution in clay during drying via small-angle neutron scattering and small-angle X-ray scattering (Nov. 2022 ~ Present)
+------
+
+*Loading collapse in clay of high expansibility
+------
+
 
 Work Experience
 ======
