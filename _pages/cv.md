@@ -53,8 +53,7 @@ Research Experience: Taking the Lead
   * Published paper: **Yang**, Zhang, Gou, et al. Role of Substrate Roughness in Soil Desiccation Cracking [J]. _Canadian Geotechnical Journal_, 2024 (ja).
 
 <div style="text-align: center;">
-  <img src="../images/SubstrateEffect2.jpg" alt="SubstrateEffect1" title="Sample" width="500" />
-  <img src="../images/SubstrateEffect1.jpg" alt="SubstrateEffect2" title="Results" width="500" />
+  <img src="../images/SubstrateEffect2.jpg" alt="SubstrateEffect1" title="Sample" width="600" />
 </div>
 
 * Cementation effect on soil arching via discrete element method (Jan. 2021 ~ Jun. 2021).
