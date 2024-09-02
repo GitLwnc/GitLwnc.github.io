@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/838edff7-f724-4a26-8ccd-af85daf4f93e)![image](https://github.com/user-attachments/assets/979a62c0-b0ca-4bce-8e2a-4592d30c8049)---
+---
 layout: archive
 title: "CV"
 permalink: /cv/
@@ -34,9 +34,9 @@ Publications
 Research Experience
 ======
 
-Development of algorithm and system for risk and soil type identifications in real-time in autonomous excavators. 
+Development of algorithm and system for risk and soil type identifications in real-time in autonomous excavators (Sep. 2021 ~ Dec. 2021)
 ------
-Developing an autonomous excavator is cruial for excavation in high-risk construction environments such as the deep ocean and exo-planets, yet it faces two challenges: 1) detecting excavation risk in real time, e.g., detecting unexpected hard rock and existing underground constractions; and 2) detecting soil types during excavation in real time for automatically adjusting excavation strategy. To solve these problems, this work developed a new real-time algorithm based on both time- and frequency- domain analyses of acceleration signals. Moreover, excavation experiment was conducted to determine the appropriate position of acceleration sensors and the hyperparameters of the proposed algorithm. 
+Developing an autonomous excavator is cruial for excavation in high-risk construction environments such as the deep ocean and exo-planets, yet it faces two challenges: 1) detecting excavation risk in real time, e.g., detecting unexpected hard rock and existing underground constractions; and 2) detecting soil types during excavation in real time for automatically adjusting excavation strategy. To solve these problems, this work developed a new real-time algorithm based on both time- and frequency- domain analyses of acceleration signals. Moreover, excavation experiment was conducted to determine the appropriate position of acceleration sensors and the hyperparameters of the proposed algorithm.
 * One patent was granted: CN113065388B,2022-11-01.
 <div style="text-align: center;">
   <img src="../images/AutoExcavator1.jpg" alt="AutoExcavator1" title="Risk identification" width="500" />
