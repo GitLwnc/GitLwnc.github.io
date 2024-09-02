@@ -39,8 +39,8 @@ Development of algorithm and system for risk and soil type identifications in re
 Developing an autonomous excavator is cruial for excavation in high-risk construction environments such as the deep ocean and exo-planets, yet it faces two challenges: 1) detecting excavation risk in real time, e.g., detecting unexpected hard rock and existing underground constractions; and 2) detecting soil types during excavation in real time for automatically adjusting excavation strategy. To solve these problems, this work developed a new real-time algorithm based on both time- and frequency- domain analyses of acceleration signals. Moreover, excavation experiment was conducted to determine the appropriate position of acceleration sensors and the hyperparameters of the proposed algorithm. 
 
 <div style="text-align: center;">
-  <img src="../images/AutoExcavator1.jpg" alt="AutoExcavator1" title="Risk identification" width="300" />
-  <img src="../images/AutoExcavator2.jpg" alt="AutoExcavator2" title="Soil type identification" width="300" />
+  <img src="../images/AutoExcavator1.jpg" alt="AutoExcavator1" title="Risk identification" width="500" />
+  <img src="../images/AutoExcavator2.jpg" alt="AutoExcavator2" title="Soil type identification" width="500" />
 </div>
 
 Work Experience
