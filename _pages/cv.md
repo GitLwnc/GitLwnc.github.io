@@ -56,11 +56,11 @@ Taking the lead
 
 * Cementation effect on soil arching evolution via discrete element method (Jan. 2021 ~ Jun. 2021).
 
-* Development of algorithm and system for risk and soil type identifications in real-time in autonomous excavators (Sep. 2020 ~ Dec. 2020).
+Development of algorithm and system for risk and soil type identifications in real-time in autonomous excavators (Sep. 2020 ~ Dec. 2020).
+------
+Developing an autonomous excavator is crucial for excavation in high-risk construction environments such as the deep ocean and exo-planets, yet it faces two challenges: 1) detecting excavation risk in real time, e.g., detecting unexpected hard rock and existing underground constructions; and 2) detecting soil types during excavation in real time for automatically adjusting excavation strategy. To solve these problems, this work developed a new real-time algorithm based on both time- and frequency- domain analyses of acceleration signals. Moreover, an excavation experiment was conducted to determine the appropriate position of acceleration sensors and the hyperparameters of the proposed algorithm.
 
-  * Developing an autonomous excavator is cruial for excavation in high-risk construction environments such as the deep ocean and exo-planets, yet it faces two challenges: 1) detecting excavation risk in real time, e.g., detecting unexpected hard rock and existing underground constractions; and 2) detecting soil types during excavation in real time for automatically adjusting excavation strategy. To solve these problems, this work developed a new real-time algorithm based on both time- and frequency- domain analyses of acceleration signals. Moreover, excavation experiment was conducted to determine the appropriate position of acceleration sensors and the hyperparameters of the proposed algorithm.
-
-  *Granted national invention patent: Zhang, **Yang**, et al. CN113065388B, 2022-11-01.
+* Granted national invention patent: Zhang, **Yang**, et al. CN113065388B, 2022-11-01.
 <div style="text-align: center;">
   <img src="../images/AutoExcavator1.jpg" alt="AutoExcavator1" title="Risk identification" width="450" />
   <img src="../images/AutoExcavator2.jpg" alt="AutoExcavator2" title="Soil type identification" width="450" />
@@ -71,26 +71,9 @@ Participation
 *Nanopore evolution in clay during drying via small-angle neutron scattering and small-angle X-ray scattering (Nov. 2022 ~ Present)
 ------
 
-*Loading collapse in clay of high expansibility
+*Loading collapse in clays of high expansibility
 ------
 
-
-Work Experience
-======
-* Spring 2024: Academic Pages Collaborator
-  * Github University
-  * Duties includes: Updates and improvements to template
-  * Supervisor: The Users
-
-* Fall 2015: Research Assistant
-  * Github University
-  * Duties included: Merging pull requests
-  * Supervisor: Professor Hub
-
-* Summer 2015: Research Assistant
-  * Github University
-  * Duties included: Tagging issues
-  * Supervisor: Professor Git
   
 Skills
 ======
