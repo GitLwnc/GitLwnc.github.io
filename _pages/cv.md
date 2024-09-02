@@ -52,17 +52,22 @@ Research Experience: Taking the Lead
 
   * Published paper: **Yang**, Zhang, Gou, et al. Role of Substrate Roughness in Soil Desiccation Cracking [J]. _Canadian Geotechnical Journal_, 2024 (ja).
 
+<div style="text-align: center;">
+  <img src="../images/SubstrateEffect2.jpg" alt="SubstrateEffect1" title="Sample" width="500" />
+  <img src="../images/SubstrateEffect1.jpg" alt="SubstrateEffect2" title="Results" width="500" />
+</div>
+
 * Cementation effect on soil arching via discrete element method (Jan. 2021 ~ Jun. 2021).
 
   * Soil arching is a typical stress redistribution phenomenon in soil subjected to unloading, which is crucial for designing underground structures and controlling ground deformation during construction. Yet, how the soil arching evolves in the cemented soil remains elusive. The discrete element method is utilized to simulate the trap door experiment, exploring the stress redistribution and fabric evolution in cemented sand upon unloading.
 
 <div style="text-align: center;">
-  <img src="../images/SoilArching.jpg" alt="AutoExcavator1" title="Risk identification" width="600" />
+  <img src="../images/SoilArching.jpg" alt="SoilArching1" title="Soil Arching" width="500" />
 </div>
 
 
 <div style="text-align: center;">
-  <video width="600" controls>
+  <video width="500" controls>
     <source src="../images/SoilArching.mp4" type="video/mp4">
   </video>
 </div>
