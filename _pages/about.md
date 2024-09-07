@@ -33,7 +33,7 @@ I've included my publication list here. If you are interested in my research, pl
 
 News
 ======
-**Conference(12/24):** I will attend the _AGU Annual Meeting_ and give a presentation or a poster titled "Nucleation-percolation transition in clay desiccation cracking".
+**Conference(12/24):** I will attend the _AGU Annual Meeting_ and give an oral presentation or a poster titled "Nucleation-percolation transition in clay desiccation cracking".
 
 **Conference(08/24):** I attended the _IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter_ and presented a poster.
 
