@@ -11,11 +11,11 @@ redirect_from:
 
 Education and Qualifications
 ======
-* **Ph.D in Geotechnical Engineering, Hunan University**, Sep. 2021 - Present
+* **Ph.D in Civil Engineering ([ARWU Top 15 Academic Subjects Worldwide](https://www.shanghairanking.com/rankings/gras/2023/RS0211)), Hunan University**, Sep. 2021 - Present
 
-  Core-curriculum: Numerical Analysis, Dynamics of Structure, Rock and Soil Dynamics, Advanced Soil Mechanics.
+  Core-curriculum: Numerical Analysis, Rock and Soil Dynamics, Advanced Soil Mechanics.
   
-* **B.S. in Geotechnical Engineering, Hunan University**, Sep. 2017 - Jun. 2021
+* **B.S. in Civil Engineering ([ARWU Top 15 Academic Subjects Worldwide](https://www.shanghairanking.com/rankings/gras/2023/RS0211)), Hunan University**, Sep. 2017 - Jun. 2021
 
   Core-curriculum: Advanced Mathematics, Theory of Elasticity, Mechanics of Materials, Fluid Mechanics, Soil mechanics, Structral Mechanics.
 
@@ -40,11 +40,11 @@ Research Experience: Taking the Lead
   * Granted national invention patent: Zhang, **Yang**, Chen. CN118090432B, 2024-06-28.
   * The paper is being written (main contributor). 
 
-* Fabric, stress, and modulus anisotropies of deep-buried soil (Jul. 2023 ~ Jul. 2024)
+* Fabric, stress, and modulus anisotropies of deep-buried soil (Jul. 2023 ~ Jul. 2024).
 
   * The paper is under review: **Yang**, Liu, Zhang, et al. Fabric, Stress, and Modulus Anisotropies in Sand during High-Stress Oedometer Test.
 
-* Regulating cracking mode in desiccating clay (May 2023 ~ Jun. 2024)
+* Regulating cracking mode in desiccating clay (May 2023 ~ Jun. 2024).
 
   * The paper is under review: **Yang**, Zhang, Chen. Nucleation-percolation transition in clay desiccation cracking. 
 
@@ -73,9 +73,9 @@ Research Experience: Taking the Lead
 
 * Development of algorithm and system for risk and soil type identifications in real-time in autonomous excavators (Sep. 2020 ~ Dec. 2020).
 
-  * Developing an autonomous excavator is crucial for excavation in high-risk construction environments such as the deep ocean and exo-planets, yet it faces two challenges: 1) detecting excavation risk in real time, e.g., detecting unexpected hard rock and existing underground constructions; and 2) detecting soil types during excavation in real time for automatically adjusting excavation strategy. To solve these problems, this work developed a new real-time algorithm based on both time- and frequency- domain analyses of acceleration signals. Moreover, an excavation experiment was conducted to determine the appropriate position of acceleration sensors and the hyperparameters of the proposed algorithm.
+  * Developing an autonomous excavator is crucial for excavation in high-risk construction environments such as the deep ocean and exo-planets, yet it faces two challenges: 1) detecting excavation risk in real-time, e.g., detecting unexpected hard rock and existing underground constructions; and 2) detecting soil types during excavation in real time for automatically adjusting excavation strategy. To solve these problems, this work developed a new real-time algorithm based on both time- and frequency- domain analyses of acceleration signals. Moreover, an excavation experiment was conducted to determine the appropriate position of acceleration sensors and the hyperparameters of the proposed algorithm.
 
-* Granted national invention patent: Zhang, **Yang**, et al. CN113065388B, 2022-11-01.
+  * Granted national invention patent: Zhang, **Yang**, et al. CN113065388B, 2022-11-01.
 
 <div style="text-align: center;">
   <img src="../images/AutoExcavator1.jpg" alt="AutoExcavator1" title="Risk identification" width="450" />
@@ -84,6 +84,7 @@ Research Experience: Taking the Lead
 
 Research Experience: Participation
 ------
+
 Nanopore evolution in clay during drying via small-angle neutron scattering and small-angle X-ray scattering (Nov. 2022 ~ Present)
 ------
 
