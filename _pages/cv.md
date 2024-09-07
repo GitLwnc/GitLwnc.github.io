@@ -17,7 +17,7 @@ Education and Qualifications
   
 * **B.S. in Civil Engineering ([ARWU Top 15 Academic Subjects Worldwide](https://www.shanghairanking.com/rankings/gras/2023/RS0211)), Hunan University**, Sep. 2017 - Jun. 2021
 
-  Core-curriculum: Advanced Mathematics, Theory of Elasticity, Mechanics of Materials, Fluid Mechanics, Soil mechanics, Structral Mechanics.
+  Core curriculum: Advanced Mathematics, Theory of Elasticity, Mechanics of Materials, Fluid Mechanics, Soil Mechanics, Structural Mechanics.
 
   GPA: 3.77/4.00.          Ranking: 6/43.
 
@@ -71,9 +71,9 @@ Research Experience: Taking the Lead
   </video>
 </div>
 
-* Development of algorithm and system for risk and soil type identifications in real-time in autonomous excavators (Sep. 2020 ~ Dec. 2020).
+* Development of algorithm and system for risk and soil type identifications in autonomous excavators (Sep. 2020 ~ Dec. 2020).
 
-  * Developing an autonomous excavator is crucial for excavation in high-risk construction environments such as the deep ocean and exo-planets, yet it faces two challenges: 1) detecting excavation risk in real-time, e.g., detecting unexpected hard rock and existing underground constructions; and 2) detecting soil types during excavation in real time for automatically adjusting excavation strategy. To solve these problems, this work developed a new real-time algorithm based on both time- and frequency- domain analyses of acceleration signals. Moreover, an excavation experiment was conducted to determine the appropriate position of acceleration sensors and the hyperparameters of the proposed algorithm.
+  * Developing an autonomous excavator is crucial for excavation in high-risk construction environments such as the deep ocean and exo-planets, yet it faces two challenges: 1) detecting excavation risk in real-time, e.g., detecting unexpected hard rock and existing underground constructions; and 2) detecting soil types during excavation in real-time for automatically adjusting excavation strategy. To solve these problems, this work developed a new real-time algorithm based on both time- and frequency- domain analyses of acceleration signals. Moreover, an excavation experiment was conducted to determine the appropriate position of acceleration sensors and the hyperparameters of the proposed algorithm.
 
   * Granted national invention patent: Zhang, **Yang**, et al. CN113065388B, 2022-11-01.
 
@@ -85,11 +85,9 @@ Research Experience: Taking the Lead
 Research Experience: Participation
 ------
 
-Nanopore evolution in clay during drying via small-angle neutron scattering and small-angle X-ray scattering (Nov. 2022 ~ Present)
-------
+* Nanopore evolution in clay during drying via small-angle neutron scattering and small-angle X-ray scattering (Nov. 2022 ~ Present)
 
-Loading collapse in clays of high expansibility (Jun. 2023 ~ Present)
-------
+* Loading collapse in clays of high expansibility (Jun. 2023 ~ Present)
 
   
 Skills
