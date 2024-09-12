@@ -34,11 +34,10 @@ Publications
 
 Research Experience: Taking the Lead
 ======
-
 * A new equipment for measuring fracture toughness of soil with variable water contents (Nov. 2022 ~ present).
 
   * Granted national invention patent: <u>Zhang</u>, **Yang**, Chen. CN118090432B, 2024-06-28.
-  * The paper is being written (main contributor). 
+  * The paper is being prepared (main contributor). 
 
 * Fabric, stress, and modulus anisotropies of deep-buried soil (Jul. 2023 ~ Jul. 2024).
 
@@ -82,35 +81,72 @@ Research Experience: Taking the Lead
   <img src="../images/AutoExcavator2.jpg" alt="AutoExcavator2" title="Soil type identification" width="450" />
 </div>
 
+PS: **Bold** indicates me, and underline indicates my supervisor.
+
 Research Experience: Participation
 ======
 
-* Nanopore evolution in clay during drying via small-angle neutron scattering and small-angle X-ray scattering (Nov. 2022 ~ Present)
+* Developing a robot for swimming in granular media (July. 2024 ~ Present).
 
-* Loading collapse in clays of high expansibility (Jun. 2023 ~ Present)
+* Loading collapse in clays of high expansibility (Jun. 2023 ~ Present).
 
+* Nanopore evolution in clay during drying via small-angle neutron scattering and small-angle X-ray scattering (Nov. 2022 ~ Present).
 
 Skills
 ======
-* Skill 1
-* Skill 2
-  * Sub-skill 2.1
-  * Sub-skill 2.2
-  * Sub-skill 2.3
-* Skill 3
-  
+* Knowledge
+  * Unsaturated soil mechanics
+  * Fracture mechanics
+  * Fractal theory
+  * Phase transition theory: nucleation and percolation
+  * Critical state soil mechanics
+* Experiment skill
+  * Design and build test instrument for measuring soil fracture toughness
+  * Build a constant humidity chamber
+  * Digital image correlation (DIC)
+  * Bender element
+  * Small-angle neutron scattering (SANS) and small-angle X-ray scattering (SAXS) tests
+  * Scanning electron microscopy (SEM) test
+  * Mercury intrusion porosimetry (MIP) test
+  * Single chip microcomputer (SCM)
+* Programming & Software
+  * C language programming
+  * Python
+  * YADE (open-source software of discrete element method)
+  * Matlab
+  * ANSYS & PLAXIS (software of finite element method)
+  * Paraview
+
 Talks
 ======
-  <ul>{% for post in site.talks reversed %}
-    {% include archive-single-talk-cv.html  %}
-  {% endfor %}</ul>
-  
-Teaching
+* **IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter**, Beijing, China, Aug. 2024.
+_Poster_: Role of substrate roughness in soil desiccation cracking.
+
+<div style="text-align: center;">
+  <img src="../images/Poster substrate.jpg" alt="Poster" title="Poster" width="600" />
+</div>
+
+* **InterPore 2024**, Qingdao, China, May 2024.
+_Oral presentation_: Role of substrate roughness in soil desiccation cracking. 
+
+* **1st International Yuelu Symposium on “Geotechnical and Underground Engineering”**, Changsha, China, Jun. 2024.
+_Poster_: Fabric, stress, and modulus anisotropies of sands during high-stress oedometer test.
+
+<div style="text-align: center;">
+  <img src="../images/Poster deep soil.jpg" alt="Poster" title="Poster" width="600" />
+</div>
+
+Honors and Awards
 ======
-  <ul>{% for post in site.teaching reversed %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
+Outstanding Undergraduate Graduates of Hunan University, May 2021.
+
+First Class Scholarship of Hunan University, Nov. 2020.
+
+Merit Student of Hunan University, Nov. 2020.
+
+Champion of Hunan University Soccer League, Jun. 2019.
+
+Champion of Changsha Soccer League, Nov. 2018.
+
+Excellent Organizer of Hunan University athletic meeting, Nov. 2018.
   
-Service and leadership
-======
-* Currently signed in to 43 different slack teams
