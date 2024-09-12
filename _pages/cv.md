@@ -120,17 +120,17 @@ Skills
 Talks
 ======
 * **IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter**, Beijing, China, Aug. 2024.
-_Poster_: Role of substrate roughness in soil desiccation cracking.
+**Poster**: Role of substrate roughness in soil desiccation cracking.
 
 <div style="text-align: center;">
   <img src="../images/Poster substrate.jpg" alt="Poster" title="Poster" width="600" />
 </div>
 
 * **InterPore 2024**, Qingdao, China, May 2024.
-_Oral presentation_: Role of substrate roughness in soil desiccation cracking. 
+**Oral presentation**: Role of substrate roughness in soil desiccation cracking. 
 
 * **1st International Yuelu Symposium on “Geotechnical and Underground Engineering”**, Changsha, China, Jun. 2024.
-_Poster_: Fabric, stress, and modulus anisotropies of sands during high-stress oedometer test.
+**Poster**: Fabric, stress, and modulus anisotropies of sands during high-stress oedometer test.
 
 <div style="text-align: center;">
   <img src="../images/Poster deep soil.jpg" alt="Poster" title="Poster" width="600" />
