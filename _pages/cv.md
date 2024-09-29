@@ -83,7 +83,7 @@ Research Experience: Taking the Lead
 
 PS: **Bold** indicates me, and underline indicates my supervisor.
 
-Research Experience: Participation
+Research Experience: Participating in
 ======
 
 * Freezing-induced stress and flow in porous media (Aug. 2024 ~ Present).
