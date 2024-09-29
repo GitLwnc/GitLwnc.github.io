@@ -37,7 +37,7 @@ Research Experience: Taking the Lead
 * A new equipment for measuring fracture toughness of soil with variable water contents (Nov. 2022 ~ present).
 
   * Granted national invention patent: <u>Zhang</u>, **Yang**, Chen. CN118090432B, 2024-06-28.
-  * The paper is being prepared (main contributor). 
+  * The paper is being prepared: **Yang**, Zhang, Chen, et. al. Measuring Fracture Toughness of Variably Saturated Clays. 
 
 * Fabric, stress, and modulus anisotropies of deep-buried soil (Jul. 2023 ~ Jul. 2024).
 
@@ -45,7 +45,7 @@ Research Experience: Taking the Lead
 
 * Regulating cracking mode in desiccating clay (May 2023 ~ Jun. 2024).
 
-  * The paper is under review: **Yang**, <u>Zhang</u>, Chen. Nucleation-percolation transition in clay desiccation cracking. 
+  * The paper is under consideration: **Yang**, <u>Zhang</u>, Chen. Nucleation-percolation transition in clay desiccation cracking. 
 
 * Investigating the role of substrate roughness on soil desiccation cracking (Jul. 2021 ~ Oct. 2022).
 
@@ -86,7 +86,9 @@ PS: **Bold** indicates me, and underline indicates my supervisor.
 Research Experience: Participation
 ======
 
-* Developing a robot for swimming in granular media (July. 2024 ~ Present).
+* Freezing-induced stress and flow in porous media (Aug. 2024 ~ Present).
+
+* Developing a swimming robot in granular media (Jul. 2024 ~ Present).
 
 * Loading collapse in clays of high expansibility (Jun. 2023 ~ Present).
 
@@ -101,13 +103,13 @@ Skills
   * Phase transition theory: nucleation and percolation
   * Critical state soil mechanics
 * Experiment skill
-  * Design and build test instrument for measuring soil fracture toughness
-  * Build a constant humidity chamber
   * Digital image correlation (DIC)
+  * High-speed photography
   * Bender element
   * Small-angle neutron scattering (SANS) and small-angle X-ray scattering (SAXS) tests
   * Scanning electron microscopy (SEM) test
   * Mercury intrusion porosimetry (MIP) test
+  * Microfluidic chips
   * Single chip microcomputer (SCM)
 * Programming & Software
   * C language programming
@@ -116,6 +118,7 @@ Skills
   * Matlab
   * ANSYS & PLAXIS (software of finite element method)
   * Paraview
+  * COMSOL
 
 Talks
 ======
