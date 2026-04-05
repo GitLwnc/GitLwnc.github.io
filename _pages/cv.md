@@ -11,15 +11,15 @@ redirect_from:
 
 Education and Qualifications
 ======
-* **Ph.D in Civil Engineering ([ARWU Top 15 Academic Subjects Worldwide](https://www.shanghairanking.com/rankings/gras/2023/RS0211)), Hunan University**, Sep. 2021 - Present
+* **Ph.D in Civil Engineering ([ARWU Top 15 Academic Subjects Worldwide](https://www.shanghairanking.com/rankings/gras/2023/RS0211)), Hunan University, China**, Sep. 2021 - Present
 
   Core-curriculum: Numerical Analysis, Rock and Soil Dynamics, Advanced Soil Mechanics.
 
-* **Visiting Student Researcher in Mechanical Engineering, KAIST**, Sep. 2025 - Mar. 2026
+* **Visiting Student Researcher in Mechanical Engineering, KAIST, South Korea**, Sep. 2025 - Mar. 2026, supported by China Scholarship Council(CSC).
 
   Research topic: Cracking in drying colloidal.
   
-* **B.S. in Civil Engineering ([ARWU Top 15 Academic Subjects Worldwide](https://www.shanghairanking.com/rankings/gras/2023/RS0211)), Hunan University**, Sep. 2017 - Jun. 2021
+* **B.S. in Civil Engineering ([ARWU Top 15 Academic Subjects Worldwide](https://www.shanghairanking.com/rankings/gras/2023/RS0211)), Hunan University, China**, Sep. 2017 - Jun. 2021
 
   Core curriculum: Advanced Mathematics, Theory of Elasticity, Mechanics of Materials, Fluid Mechanics, Soil Mechanics, Structural Mechanics.
 
@@ -38,26 +38,34 @@ Publications
 
 Research Experience: Taking the Lead
 ======
+* Thaw-indued landslide in permafrost region (Mar. 2026 ~ Present)
+
+* Modeling evolution of fracture toughness of clayey soils (Dec. 2025 ~ Present)
+
 * Suction and volume evolutions of clayey soils upon high-stress unloading and subsequent Soaking (Apr. 2025 ~ Mar. 2026)
 
-  * Published paper: **Yang, Y.**, <u>Zhang<u>, C., Liu, Z., Yuan, J., & Chen, R. (2026). Suction and Volume Evolutions of Clayey Soils upon High-Stress Unloading and Subsequent Soaking. Canadian Geotechnical Journal, (ja).
+  * Published paper: **Yang, Y.**, <u>Zhang</u>, C., Liu, Z., Yuan, J., & Chen, R. (2026). Suction and Volume Evolutions of Clayey Soils upon High-Stress Unloading and Subsequent Soaking. Canadian Geotechnical Journal, (ja).
+
+* Suction and volume evolutions of clayey soils upon high-stress unloading and subsequent Soaking (Apr. 2025 ~ Mar. 2026)
+
+  * Published paper: **Yang, Y.**, <u>Zhang</u>, C., Liu, Z., Yuan, J., & Chen, R. (2026). Suction and Volume Evolutions of Clayey Soils upon High-Stress Unloading and Subsequent Soaking. Canadian Geotechnical Journal, (ja).
 
 * A new equipment for measuring fracture toughness of soil with variable water contents (Nov. 2022 ~ Oct. 2025).
 
   * Granted national invention patent: <u>Zhang</u>, **Yang**, Chen. CN118090432B, 2024-06-28.
-  * Published paper: **Yang, Y.**, & <u>Zhang, C<u>. (2026). Measuring fracture toughness of clayey soils in a wide suction range. Géotechnique, 1-15.
+  * Published paper: **Yang, Y.**, & <u>Zhang, C</u>. (2026). Measuring fracture toughness of clayey soils in a wide suction range. _Géotechnique_, 1-15.
 
 * Stress, and modulus anisotropies of deep-buried soil (Jul. 2023 ~ Jul. 2024).
 
-  * The paper is under review: **Yang**, Liu, <u>Zhang</u>, et al. Stress and Modulus Anisotropies in Sand during High-Stress Oedometer Test.
+  * The paper is under review: **Yang**, Liu, <u>Zhang</u>, et al. Stress and Modulus Anisotropies in Sand during High-Stress Oedometer Test, submitted to _Acta Geotechnica_
 
 * Role of pore heterogenity on desiccation cracking of clayey soil (May 2023 ~ Jun. 2024).
 
-  * The paper is under consideration: **Yang, Y.**, <u>Zhang, C.<u>, Kim, H., & Chen, R. (2025). Nucleation-percolation transition in desiccation cracking of clay. Physical Review E, 111(5), L053501.
+  * Published: **Yang, Y.**, <u>Zhang, C.</u>, <u>Kim, H.</u>, & Chen, R. (2025). Nucleation-percolation transition in desiccation cracking of clay. _Physical Review E_, 111(5), L053501.
 
 * Role of substrate roughness on soil desiccation cracking (Jul. 2021 ~ Oct. 2022).
 
-  * Published paper: **Yang, Y.**, <u>Zhang, C.<u>, Gou, L., Chen, R., & Dong, Y. (2024). Role of substrate roughness in soil desiccation cracking. Canadian Geotechnical Journal, 61(12), 2686-2703.
+  * Published paper: **Yang, Y.**, <u>Zhang, C.</u>, Gou, L., Chen, R., & Dong, Y. (2024). Role of substrate roughness in soil desiccation cracking. _Canadian Geotechnical Journal_, 61(12), 2686-2703.
 
 <div style="text-align: center;">
   <img src="../images/SubstrateEffect2.jpg" alt="SubstrateEffect1" title="Sample" width="600" />
@@ -100,7 +108,7 @@ Research Experience: Participating in
 
 * Loading collapse in clays of high expansibility (Jun. 2023 ~ Present).
 
-* Nanopore evolution in clay during drying via small-angle neutron scattering and small-angle X-ray scattering (Nov. 2022 ~ Present).
+* Nanopore evolution in clay during drying via small-angle neutron scattering and small-angle X-ray scattering (Nov. 2022 ~ Jun. 2025).
 
 Skills
 ======
@@ -108,7 +116,7 @@ Skills
   * Unsaturated soil mechanics
   * Fracture mechanics
   * Fractal theory
-  * Phase transition theory: nucleation and percolation
+  * Phase transition theory
   * Critical state soil mechanics
 * Experiment skill
   * Digital image correlation (DIC)
@@ -130,6 +138,18 @@ Skills
 
 Talks
 ======
+* **AGU Fall Meeting 2025**, Washington, D.C., USA, Dec. 2025.
+**Oral presentation**: Measuring Fracture Toughness of Clayey Soils in Wide Suction Range.
+
+* **80th Anniversary Conference of KSME**, South Korea, Dec. 2025.
+**Oral presentation**: Role of pore structure heterogeneity on clay desiccation cracking.
+
+* **AGU Fall Meeting 2024**, Washington, D.C., USA, Dec. 2024.
+**Poster**: Nucleation-percolation transition in clay desiccation cracking.
+
+* **IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter**, Beijing, China, Aug. 2024.
+**Poster**: Role of substrate roughness in soil desiccation cracking.
+
 * **IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter**, Beijing, China, Aug. 2024.
 **Poster**: Role of substrate roughness in soil desiccation cracking.
 
@@ -149,6 +169,8 @@ Talks
 
 Honors and Awards
 ======
+China Scholarship Council (CSC) Government-Sponsored Overseas Study Program, May 2025.
+
 Outstanding Undergraduate Graduates of Hunan University, May 2021.
 
 First Class Scholarship of Hunan University, Nov. 2020.
