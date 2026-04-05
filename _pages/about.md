@@ -33,7 +33,11 @@ If you are interested in my research, please get in touch with me via email (yhy
 
 News
 ======
-**Conference(12/24):** I attended the _AGU Annual Meeting_ and give an oral presentation or a poster titled "Nucleation-percolation transition in clay desiccation cracking".
+**Talk(12/25):** I attended the _AGU 2025 Annual Meeting_ and give an oral presentation "Measuring fracture toughness of clayey soils in a wide suction range".
+
+**Talk(12/25):** I attended the _80th Anniversary Conference of KSME_ and give an oral presentation "Role of pore structure heterogeneity on clay desiccation cracking".
+
+**Conference(12/24):** I attended the _AGU 2024 Annual Meeting_ and give a poster titled "Nucleation-percolation transition in clay desiccation cracking".
 
 **Conference(08/24):** I attended the _IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter_ and presented a poster.
 
