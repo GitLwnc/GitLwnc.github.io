@@ -3,7 +3,7 @@ title: "Nucleation-percolation transition in desiccation cracking of clay"
 collection: publications
 category: manuscripts
 permalink: /publication/2025-05-01-paper-title-number-2
-date: 2025-05
+date: 2025-05-01
 venue: 'Physical Review E'
 paperurl: 'https://doi.org/10.1103/PhysRevE.111.L053501'
 citation: 'Yang, Y., Zhang, C., Kim, H., & Chen, R. (2025). Nucleation-percolation transition in desiccation cracking of clay. Physical Review E, 111(5), L053501.'
