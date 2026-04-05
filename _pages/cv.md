@@ -44,7 +44,7 @@ Research Experience: Taking the Lead
 
 * Suction and volume evolutions of clayey soils upon high-stress unloading and subsequent Soaking (Apr. 2025 ~ Mar. 2026)
 
-  * Published paper: **Yang, Y.**, <u>Zhang</u>, C., Liu, Z., Yuan, J., & Chen, R. (2026). Suction and Volume Evolutions of Clayey Soils upon High-Stress Unloading and Subsequent Soaking. Canadian Geotechnical Journal, (ja).
+  * Published paper: **Yang, Y.**, <u>Zhang</u>, C., Liu, Z., Yuan, J., & Chen, R. (2026). Suction and Volume Evolutions of Clayey Soils upon High-Stress Unloading and Subsequent Soaking. _Canadian Geotechnical Journal_, (ja).
 
 * A new equipment for measuring fracture toughness of soil with variable water contents (Nov. 2022 ~ Oct. 2025).
 
@@ -53,7 +53,7 @@ Research Experience: Taking the Lead
 
 * Stress, and modulus anisotropies of deep-buried soil (Jul. 2023 ~ Jul. 2024).
 
-  * The paper is under review: **Yang**, Liu, <u>Zhang</u>, et al. Stress and Modulus Anisotropies in Sand during High-Stress Oedometer Test, submitted to _Acta Geotechnica_
+  * The paper is under review: **Yang**, Liu, <u>Zhang</u>, et al. Stress and Modulus Anisotropies in Sand during High-Stress Oedometer Test, submitted to _Acta Geotechnica_.
 
 * Role of pore heterogenity on desiccation cracking of clayey soil (May 2023 ~ Jun. 2024).
 
