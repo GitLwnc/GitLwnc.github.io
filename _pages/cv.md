@@ -61,7 +61,7 @@ Research Experience: Taking the Lead
 
 * Role of pore heterogenity on desiccation cracking of clayey soil (May 2023 ~ Jun. 2024).
 
-  * Published: **Yang, Y.**, <u>Zhang, C.</u>, <u>Kim, H.</u>, & Chen, R. (2025). Nucleation-percolation transition in desiccation cracking of clay. _Physical Review E_, 111(5), L053501.
+  * Published paper: **Yang, Y.**, <u>Zhang, C.</u>, <u>Kim, H.</u>, & Chen, R. (2025). Nucleation-percolation transition in desiccation cracking of clay. _Physical Review E_, 111(5), L053501.
 
 * Role of substrate roughness on soil desiccation cracking (Jul. 2021 ~ Oct. 2022).
 
