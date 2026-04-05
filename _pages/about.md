@@ -41,20 +41,6 @@ News
 
 **Talk (12/25):** I attended the _80th Anniversary Conference of KSME_ and give an oral presentation "Role of pore structure heterogeneity on clay desiccation cracking".
 
-**Paper (05/25):** Our paper titled ["Nucleation-percolation transition in desiccation cracking of clay"](https://doi.org/10.1103/PhysRevE.111.L053501) was published in _**Physical Review E**_.
-
-**Conference (12/24):** I attended the _AGU 2024 Annual Meeting_ and give a poster titled "Nucleation-percolation transition in clay desiccation cracking".
-
-**Conference (08/24):** I attended the _IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter_ and presented a poster.
-
-**Patent (06/24):** Our patent was granted (CN202410502010.9), which is about _a new device_ for measuring the fracture toughness of unsaturated clay.
-
-**Conference (06/24):** I attended the _1st International Yuelu Symposium on “Geotechnical and Underground Engineering”_ and presented a poster titled "Fabric, stress, and modulus anisotropies of sands during high-stress oedometer test". 
-
-**Talk (05/24):** I have given an oral presentation about the "Role of substrate roughness in soil desiccation cracking" at _InterPore Annual Meeting_.
-
-**Paper (03/24):** Our paper titled ["Role of substrate roughness in soil desiccation cracking"](https://doi.org/10.1139/cgj-2023-0638) was published in _**Canadian Geotechnical Journal**_.
-
 
 
 <div class="gallery-container">
