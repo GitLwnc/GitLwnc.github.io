@@ -15,7 +15,7 @@ Education and Qualifications
 
   Core-curriculum: Numerical Analysis, Rock and Soil Dynamics, Advanced Soil Mechanics.
 
-* **Visiting Student Researcher in Mechanical Engineering, KAIST, South Korea**, Sep. 2025 - Mar. 2026, supported by China Scholarship Council(CSC).
+* **Visiting Student Researcher in Mechanical Engineering, KAIST ([No.53 in QS World University Rankings 2025]), South Korea**, Sep. 2025 - Mar. 2026, supported by China Scholarship Council(CSC).
 
   Research topic: Cracking in drying colloidal.
   
