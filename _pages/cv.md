@@ -146,9 +146,6 @@ Talks
 * **IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter**, Beijing, China, Aug. 2024.
 **Poster**: Role of substrate roughness in soil desiccation cracking.
 
-* **IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter**, Beijing, China, Aug. 2024.
-**Poster**: Role of substrate roughness in soil desiccation cracking.
-
 <div style="text-align: center;">
   <img src="../images/Poster substrate.jpg" alt="Poster" title="Poster" width="600" />
 </div>
