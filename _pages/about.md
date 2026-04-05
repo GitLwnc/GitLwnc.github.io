@@ -33,13 +33,15 @@ If you are interested in my research, please get in touch with me via email (yhy
 
 News
 ======
-**Paper (03/26):** Our paper titled ["Suction and Volume Evolutions of Clayey Soils upon High-Stress Unloading and Subsequent Soaking"](https://doi.org/10.1139/cgj-2026-0045) was published in _Canadian Geotechnical Journal_.
+**Paper (03/28):** Our paper titled ["Suction and Volume Evolutions of Clayey Soils upon High-Stress Unloading and Subsequent Soaking"](https://doi.org/10.1139/cgj-2026-0045) was published in _**Canadian Geotechnical Journal**_.
 
-**Paper (03/26):** Our paper titled ["Measuring fracture toughness of clayey soils in a wide suction range"](https://doi.org/10.1680/jgeot.25.00080) was published in _Géotechnique_.
+**Paper (03/26):** Our paper titled ["Measuring fracture toughness of clayey soils in a wide suction range"](https://doi.org/10.1680/jgeot.25.00080) was published in _**Géotechnique**_.
 
 **Talk (12/25):** I attended the _AGU 2025 Annual Meeting_ and give an oral presentation "Measuring fracture toughness of clayey soils in a wide suction range".
 
 **Talk (12/25):** I attended the _80th Anniversary Conference of KSME_ and give an oral presentation "Role of pore structure heterogeneity on clay desiccation cracking".
+
+**Paper (05/25):** Our paper titled ["Nucleation-percolation transition in desiccation cracking of clay"](https://doi.org/10.1103/PhysRevE.111.L053501) was published in _**Physical Review E**_.
 
 **Conference (12/24):** I attended the _AGU 2024 Annual Meeting_ and give a poster titled "Nucleation-percolation transition in clay desiccation cracking".
 
@@ -51,7 +53,7 @@ News
 
 **Talk (05/24):** I have given an oral presentation about the "Role of substrate roughness in soil desiccation cracking" at _InterPore Annual Meeting_.
 
-**Paper (03/24):** Our paper titled ["Role of substrate roughness in soil desiccation cracking"](https://doi.org/10.1139/cgj-2023-0638) was published in _Canadian Geotechnical Journal_.
+**Paper (03/24):** Our paper titled ["Role of substrate roughness in soil desiccation cracking"](https://doi.org/10.1139/cgj-2023-0638) was published in _**Canadian Geotechnical Journal**_.
 
 
 
