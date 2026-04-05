@@ -165,7 +165,7 @@ Talks
 
 Honors and Awards
 ======
-China Scholarship Council (CSC) Government-Sponsored Overseas Study Program, May 2025.
+China Scholarship Council (CSC) Overseas Study Program, May 2025.
 
 Outstanding Undergraduate Graduates of Hunan University, May 2021.
 
