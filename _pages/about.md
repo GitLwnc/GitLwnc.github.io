@@ -7,9 +7,9 @@ redirect_from:
   - /about.html
 ---
 
-I am now a 4-th year Ph. D candidate in the College of Civil Engineering at Hunan University, supervised by [Prof. Chao Zhang](https://www.researchgate.net/profile/Chao-Zhang-43). I joined Prof. Zhang's [UNSAT lab](https://chaozhanghnu.github.io) in 2020 as a 3-rd year undergraduate student. 
+I am now a 4-th year Ph. D candidate in the College of Civil Engineering at Hunan University, supervised by [Prof. Chao Zhang](https://www.researchgate.net/profile/Chao-Zhang-43). I joined Prof. Zhang's [UNSAT lab](https://chaozhanghnu.github.io) in 2020 as a 5-th year undergraduate student. 
 
-In the UNSAT lab, I belong to a six-member group focusing on stress state and constitutive relation for unsaturated soil. I assisted Prof. Zhang in managing this group and worked closely with the other five members. In addition to my research regarding desiccation cracking in porous media, I deeply participate in the research of the other five members, e.g., clay pore structure evolution via small-angle neutron scattering and small-angle scattering X-ray scattering, development of swimming robot in granular environments, deep-buried soil's anisotropies in fabric, stress and modulus, loading collapse phenomenon in high-expansive clay, etc. 
+In the UNSAT lab, I belong to a seven-member group focusing on stress state and constitutive relation for unsaturated soil. I assisted Prof. Zhang in managing this group and worked closely with the other five members. In addition to my research regarding desiccation cracking in porous media, I deeply participate in the research of the other six members, e.g., clay pore structure evolution via small-angle neutron scattering and small-angle scattering X-ray scattering, development of swimming robot in granular environments, deep-buried soil's anisotropies in fabric, stress and modulus, loading collapse phenomenon in high-expansive clay, etc. 
 
 Research interests
 ======
@@ -33,7 +33,7 @@ If you are interested in my research, please get in touch with me via email (yhy
 
 News
 ======
-**Conference(12/24):** I will attend the _AGU Annual Meeting_ and give an oral presentation or a poster titled "Nucleation-percolation transition in clay desiccation cracking".
+**Conference(12/24):** I attended the _AGU Annual Meeting_ and give an oral presentation or a poster titled "Nucleation-percolation transition in clay desiccation cracking".
 
 **Conference(08/24):** I attended the _IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter_ and presented a poster.
 
