@@ -38,11 +38,11 @@ Publications
 
 Research Experience: Taking the Lead
 ======
-* Thaw-indued landslide in permafrost region (Mar. 2026 ~ Present)
+* Thaw-indued landslide in permafrost region (Mar. 2026 ~ Present).
 
-* Modeling evolution of fracture toughness of clayey soils (Dec. 2025 ~ Present)
+* Modeling evolution of fracture toughness of clayey soils (Dec. 2025 ~ Present).
 
-* Suction and volume evolutions of clayey soils upon high-stress unloading and subsequent Soaking (Apr. 2025 ~ Mar. 2026)
+* Suction and volume evolutions of clayey soils upon high-stress unloading and subsequent Soaking (Apr. 2025 ~ Mar. 2026).
 
   * Published paper: **Yang, Y.**, <u>Zhang</u>, C., Liu, Z., Yuan, J., & Chen, R. (2026). Suction and Volume Evolutions of Clayey Soils upon High-Stress Unloading and Subsequent Soaking. _Canadian Geotechnical Journal_, (ja).
 
