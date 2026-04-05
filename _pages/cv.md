@@ -14,6 +14,10 @@ Education and Qualifications
 * **Ph.D in Civil Engineering ([ARWU Top 15 Academic Subjects Worldwide](https://www.shanghairanking.com/rankings/gras/2023/RS0211)), Hunan University**, Sep. 2021 - Present
 
   Core-curriculum: Numerical Analysis, Rock and Soil Dynamics, Advanced Soil Mechanics.
+
+* **Visiting Student Researcher in Mechanical Engineering, KAIST**, Sep. 2025 - Mar. 2026
+
+  Research topic: Cracking in drying colloidal.
   
 * **B.S. in Civil Engineering ([ARWU Top 15 Academic Subjects Worldwide](https://www.shanghairanking.com/rankings/gras/2023/RS0211)), Hunan University**, Sep. 2017 - Jun. 2021
 
@@ -34,22 +38,26 @@ Publications
 
 Research Experience: Taking the Lead
 ======
-* A new equipment for measuring fracture toughness of soil with variable water contents (Nov. 2022 ~ present).
+* Suction and volume evolutions of clayey soils upon high-stress unloading and subsequent Soaking (Apr. 2025 ~ Mar. 2026)
+
+  * Published paper: **Yang, Y.**, <u>Zhang<u>, C., Liu, Z., Yuan, J., & Chen, R. (2026). Suction and Volume Evolutions of Clayey Soils upon High-Stress Unloading and Subsequent Soaking. Canadian Geotechnical Journal, (ja).
+
+* A new equipment for measuring fracture toughness of soil with variable water contents (Nov. 2022 ~ Oct. 2025).
 
   * Granted national invention patent: <u>Zhang</u>, **Yang**, Chen. CN118090432B, 2024-06-28.
-  * The paper is being prepared: **Yang**, Zhang, Chen, et. al. Measuring Fracture Toughness of Variably Saturated Clays. 
+  * Published paper: **Yang, Y.**, & <u>Zhang, C<u>. (2026). Measuring fracture toughness of clayey soils in a wide suction range. Géotechnique, 1-15.
 
-* Fabric, stress, and modulus anisotropies of deep-buried soil (Jul. 2023 ~ Jul. 2024).
+* Stress, and modulus anisotropies of deep-buried soil (Jul. 2023 ~ Jul. 2024).
 
-  * The paper is under review: **Yang**, Liu, <u>Zhang</u>, et al. Fabric, Stress, and Modulus Anisotropies in Sand during High-Stress Oedometer Test.
+  * The paper is under review: **Yang**, Liu, <u>Zhang</u>, et al. Stress and Modulus Anisotropies in Sand during High-Stress Oedometer Test.
 
-* Regulating cracking mode in desiccating clay (May 2023 ~ Jun. 2024).
+* Role of pore heterogenity on desiccation cracking of clayey soil (May 2023 ~ Jun. 2024).
 
-  * The paper is under consideration: **Yang**, <u>Zhang</u>, Chen. Nucleation-percolation transition in clay desiccation cracking. 
+  * The paper is under consideration: **Yang, Y.**, <u>Zhang, C.<u>, Kim, H., & Chen, R. (2025). Nucleation-percolation transition in desiccation cracking of clay. Physical Review E, 111(5), L053501.
 
-* Investigating the role of substrate roughness on soil desiccation cracking (Jul. 2021 ~ Oct. 2022).
+* Role of substrate roughness on soil desiccation cracking (Jul. 2021 ~ Oct. 2022).
 
-  * Published paper: **Yang**, <u>Zhang</u>, Gou, et al. Role of Substrate Roughness in Soil Desiccation Cracking [J]. _Canadian Geotechnical Journal_, 2024 (ja).
+  * Published paper: **Yang, Y.**, <u>Zhang, C.<u>, Gou, L., Chen, R., & Dong, Y. (2024). Role of substrate roughness in soil desiccation cracking. Canadian Geotechnical Journal, 61(12), 2686-2703.
 
 <div style="text-align: center;">
   <img src="../images/SubstrateEffect2.jpg" alt="SubstrateEffect1" title="Sample" width="600" />
