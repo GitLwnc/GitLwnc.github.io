@@ -134,6 +134,13 @@ Skills
 
 Talks
 ======
+* **Flow and Transport in Permeable Media – Gordon Research Conference**, Les Diablerets, Switzerland, Jul. 2026.
+**Poster**: Clay Desiccation Cracking: Pattern, Mechanisms, and Modeling.
+  
+<div style="text-align: center;">
+  <img src="../images/Poster-GRC2026.jpg" alt="Poster" title="Poster" width="600" />
+</div>
+
 * **AGU Fall Meeting 2025**, Washington, D.C., USA, Dec. 2025.
 **Oral presentation**: Measuring Fracture Toughness of Clayey Soils in Wide Suction Range.
 
@@ -142,6 +149,10 @@ Talks
 
 * **AGU Fall Meeting 2024**, Washington, D.C., USA, Dec. 2024.
 **Poster**: Nucleation-percolation transition in clay desiccation cracking.
+
+<div style="text-align: center;">
+  <img src="../images/Poster_AGU24.jpg" alt="Poster" title="Poster" width="600" />
+</div>
 
 * **IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter**, Beijing, China, Aug. 2024.
 **Poster**: Role of substrate roughness in soil desiccation cracking.
