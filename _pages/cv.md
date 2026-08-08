@@ -148,7 +148,7 @@ Talks
 **Oral presentation**: Role of pore structure heterogeneity on clay desiccation cracking.
 
 <div style="text-align: center;">
-  <img src="../images/Oral presentation_KSME2026.jpg" alt="Poster" title="Poster" width="600" />
+  <img src="../images/Oral presentation_ASME2026.jpg" alt="Poster" title="Poster" width="600" />
 </div>
 
 * **AGU Fall Meeting 2024**, Washington, D.C., USA, Dec. 2024.
