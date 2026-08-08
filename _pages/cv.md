@@ -138,7 +138,7 @@ Talks
 **Poster**: Clay Desiccation Cracking: Pattern, Mechanisms, and Modeling.
   
 <div style="text-align: center;">
-  <img src="../images/Poster-GRC2026.jpg" alt="Poster" title="Poster" width="600" />
+  <img src="../images/Poster-GRC2026.jpg" alt="Poster" title="Poster" width="800" />
 </div>
 
 * **AGU Fall Meeting 2025**, Washington, D.C., USA, Dec. 2025.
@@ -155,7 +155,7 @@ Talks
 **Poster**: Nucleation-percolation transition in clay desiccation cracking.
 
 <div style="text-align: center;">
-  <img src="../images/Poster_AGU24.png" alt="Poster" title="Poster" width="600" />
+  <img src="../images/Poster_AUG24.png" alt="Poster" title="Poster" width="800" />
 </div>
 
 * **IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter**, Beijing, China, Aug. 2024.
@@ -167,6 +167,10 @@ Talks
 
 * **InterPore 2024**, Qingdao, China, May 2024.
 **Oral presentation**: Role of substrate roughness in soil desiccation cracking. 
+
+<div style="text-align: center;">
+  <img src="../images/Oral presentation_Interpore2024.jgp" alt="Poster" title="Poster" width="600" />
+</div>
 
 * **1st International Yuelu Symposium on “Geotechnical and Underground Engineering”**, Changsha, China, Jun. 2024.
 **Poster**: Fabric, stress, and modulus anisotropies of sands during high-stress oedometer test.
