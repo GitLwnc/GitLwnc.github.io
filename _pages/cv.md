@@ -138,24 +138,28 @@ Talks
 **Poster**: Clay Desiccation Cracking: Pattern, Mechanisms, and Modeling.
   
 <div style="text-align: center;">
-  <img src="../images/Poster-GRC2026.jpg" alt="Poster" title="Poster" width="800" />
+  <img src="../images/Poster-GRC2026.jpg" alt="Poster" title="Poster" width="1000" />
 </div>
 
 * **AGU Fall Meeting 2025**, Washington, D.C., USA, Dec. 2025.
 **Oral presentation**: Measuring Fracture Toughness of Clayey Soils in Wide Suction Range.
 
+<div style="text-align: center;">
+  <img src="../images/Oral presentation_AGU25.png" alt="Poster" title="Poster" width="800" />
+</div>
+
 * **80th Anniversary Conference of KSME**, South Korea, Dec. 2025.
 **Oral presentation**: Role of pore structure heterogeneity on clay desiccation cracking.
 
 <div style="text-align: center;">
-  <img src="../images/Oral presentation_ASME2026.jpg" alt="Poster" title="Poster" width="600" />
+  <img src="../images/Oral presentation_ASME2026.jpg" alt="Poster" title="Poster" width="800" />
 </div>
 
 * **AGU Fall Meeting 2024**, Washington, D.C., USA, Dec. 2024.
 **Poster**: Nucleation-percolation transition in clay desiccation cracking.
 
 <div style="text-align: center;">
-  <img src="../images/Poster_AUG24.png" alt="Poster" title="Poster" width="800" />
+  <img src="../images/Poster_AUG24.png" alt="Poster" title="Poster" width="1000" />
 </div>
 
 * **IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter**, Beijing, China, Aug. 2024.
@@ -169,7 +173,7 @@ Talks
 **Oral presentation**: Role of substrate roughness in soil desiccation cracking. 
 
 <div style="text-align: center;">
-  <img src="../images/Oral presentation_Interpore2024.jpg" alt="Poster" title="Poster" width="600" />
+  <img src="../images/Oral presentation_Interpore2024.jpg" alt="Poster" title="Poster" width="800" />
 </div>
 
 * **1st International Yuelu Symposium on “Geotechnical and Underground Engineering”**, Changsha, China, Jun. 2024.
