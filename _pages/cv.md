@@ -169,7 +169,7 @@ Talks
 **Oral presentation**: Role of substrate roughness in soil desiccation cracking. 
 
 <div style="text-align: center;">
-  <img src="../images/Oral presentation_Interpore2024.jgp" alt="Poster" title="Poster" width="600" />
+  <img src="../images/Oral presentation_Interpore2024.jpg" alt="Poster" title="Poster" width="600" />
 </div>
 
 * **1st International Yuelu Symposium on “Geotechnical and Underground Engineering”**, Changsha, China, Jun. 2024.
