@@ -147,11 +147,15 @@ Talks
 * **80th Anniversary Conference of KSME**, South Korea, Dec. 2025.
 **Oral presentation**: Role of pore structure heterogeneity on clay desiccation cracking.
 
+<div style="text-align: center;">
+  <img src="../images/Oral presentation_KSME2026.jpg" alt="Poster" title="Poster" width="600" />
+</div>
+
 * **AGU Fall Meeting 2024**, Washington, D.C., USA, Dec. 2024.
 **Poster**: Nucleation-percolation transition in clay desiccation cracking.
 
 <div style="text-align: center;">
-  <img src="../images/Poster_AGU24.jpg" alt="Poster" title="Poster" width="600" />
+  <img src="../images/Poster_AGU24.png" alt="Poster" title="Poster" width="600" />
 </div>
 
 * **IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter**, Beijing, China, Aug. 2024.
