@@ -62,7 +62,6 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
       }
       assert(await page.locator("video").first().evaluate(v=>!!v.canPlayType('video/mp4; codecs="avc1.42E01E"')),"The test browser must decode H.264");
       await active(0);
-      await page.waitForFunction(() => !document.querySelectorAll("video")[0].paused);
       const playing = async n => {
         try {
           await page.waitForFunction(n => Array.from(document.querySelectorAll("video")).every((v,i) => i===n ? (!v.paused && !v.error && v.readyState >= 2 && v.currentTime > 0.05) : v.paused),n);

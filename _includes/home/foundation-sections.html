@@ -22,7 +22,6 @@
                 <strong>{% if item.kind == 'ongoing' %}Phase-field Modelling{% else %}Research film{% endif %}</strong>
                 <span>{% if item.kind == 'ongoing' %}Simulation image coming soon{% else %}Video coming soon{% endif %}</span>
               </div>
-              <p class="research-video-message" data-video-message role="status" hidden></p>
               {% endif %}
             </div>
             <div class="research-slide__body">
@@ -38,6 +37,7 @@
                 <button type="button" data-sound-toggle aria-label="Unmute video" aria-pressed="false">Unmute</button>
                 <a class="text-link" href="{{ item.video | relative_url }}" data-full-video target="_blank" rel="noopener">Full-size video ↗</a>
               </div>
+              <p class="research-video-message" data-video-message role="status" hidden></p>
               {% endif %}
               {% else %}
               <a class="text-link" href="{{ base_path }}{{ item.url }}">Explore ongoing research →</a>
