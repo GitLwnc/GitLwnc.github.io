@@ -55,7 +55,17 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
       await active(0);
       await page.waitForFunction(() => !document.querySelectorAll("video")[0].paused);
       const playing = async n => {
-        await page.waitForFunction(n => Array.from(document.querySelectorAll("video")).every((v,i) => i===n ? !v.paused : v.paused),n);
+        try {
+          await page.waitForFunction(n => Array.from(document.querySelectorAll("video")).every((v,i) => i===n ? !v.paused : v.paused),n);
+        } catch(error) {
+          console.log("MEDIA_DIAGNOSTIC",JSON.stringify(await page.locator("video").evaluateAll(vs=>vs.map(v=>({
+            paused:v.paused,muted:v.muted,ready:v.readyState,network:v.networkState,error:v.error&&v.error.message,
+            src:v.currentSrc,source:v.querySelector("source").getAttribute("src"),hidden:v.closest("[data-slide]").getAttribute("aria-hidden"),
+            rootRect:JSON.stringify(v.closest("[data-carousel]").getBoundingClientRect())
+          })))));
+          await page.screenshot({path:"qa-output/failure-"+width+".png",fullPage:true});
+          throw error;
+        }
       };
       await playing(0);
       assert.equal(await page.locator("video").nth(1).locator("source").getAttribute("src"),null);
