@@ -16,6 +16,12 @@ jobs:
         with:
           ruby-version: '3.1'
           bundler-cache: true
+      - name: Inspect original video formats
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt,width,height -show_entries format=duration -of json 'images/网站视屏-nucleation percolation transition.mp4'
+          ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt,width,height -show_entries format=duration -of json 'images/网站视屏-Fracture toughness.mp4'
       - name: JavaScript syntax
         run: |
           node --check assets/js/home-carousel.js
@@ -36,6 +42,9 @@ jobs:
           bundle exec jekyll serve --skip-initial-build --no-watch --host 127.0.0.1 --port 4000 > /tmp/homepage-server.log 2>&1 &
           for attempt in $(seq 1 30); do curl --silent --fail http://127.0.0.1:4000/ > /dev/null && break; sleep 1; done
           node scripts/check-homepage.cjs
+      - name: Local preview server diagnostics
+        if: always()
+        run: tail -80 /tmp/homepage-server.log || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:

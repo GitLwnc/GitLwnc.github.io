@@ -56,6 +56,8 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
         for(const path of await page.locator("video source").evaluateAll(ss=>ss.map(s=>s.dataset.src))) {
           const response=await page.request.get(new URL(path,page.url()).href);
           console.log("MEDIA_HTTP", JSON.stringify({path,status:response.status(),type:response.headers()["content-type"],bytes:(await response.body()).length}));
+          const ranged=await page.request.get(new URL(path,page.url()).href,{headers:{Range:"bytes=0-1023"}});
+          console.log("MEDIA_RANGE",JSON.stringify({path,status:ranged.status(),headers:ranged.headers(),bytes:(await ranged.body()).length}));
         }
       }
       await active(0);
