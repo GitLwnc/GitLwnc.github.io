@@ -147,7 +147,7 @@
 .research-carousel [aria-current="true"] { background: var(--accent-cyan); border-color: #39767a; }
 .research-video-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 14px; font-size: 0.85rem; }
 .research-video-actions .text-link { margin-left: auto; }
-.research-video-message { position: absolute; inset: 20% 10%; padding: 16px; background: #fff; color: var(--text-primary); z-index: 3; font-size: 0.9rem; }
+.research-video-message { margin: 14px 0 0; padding: 12px 14px; border-left: 3px solid var(--accent-ochre); background: var(--bg-soft); color: var(--text-primary); font-size: 0.85rem; line-height: 1.5; }
 .expertise-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; }
 .expertise-group { min-width: 0; border-top: 2px solid var(--accent-cyan); padding-top: 18px; }
 .expertise-group h3 { margin: 0 0 14px; color: var(--text-primary); font-size: 1.1rem; line-height: 1.3; }

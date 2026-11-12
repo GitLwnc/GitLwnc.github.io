@@ -10,7 +10,7 @@ assert(publicationRecords.every(p=>["published","under_review","in_preparation"]
 const expectedCounts = Object.fromEntries(["published","under_review","in_preparation"].map(status=>[status,publicationRecords.filter(p=>p.status===status).length]));
 (async () => {
   fs.mkdirSync("qa-output", {recursive:true});
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({channel:"chrome"});
   const reports = [];
   try {
     for (const width of [1440, 1024, 768, 390, 320]) {
@@ -53,13 +53,14 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
         assert.equal(await page.locator('[data-slide][aria-hidden="false"]').count(),1);
       };
       if(width===1440) {
-        for(const path of await page.locator("video source").evaluateAll(ss=>ss.map(s=>s.dataset.src))) {
+        for(const path of await page.locator("video").evaluateAll(ss=>ss.map(s=>s.dataset.src))) {
           const response=await page.request.get(new URL(path,page.url()).href);
           console.log("MEDIA_HTTP", JSON.stringify({path,status:response.status(),type:response.headers()["content-type"],bytes:(await response.body()).length}));
           const ranged=await page.request.get(new URL(path,page.url()).href,{headers:{Range:"bytes=0-1023"}});
           console.log("MEDIA_RANGE",JSON.stringify({path,status:ranged.status(),headers:ranged.headers(),bytes:(await ranged.body()).length}));
         }
       }
+      assert(await page.locator("video").first().evaluate(v=>!!v.canPlayType('video/mp4; codecs="avc1.42E01E"')),"The test browser must decode H.264");
       await active(0);
       await page.waitForFunction(() => !document.querySelectorAll("video")[0].paused);
       const playing = async n => {
@@ -68,7 +69,7 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
         } catch(error) {
           console.log("MEDIA_DIAGNOSTIC",JSON.stringify(await page.locator("video").evaluateAll(vs=>vs.map(v=>({
             paused:v.paused,muted:v.muted,ready:v.readyState,network:v.networkState,error:v.error&&{code:v.error.code,message:v.error.message},time:v.currentTime,videoWidth:v.videoWidth,
-            src:v.currentSrc,source:v.querySelector("source").getAttribute("src"),hidden:v.closest("[data-slide]").getAttribute("aria-hidden"),
+            src:v.currentSrc,source:v.getAttribute("src"),hidden:v.closest("[data-slide]").getAttribute("aria-hidden"),
             rootRect:JSON.stringify(v.closest("[data-carousel]").getBoundingClientRect())
           })))));
           await page.screenshot({path:"qa-output/failure-"+width+".png",fullPage:true});
@@ -76,13 +77,13 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
         }
       };
       await playing(0);
-      assert.equal(await page.locator("video").nth(1).locator("source").getAttribute("src"),null);
+      assert.equal(await page.locator("video").nth(1).getAttribute("src"),null);
       await page.locator("[data-sound-toggle]").first().click();
       assert.equal(await page.locator("video").first().evaluate(v=>v.muted),false);
       await page.locator("[data-next]").click(); await active(1); await playing(1);
-      assert.equal(await page.locator("video").first().locator("source").getAttribute("src"),null);
+      assert.equal(await page.locator("video").first().getAttribute("src"),null);
       await page.locator("[data-next]").click(); await active(2); await playing(-1);
-      assert(await page.locator("video source").evaluateAll(ss=>ss.every(s=>!s.hasAttribute("src"))));
+      assert(await page.locator("video").evaluateAll(ss=>ss.every(s=>!s.hasAttribute("src"))));
       await page.locator("[data-next]").click(); await active(0); await playing(0);
       await page.locator("[data-prev]").click(); await active(2);
       await page.locator('[data-go="1"]').click(); await active(1);
@@ -124,7 +125,7 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
       })),"Media frames must be 16:9");
       assert(await page.locator(".publication-row-v2").evaluateAll(rows=>rows.every(row=>parseFloat(getComputedStyle(row).paddingTop)<=18)),"Publication rows are too loose");
       // Resolve every local homepage link and media reference against the built site.
-      const urls = await page.locator("main a[href], main video source, main img").evaluateAll(els=>els.map(el=>el.href||el.dataset.src||el.src));
+      const urls = await page.locator("main a[href], main video[data-src], main img").evaluateAll(els=>els.map(el=>el.href||el.dataset.src||el.src));
       for(const target of urls) {
         const url=new URL(target,"http://127.0.0.1:4000/").href;
         if(new URL(url).origin!=="http://127.0.0.1:4000") continue;
@@ -175,7 +176,32 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
     await deniedPage.waitForFunction(()=>!document.querySelector("video").paused);
     assert.deepEqual(deniedErrors,[]);
     await deniedContext.close();
-    fs.writeFileSync("qa-output/report.json",JSON.stringify({reports,reducedMotion:"passed",autoplayDenied:"passed",publicationCounts:expectedCounts},null,2));
+    // Unsupported preview engines must get useful fallback guidance, not a blocked UI.
+    const unsupportedContext=await browser.newContext();
+    const unsupportedPage=await unsupportedContext.newPage();
+    await unsupportedPage.addInitScript(()=>{HTMLMediaElement.prototype.canPlayType=function(){return "";};});
+    await unsupportedPage.goto("http://127.0.0.1:4000/");
+    await unsupportedPage.locator("[data-carousel]").scrollIntoViewIfNeeded();
+    await unsupportedPage.waitForFunction(()=>document.querySelector("[data-video-message]").textContent.includes("H.264"));
+    assert(await unsupportedPage.locator("[data-video-toggle]").first().isVisible());
+    assert.equal(await unsupportedPage.locator("[data-full-video]").first().getAttribute("target"),"_blank");
+    await unsupportedContext.close();
+    // Click the actual full-size links and require native video decoding, not merely HTTP 200.
+    const linkContext=await browser.newContext();
+    const linkPage=await linkContext.newPage();
+    await linkPage.goto("http://127.0.0.1:4000/");
+    for(let film=0;film<2;film++) {
+      await linkPage.locator('[data-go="'+film+'"]').click();
+      const popupPromise=linkPage.waitForEvent("popup");
+      await linkPage.locator("[data-full-video]").nth(film).click();
+      const popup=await popupPromise;
+      await popup.waitForLoadState("domcontentloaded");
+      await popup.waitForFunction(()=>document.querySelector("video")&&document.querySelector("video").readyState>=2);
+      assert(await popup.locator("video").evaluate(v=>!v.error&&v.videoWidth>0));
+      await popup.close();
+    }
+    await linkContext.close();
+    fs.writeFileSync("qa-output/report.json",JSON.stringify({reports,reducedMotion:"passed",autoplayDenied:"passed",publicationCounts:expectedCounts,jekyllPreview:"passed",decodedPlayback:"passed",fullSizeLinks:"passed",unsupportedCodecFallback:"passed"},null,2));
     console.log(JSON.stringify({reports,reducedMotion:"passed"}));
   } finally { await browser.close(); }
 })().catch(error=>{console.error(error);process.exit(1);});

@@ -16,12 +16,6 @@ jobs:
         with:
           ruby-version: '3.1'
           bundler-cache: true
-      - name: Inspect original video formats
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq ffmpeg
-          ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt,width,height -show_entries format=duration -of json 'images/网站视屏-nucleation percolation transition.mp4'
-          ffprobe -v error -show_entries stream=codec_name,profile,pix_fmt,width,height -show_entries format=duration -of json 'images/网站视屏-Fracture toughness.mp4'
       - name: JavaScript syntax
         run: |
           node --check assets/js/home-carousel.js
@@ -34,7 +28,7 @@ jobs:
       - name: Install browser checks
         run: |
           npm install --prefix "$RUNNER_TEMP/homepage-qa" playwright@1.56.1
-          "$RUNNER_TEMP/homepage-qa/node_modules/.bin/playwright" install --with-deps chromium
+          "$RUNNER_TEMP/homepage-qa/node_modules/.bin/playwright" install --with-deps chrome
       - name: Check homepage
         env:
           NODE_PATH: ${{ runner.temp }}/homepage-qa/node_modules

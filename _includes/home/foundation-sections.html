@@ -11,11 +11,9 @@
           <article class="research-slide" data-slide role="group" aria-roledescription="slide" aria-label="{{ forloop.index }} of {{ forloop.length }}: {{ item.title | escape }}">
             <div class="research-slide__media">
               {% if item.video and item.video != '' %}
-              <video muted playsinline loop preload="none" aria-label="{{ item.title | escape }} research video"{% if item.poster %} poster="{{ item.poster | relative_url }}"{% endif %}>
-                <source data-src="{{ item.video | relative_url }}" type="video/mp4">
+              <video muted playsinline loop preload="none" data-src="{{ item.video | relative_url }}" aria-label="{{ item.title | escape }} research video"{% if item.poster %} poster="{{ item.poster | relative_url }}"{% endif %}>
                 Your browser does not support video.
               </video>
-              <p class="research-video-message" data-video-message hidden></p>
               {% elsif item.image and item.image != '' %}
               <img src="{{ item.image | relative_url }}" alt="Phase-field simulation of drying-induced fracture in clay" loading="lazy">
               {% else %}
@@ -24,6 +22,7 @@
                 <strong>{% if item.kind == 'ongoing' %}Phase-field Modelling{% else %}Research film{% endif %}</strong>
                 <span>{% if item.kind == 'ongoing' %}Simulation image coming soon{% else %}Video coming soon{% endif %}</span>
               </div>
+              <p class="research-video-message" data-video-message role="status" hidden></p>
               {% endif %}
             </div>
             <div class="research-slide__body">
@@ -37,7 +36,7 @@
               <div class="research-video-actions" aria-label="Video controls">
                 <button type="button" data-video-toggle aria-label="Play research video">Play video</button>
                 <button type="button" data-sound-toggle aria-label="Unmute video" aria-pressed="false">Unmute</button>
-                <a class="text-link" href="{{ item.video | relative_url }}">Full-size video ↗</a>
+                <a class="text-link" href="{{ item.video | relative_url }}" data-full-video target="_blank" rel="noopener">Full-size video ↗</a>
               </div>
               {% endif %}
               {% else %}

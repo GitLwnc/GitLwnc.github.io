@@ -10,6 +10,7 @@
     var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     var manualPlay = new WeakSet(), manualPause = new WeakSet();
     var loaded = new WeakSet(), resumeTimes = new WeakMap();
+    var generations = new WeakMap(), pending = new WeakMap(), failures = new WeakSet();
     if (slides.length < 2) return;
 
     function allowed(video) {
@@ -19,21 +20,42 @@
     function buttonState(video) {
       var button = video.closest("[data-slide]").querySelector("[data-video-toggle]");
       if (!button) return;
-      button.textContent = video.paused ? "Play video" : "Pause video";
+      button.hidden = false;
+      button.textContent = failures.has(video) ? "Retry video" : (video.paused ? "Play video" : "Pause video");
       button.setAttribute("aria-label", button.textContent);
+    }
+    function clearIssue(video) {
+      failures.delete(video);
+      var message = video.closest("[data-slide]").querySelector("[data-video-message]");
+      if (message) { message.hidden = true; message.textContent = ""; }
+    }
+    function showIssue(video, text) {
+      failures.add(video);
+      var message = video.closest("[data-slide]").querySelector("[data-video-message]");
+      if (message) { message.hidden = false; message.textContent = text; }
+      buttonState(video);
     }
     function loadActiveVideo(video) {
       if (loaded.has(video)) return;
-      video.querySelectorAll("source[data-src]").forEach(function (source) { source.src = source.dataset.src; });
+      clearIssue(video);
+      generations.set(video, (generations.get(video) || 0) + 1);
       loaded.add(video);
+      if (!video.canPlayType('video/mp4; codecs="avc1.42E01E"')) {
+        showIssue(video, "This browser does not support H.264 MP4 playback. Open this page in Google Chrome or Microsoft Edge to watch the video.");
+        return;
+      }
+      video.src = video.dataset.src;
       video.load();
     }
     function releaseVideo(video) {
       if (!loaded.has(video)) return;
       resumeTimes.set(video, video.currentTime || 0);
-      video.querySelectorAll("source").forEach(function (source) { source.removeAttribute("src"); });
       loaded.delete(video);
+      generations.set(video, (generations.get(video) || 0) + 1);
+      pending.delete(video);
+      video.removeAttribute("src");
       video.load();
+      clearIssue(video);
     }
     function syncMedia() {
       videos.forEach(function (video) {
@@ -44,15 +66,23 @@
           return;
         }
         loadActiveVideo(video);
+        if (failures.has(video) || pending.has(video) || !video.paused) return;
+        var generation = generations.get(video);
         var play = video.play();
-        if (play && play.then) play.then(function () {
-          // A switch or visibility change can finish before play() resolves.
-          if (!allowed(video)) video.pause();
-          buttonState(video);
-        }).catch(function () {
-          // Autoplay may be denied. The explicit play control remains usable.
-          buttonState(video);
-        });
+        if (play && play.then) {
+          pending.set(video, play);
+          play.then(function () {
+            if (generations.get(video) !== generation) return;
+            pending.delete(video);
+            if (!allowed(video)) video.pause();
+            buttonState(video);
+          }).catch(function () {
+            if (generations.get(video) !== generation) return;
+            pending.delete(video);
+            // Autoplay rejection and aborts leave a usable manual play control.
+            buttonState(video);
+          });
+        }
       });
     }
     function show(next, announce) {
@@ -83,7 +113,10 @@
       }
       video.addEventListener("loadedmetadata", function () {
         var time = resumeTimes.get(video) || 0;
-        if (time > 0 && Number.isFinite(video.duration)) video.currentTime = Math.min(time, Math.max(0, video.duration - 0.1));
+        clearIssue(video);
+        if (time > 0 && Number.isFinite(video.duration)) {
+          try { video.currentTime = Math.min(time, Math.max(0, video.duration - 0.1)); } catch (error) { resumeTimes.delete(video); }
+        }
       });
       video.addEventListener("play", function () {
         if (!allowed(video)) video.pause();
@@ -92,14 +125,22 @@
       video.addEventListener("pause", function () { buttonState(video); });
       var button = video.closest("[data-slide]").querySelector("[data-video-toggle]");
       if (button) button.addEventListener("click", function () {
-        if (video.paused) { manualPause.delete(video); manualPlay.add(video); }
+        if (failures.has(video)) { releaseVideo(video); manualPause.delete(video); manualPlay.add(video); }
+        else if (video.paused) { manualPause.delete(video); manualPlay.add(video); }
         else { manualPlay.delete(video); manualPause.add(video); }
         syncMedia();
       });
       video.addEventListener("error", function () {
-        var message = video.parentElement.querySelector("[data-video-message]");
-        if (message) { message.hidden = false; message.textContent = "Video unavailable. You can still read the paper below."; }
-        if (button) button.hidden = true;
+        // Resource release and late events from an old load are not playback failures.
+        if (!loaded.has(video) || !video.getAttribute("src") || !video.error) return;
+        failures.add(video);
+        pending.delete(video);
+        var message = video.closest("[data-slide]").querySelector("[data-video-message]");
+        if (message) {
+          message.hidden = false;
+          message.textContent = "Video could not be loaded (error " + video.error.code + "). Retry or open the full-size video.";
+        }
+        buttonState(video);
       });
     });
     root.querySelector("[data-prev]").addEventListener("click", function () { show(index - 1, true); });
