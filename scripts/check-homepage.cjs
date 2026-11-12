@@ -71,13 +71,10 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
       assert.equal(await page.locator("video").nth(1).locator("source").getAttribute("src"),null);
       await page.locator("[data-sound-toggle]").first().click();
       assert.equal(await page.locator("video").first().evaluate(v=>v.muted),false);
-      if(width===1440||width===390) await carousel.screenshot({path:"qa-output/research-"+width+"-01.png"});
       await page.locator("[data-next]").click(); await active(1); await playing(1);
       assert.equal(await page.locator("video").first().locator("source").getAttribute("src"),null);
-      if(width===1440||width===390) await carousel.screenshot({path:"qa-output/research-"+width+"-02.png"});
       await page.locator("[data-next]").click(); await active(2); await playing(-1);
       assert(await page.locator("video source").evaluateAll(ss=>ss.every(s=>!s.hasAttribute("src"))));
-      if(width===1440||width===390) await carousel.screenshot({path:"qa-output/research-"+width+"-03.png"});
       await page.locator("[data-next]").click(); await active(0); await playing(0);
       await page.locator("[data-prev]").click(); await active(2);
       await page.locator('[data-go="1"]').click(); await active(1);
@@ -120,12 +117,21 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
       assert(await page.locator(".publication-row-v2").evaluateAll(rows=>rows.every(row=>parseFloat(getComputedStyle(row).paddingTop)<=18)),"Publication rows are too loose");
       // Resolve every local homepage link and media reference against the built site.
       const urls = await page.locator("main a[href], main video source, main img").evaluateAll(els=>els.map(el=>el.href||el.dataset.src||el.src));
-      for(const url of urls) {
+      for(const target of urls) {
+        const url=new URL(target,"http://127.0.0.1:4000/").href;
         if(new URL(url).origin!=="http://127.0.0.1:4000") continue;
         const response = await page.request.get(url);
         assert(response.ok(), "Broken local resource: "+url);
       }
       assert.deepEqual(errors,[]);
+      // Capture after behavior checks: full-element screenshots can resize the viewport.
+      if(width===1440||width===390) {
+        for(let slide=0;slide<3;slide++) {
+          await page.locator('[data-go="'+slide+'"]').click(); await active(slide);
+          await page.waitForTimeout(450);
+          await carousel.screenshot({path:"qa-output/research-"+width+"-0"+(slide+1)+".png"});
+        }
+      }
       await page.screenshot({path:"qa-output/home-"+width+".png",fullPage:true});
       reports.push({width,result:"passed",dimensions,consoleErrors:errors});
       await context.close();
