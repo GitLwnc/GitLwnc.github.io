@@ -2,7 +2,9 @@
 title: "Role of substrate roughness in soil desiccation cracking"
 collection: publications
 category: manuscripts
-permalink: /publication/2024-03-01-paper-title-number-1
+permalink: /publication/2024-03-01-paper-title-number-1/
+redirect_from:
+  - /publication/2024-03-01-paper-title-number-1
 date: 2024-03-01
 venue: 'Canadian Geotechnical Journal'
 paperurl: 'https://doi.org/10.1139/cgj-2023-0638'
