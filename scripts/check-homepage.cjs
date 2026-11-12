@@ -18,6 +18,8 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
       const page = await context.newPage();
       const errors = [], videoRequests = [];
       page.on("request", request => {if(request.url().includes(".mp4")) videoRequests.push(decodeURI(request.url()));});
+      page.on("response", async response=>{if(response.url().includes(".mp4")) console.log("MEDIA_BROWSER_HTTP",JSON.stringify({url:response.url(),status:response.status(),headers:response.headers()}));});
+      page.on("requestfailed",request=>{if(request.url().includes(".mp4")) console.log("MEDIA_BROWSER_FAILED",JSON.stringify({url:request.url(),failure:request.failure()}));});
       page.on("pageerror", e => errors.push(e.message));
       page.on("console", msg => {if(msg.type()==="error") errors.push(msg.text());});
       await page.goto("http://127.0.0.1:4000/", {waitUntil:"networkidle"});
