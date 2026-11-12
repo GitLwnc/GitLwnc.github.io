@@ -59,6 +59,12 @@ const fs = require("node:fs");
       const dimensions = await page.locator("[data-slide]").evaluateAll(els => els.map(el => ({w:el.offsetWidth,h:el.offsetHeight})));
       console.log("Slide dimensions", width, JSON.stringify(dimensions));
       await page.screenshot({path:"qa-output/layout-"+width+".png",fullPage:true});
+      assert(await page.locator(".research-placeholder").evaluateAll(els => els.every(el => {
+        const box=el.getBoundingClientRect();
+        return Array.from(el.children).filter(child=>getComputedStyle(child).display!=="none").every(child=>{
+          const r=child.getBoundingClientRect(); return r.top>=box.top-1&&r.bottom<=box.bottom+1;
+        });
+      })), "Placeholder text is clipped");
       assert(dimensions.every(d=>d.w===dimensions[0].w&&d.h===dimensions[0].h),"Slide dimensions differ");
       assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),"Page overflows horizontally");
       assert(await page.locator("img").evaluateAll(imgs=>imgs.every(img=>img.complete&&img.naturalWidth>0)),"Broken image");

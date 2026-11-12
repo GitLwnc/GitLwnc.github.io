@@ -225,3 +225,10 @@
 
 .research-video-link { display: inline-block; margin-left: 24px; }
 @media (max-width: 767px) { .research-video-link { margin-left: 0; margin-top: 14px; display: block; } }
+
+@media (max-width: 767px) {
+  .research-placeholder { padding: 12px; gap: 6px; }
+  .research-placeholder__index { display: none; }
+  .research-placeholder strong { font-size: 1rem; line-height: 1.25; }
+  .research-placeholder > span:last-child { font-size: 0.7rem; line-height: 1.25; }
+}
