@@ -89,7 +89,18 @@ body {
 
 .site-nav-v2 a:hover { color: var(--link-hover) !important; }
 
-.site-nav-v2__toggle,
+/* Keep the mobile menu checkbox keyboard-accessible while visually hiding it. */
+.site-nav-v2__toggle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 .site-nav-v2__button { display: none; }
 
 .page__footer {
@@ -136,6 +147,11 @@ body {
     border: 1px solid rgba(17,17,17,0.16);
     background: rgba(255,255,255,0.36);
     cursor: pointer;
+  }
+
+  .site-nav-v2__toggle:focus-visible + .site-nav-v2__button {
+    outline: 2px solid var(--link-hover);
+    outline-offset: 3px;
   }
 
   .site-nav-v2__button span {
