@@ -18,7 +18,9 @@
 bundle install
 bundle exec jekyll serve --livereload --host 127.0.0.1
 ```
-浏览器访问 http://127.0.0.1:4000 。停止服务按 Ctrl+C。更改 _config.yml 后需要重启服务。
+浏览器访问 http://127.0.0.1:4000 。停止服务按 Ctrl+C。更改 _config.yml、Gemfile 或 scripts/webrick_video_ranges.rb 后需要重启服务。
+
+本分支已修复 WEBrick 导致本地 MP4 播放中断的 If-Range 问题。同步本次修改后，先停止旧服务，运行 bundle install，再用上述正常命令启动；不要添加 --skip-initial-build。详见 [视频播放修复说明](VIDEO-PLAYBACK-FIX.md)。
 
 Windows 原生预览可使用 RubyInstaller 官方 Ruby+Devkit，安装 MSYS2 开发工具后重开 VS Code 终端，运行：
 ```powershell

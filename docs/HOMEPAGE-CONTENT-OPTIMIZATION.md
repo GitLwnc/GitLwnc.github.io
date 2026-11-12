@@ -1,4 +1,6 @@
 # 首页内容与视觉优化交付记录
+
+> 视频验证更正：本记录此前的播放检查只核对暂停状态，未证明成功解码。用户本地预览故障后，已在真实 Jekyll + Google Chrome 中复现并修复 WEBrick 的 If-Range 错误；新增检查要求画面数据就绪及播放时间推进。请以 [视频修复记录](VIDEO-PLAYBACK-FIX.md) 的原因、结果和更新步骤为准。
 ## Git 与工作方式
 - 仓库：https://github.com/GitLwnc/GitLwnc.github.io
 - V2 分支：phase-1-foundation-v2，已核对远程六个分支后唯一确认。
