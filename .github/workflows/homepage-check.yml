@@ -16,19 +16,6 @@ jobs:
         with:
           ruby-version: '3.1'
           bundler-cache: true
-      - name: Prepare missing poster previews
-        if: hashFiles('images/research/pre-poster.jpg') == ''
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq ffmpeg
-          python3 - <<'PY'
-          import subprocess, base64, os
-          os.makedirs('qa-output', exist_ok=True)
-          for name, source in [('pre', 'images/网站视屏-nucleation percolation transition.mp4'), ('fracture', 'images/网站视屏-Fracture toughness.mp4')]:
-              dest = 'qa-output/' + name + '-poster.jpg'
-              subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-ss', '20', '-i', source, '-frames:v', '1', '-vf', 'scale=1440:-2', '-q:v', '3', dest], check=True)
-              print('POSTER_' + name + '=' + base64.b64encode(open(dest, 'rb').read()).decode())
-          PY
       - name: Build Jekyll
         run: bundle exec jekyll build --trace
       - uses: actions/setup-node@v4
