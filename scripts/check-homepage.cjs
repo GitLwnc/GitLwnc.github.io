@@ -58,6 +58,16 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
         for(const path of await page.locator("video").evaluateAll(ss=>ss.map(s=>s.dataset.src))) {
           const response=await page.request.get(new URL(path,page.url()).href);
           console.log("MEDIA_HTTP", JSON.stringify({path,status:response.status(),type:response.headers()["content-type"],bytes:(await response.body()).length}));
+          const body=await response.body();
+          for(const range of ["bytes=0-1023","bytes="+(body.length-1024)+"-"]) {
+            const conditional=await page.request.get(new URL(path,page.url()).href,{headers:{Range:range,"If-Range":response.headers().etag}});
+            assert.equal(conditional.status(),206,"Matching If-Range must return video bytes");
+            const expected=range==="bytes=0-1023"?body.subarray(0,1024):body.subarray(-1024);
+            assert((await conditional.body()).equals(expected),"Conditional video range returned incorrect bytes");
+          }
+          const stale=await page.request.get(new URL(path,page.url()).href,{headers:{Range:"bytes=0-1023","If-Range":'"stale-validator"'}});
+          assert.equal(stale.status(),200,"Stale If-Range must return the full file");
+          assert((await stale.body()).equals(body));
           const ranged=await page.request.get(new URL(path,page.url()).href,{headers:{Range:"bytes=0-1023"}});
           console.log("MEDIA_RANGE",JSON.stringify({path,status:ranged.status(),headers:ranged.headers(),bytes:(await ranged.body()).length}));
         }
