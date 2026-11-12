@@ -20,6 +20,7 @@ jobs:
         run: |
           node --check assets/js/home-carousel.js
           node --check scripts/check-homepage.cjs
+          ruby -c _plugins/webrick_video_ranges.rb
       - name: Build Jekyll
         run: bundle exec jekyll build --trace
       - uses: actions/setup-node@v4
@@ -33,7 +34,7 @@ jobs:
         env:
           NODE_PATH: ${{ runner.temp }}/homepage-qa/node_modules
         run: |
-          bundle exec jekyll serve --skip-initial-build --no-watch --host 127.0.0.1 --port 4000 > /tmp/homepage-server.log 2>&1 &
+          bundle exec jekyll serve --no-watch --host 127.0.0.1 --port 4000 > /tmp/homepage-server.log 2>&1 &
           for attempt in $(seq 1 30); do curl --silent --fail http://127.0.0.1:4000/ > /dev/null && break; sleep 1; done
           node scripts/check-homepage.cjs
       - name: Local preview server diagnostics

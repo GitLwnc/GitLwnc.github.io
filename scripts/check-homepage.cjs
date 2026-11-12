@@ -164,7 +164,7 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
     await page.waitForTimeout(500);
     assert(await page.locator("video").evaluateAll(vs=>vs.every(v=>v.paused)));
     await page.locator("[data-video-toggle]").first().click();
-    await page.waitForFunction(()=>!document.querySelector("video").paused);
+    await page.waitForFunction(()=>{const v=document.querySelector("video");return !v.paused&&!v.error&&v.readyState>=2&&v.currentTime>0.1;});
     await context.close();
     // Exercise denied autoplay without disabling the user's manual play control.
     const deniedContext = await browser.newContext();
@@ -184,7 +184,7 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
     await deniedPage.waitForTimeout(500);
     assert(await deniedPage.locator("video").first().evaluate(v=>v.paused&&!!v.poster));
     await deniedPage.locator("[data-video-toggle]").first().click();
-    await deniedPage.waitForFunction(()=>!document.querySelector("video").paused);
+    await deniedPage.waitForFunction(()=>{const v=document.querySelector("video");return !v.paused&&!v.error&&v.readyState>=2&&v.currentTime>0.1;});
     assert.deepEqual(deniedErrors,[]);
     await deniedContext.close();
     // Unsupported preview engines must get useful fallback guidance, not a blocked UI.
