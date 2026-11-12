@@ -186,6 +186,22 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
     assert(await unsupportedPage.locator("[data-video-toggle]").first().isVisible());
     assert.equal(await unsupportedPage.locator("[data-full-video]").first().getAttribute("target"),"_blank");
     await unsupportedContext.close();
+    // A real failed request must keep Retry available and recover after the network returns.
+    const retryContext=await browser.newContext();
+    const retryPage=await retryContext.newPage();
+    let denyMedia=true;
+    await retryPage.route("**/*.mp4",route=>denyMedia?route.abort("failed"):route.continue());
+    await retryPage.goto("http://127.0.0.1:4000/");
+    await retryPage.locator("[data-carousel]").scrollIntoViewIfNeeded();
+    await retryPage.waitForFunction(()=>document.querySelector("video").error!==null);
+    await retryPage.waitForFunction(()=>document.querySelector("[data-video-toggle]").textContent==="Retry video");
+    assert(await retryPage.locator("[data-video-toggle]").first().isVisible());
+    assert.equal(await retryPage.locator("[data-video-message]").first().evaluate(el=>getComputedStyle(el).position),"static");
+    denyMedia=false;
+    await retryPage.locator("[data-video-toggle]").first().click();
+    await retryPage.waitForFunction(()=>{const v=document.querySelector("video");return !v.error&&v.readyState>=2&&v.currentTime>0.1;});
+    assert(await retryPage.locator("[data-video-message]").first().isHidden());
+    await retryContext.close();
     // Click the actual full-size links and require native video decoding, not merely HTTP 200.
     const linkContext=await browser.newContext();
     const linkPage=await linkContext.newPage();
@@ -201,7 +217,7 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
       await popup.close();
     }
     await linkContext.close();
-    fs.writeFileSync("qa-output/report.json",JSON.stringify({reports,reducedMotion:"passed",autoplayDenied:"passed",publicationCounts:expectedCounts,jekyllPreview:"passed",decodedPlayback:"passed",fullSizeLinks:"passed",unsupportedCodecFallback:"passed"},null,2));
+    fs.writeFileSync("qa-output/report.json",JSON.stringify({reports,reducedMotion:"passed",autoplayDenied:"passed",publicationCounts:expectedCounts,jekyllPreview:"passed",decodedPlayback:"passed",fullSizeLinks:"passed",unsupportedCodecFallback:"passed",networkRetry:"passed"},null,2));
     console.log(JSON.stringify({reports,reducedMotion:"passed"}));
   } finally { await browser.close(); }
 })().catch(error=>{console.error(error);process.exit(1);});
