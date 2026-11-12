@@ -16,6 +16,10 @@ jobs:
         with:
           ruby-version: '3.1'
           bundler-cache: true
+      - name: JavaScript syntax
+        run: |
+          node --check assets/js/home-carousel.js
+          node --check scripts/check-homepage.cjs
       - name: Build Jekyll
         run: bundle exec jekyll build --trace
       - uses: actions/setup-node@v4

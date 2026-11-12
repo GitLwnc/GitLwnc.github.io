@@ -2,6 +2,7 @@
 title: "Suction and Volume Evolutions of Clayey Soils upon High-Stress Unloading and Subsequent Soaking"
 collection: publications
 category: manuscripts
+status: published
 permalink: /publication/2026-03-28-paper-title-number-4/
 redirect_from:
   - /publication/2026-03-28-paper-title-number-4

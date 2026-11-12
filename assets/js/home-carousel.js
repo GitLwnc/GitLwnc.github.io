@@ -9,6 +9,7 @@
     var index = 0, inView = false, start = null;
     var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     var manualPlay = new WeakSet(), manualPause = new WeakSet();
+    var loaded = new WeakSet(), resumeTimes = new WeakMap();
     if (slides.length < 2) return;
 
     function allowed(video) {
@@ -16,15 +17,33 @@
         !manualPause.has(video) && (!reduced.matches || manualPlay.has(video));
     }
     function buttonState(video) {
-      var button = video.parentElement.querySelector("[data-video-toggle]");
+      var button = video.closest("[data-slide]").querySelector("[data-video-toggle]");
       if (!button) return;
       button.textContent = video.paused ? "Play video" : "Pause video";
       button.setAttribute("aria-label", button.textContent);
     }
+    function loadActiveVideo(video) {
+      if (loaded.has(video)) return;
+      video.querySelectorAll("source[data-src]").forEach(function (source) { source.src = source.dataset.src; });
+      loaded.add(video);
+      video.load();
+    }
+    function releaseVideo(video) {
+      if (!loaded.has(video)) return;
+      resumeTimes.set(video, video.currentTime || 0);
+      video.querySelectorAll("source").forEach(function (source) { source.removeAttribute("src"); });
+      loaded.delete(video);
+      video.load();
+    }
     function syncMedia() {
       videos.forEach(function (video) {
-        if (!allowed(video)) { video.pause(); buttonState(video); return; }
-        video.muted = true;
+        if (!allowed(video)) {
+          video.pause();
+          if (!slides[index].contains(video) || !inView || document.hidden) releaseVideo(video);
+          buttonState(video);
+          return;
+        }
+        loadActiveVideo(video);
         var play = video.play();
         if (play && play.then) play.then(function () {
           // A switch or visibility change can finish before play() resolves.
@@ -53,12 +72,25 @@
     }
     videos.forEach(function (video) {
       video.muted = true;
+      var sound = video.closest("[data-slide]").querySelector("[data-sound-toggle]");
+      if (sound) {
+        sound.addEventListener("click", function () { video.muted = !video.muted; });
+        video.addEventListener("volumechange", function () {
+          sound.textContent = video.muted ? "Unmute" : "Mute";
+          sound.setAttribute("aria-label", video.muted ? "Unmute video" : "Mute video");
+          sound.setAttribute("aria-pressed", String(!video.muted));
+        });
+      }
+      video.addEventListener("loadedmetadata", function () {
+        var time = resumeTimes.get(video) || 0;
+        if (time > 0 && Number.isFinite(video.duration)) video.currentTime = Math.min(time, Math.max(0, video.duration - 0.1));
+      });
       video.addEventListener("play", function () {
         if (!allowed(video)) video.pause();
         buttonState(video);
       });
       video.addEventListener("pause", function () { buttonState(video); });
-      var button = video.parentElement.querySelector("[data-video-toggle]");
+      var button = video.closest("[data-slide]").querySelector("[data-video-toggle]");
       if (button) button.addEventListener("click", function () {
         if (video.paused) { manualPause.delete(video); manualPlay.add(video); }
         else { manualPlay.delete(video); manualPause.add(video); }
@@ -74,7 +106,7 @@
     root.querySelector("[data-next]").addEventListener("click", function () { show(index + 1, true); });
     dots.forEach(function (dot) { dot.addEventListener("click", function () { show(Number(dot.dataset.go), true); }); });
     root.addEventListener("keydown", function (event) {
-      if (event.target.closest("video")) return;
+      if (event.target.closest("video, [data-sound-toggle]")) return;
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
         event.preventDefault(); show(index + (event.key === "ArrowRight" ? 1 : -1), true);
       }

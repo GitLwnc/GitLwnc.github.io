@@ -2,6 +2,7 @@
 title: "Role of substrate roughness in soil desiccation cracking"
 collection: publications
 category: manuscripts
+status: published
 permalink: /publication/2024-03-01-paper-title-number-1/
 redirect_from:
   - /publication/2024-03-01-paper-title-number-1

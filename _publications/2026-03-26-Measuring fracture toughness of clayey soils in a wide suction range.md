@@ -2,6 +2,7 @@
 title: "Measuring fracture toughness of clayey soils in a wide suction range"
 collection: publications
 category: manuscripts
+status: published
 permalink: /publication/2026-03-26-paper-title-number-3/
 redirect_from:
   - /publication/2026-03-26-paper-title-number-3

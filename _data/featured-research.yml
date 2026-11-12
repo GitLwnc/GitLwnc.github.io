@@ -1,24 +1,21 @@
-# Paths are site-root relative. Leave video/poster blank until verified assets exist.
+# Keep original video filenames. Image and poster paths are site-root relative.
 - kind: published
-  label: Published Research 01
-  title: Nucleation–percolation transition
+  label: Published Research
+  title: Nucleation-percolation transition in desiccation cracking of clay
   venue: Physical Review E · 2025
-  description: How pore-scale heterogeneity governs the transition from crack nucleation to connected desiccation crack networks.
   url: https://doi.org/10.1103/PhysRevE.111.L053501
   video: /images/网站视屏-nucleation percolation transition.mp4
   poster: /images/research/pre-poster.jpg
 - kind: published
-  label: Published Research 02
-  title: Fracture toughness across suction
+  label: Published Research
+  title: Measuring fracture toughness of clayey soils in a wide suction range
   venue: Géotechnique · 2026
-  description: Measuring suction-dependent fracture resistance in clayey soils through controlled experiments and digital image correlation.
   url: https://doi.org/10.1680/jgeot.25.00080
   video: /images/网站视屏-Fracture toughness.mp4
   poster: /images/research/fracture-poster.jpg
 - kind: ongoing
   label: Ongoing Research
-  title: Phase-field Modelling
-  venue: Drying-induced fracture in clay
-  description: Connecting experiments, fracture mechanics and coupled transport to model the initiation and evolution of desiccation cracks.
+  title: Phase-field modelling of soil desiccation cracking
+  venue: Numerical modelling · Ongoing
   url: /research/#ongoing
   image:

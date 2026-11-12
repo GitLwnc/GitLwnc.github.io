@@ -2,6 +2,7 @@
 title: "Nucleation-percolation transition in desiccation cracking of clay"
 collection: publications
 category: manuscripts
+status: published
 permalink: /publication/2025-05-08-paper-title-number-2/
 redirect_from:
   - /publication/2025-05-08-paper-title-number-2
