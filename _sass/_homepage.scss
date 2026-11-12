@@ -163,7 +163,7 @@
 .research-placeholder strong { font-size: 1.35rem; }
 .research-placeholder > span:last-child { font-size: 0.85rem; }
 .is-enhanced .research-carousel__viewport { overflow: hidden; touch-action: pan-y pinch-zoom; }
-.is-enhanced .research-carousel__track { display: flex; align-items: stretch; transition: transform 360ms ease; }
+.is-enhanced .research-carousel__track { display: grid; grid-auto-flow: column; grid-auto-columns: 100%; align-items: stretch; transition: transform 360ms ease; }
 .is-enhanced .research-slide { flex: 0 0 100%; min-width: 0; margin-bottom: 0; box-sizing: border-box; }
 .research-carousel__controls, .research-carousel__indicators { display: flex; align-items: center; justify-content: center; gap: 12px; }
 .research-carousel__controls { margin-top: 24px; }

@@ -57,6 +57,8 @@ const fs = require("node:fs");
       await page.locator('[data-go="2"]').click(); await active(2);
       await page.waitForTimeout(450);
       const dimensions = await page.locator("[data-slide]").evaluateAll(els => els.map(el => ({w:el.offsetWidth,h:el.offsetHeight})));
+      console.log("Slide dimensions", width, JSON.stringify(dimensions));
+      await page.screenshot({path:"qa-output/layout-"+width+".png",fullPage:true});
       assert(dimensions.every(d=>d.w===dimensions[0].w&&d.h===dimensions[0].h),"Slide dimensions differ");
       assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),"Page overflows horizontally");
       assert(await page.locator("img").evaluateAll(imgs=>imgs.every(img=>img.complete&&img.naturalWidth>0)),"Broken image");
