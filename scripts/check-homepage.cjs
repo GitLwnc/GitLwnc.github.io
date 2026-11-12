@@ -52,14 +52,20 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
         await page.waitForFunction(n => document.querySelectorAll("[data-slide]")[n].getAttribute("aria-hidden")==="false",n);
         assert.equal(await page.locator('[data-slide][aria-hidden="false"]').count(),1);
       };
+      if(width===1440) {
+        for(const path of await page.locator("video source").evaluateAll(ss=>ss.map(s=>s.dataset.src))) {
+          const response=await page.request.get(new URL(path,page.url()).href);
+          console.log("MEDIA_HTTP", JSON.stringify({path,status:response.status(),type:response.headers()["content-type"],bytes:(await response.body()).length}));
+        }
+      }
       await active(0);
       await page.waitForFunction(() => !document.querySelectorAll("video")[0].paused);
       const playing = async n => {
         try {
-          await page.waitForFunction(n => Array.from(document.querySelectorAll("video")).every((v,i) => i===n ? !v.paused : v.paused),n);
+          await page.waitForFunction(n => Array.from(document.querySelectorAll("video")).every((v,i) => i===n ? (!v.paused && !v.error && v.readyState >= 2 && v.currentTime > 0.05) : v.paused),n);
         } catch(error) {
           console.log("MEDIA_DIAGNOSTIC",JSON.stringify(await page.locator("video").evaluateAll(vs=>vs.map(v=>({
-            paused:v.paused,muted:v.muted,ready:v.readyState,network:v.networkState,error:v.error&&v.error.message,
+            paused:v.paused,muted:v.muted,ready:v.readyState,network:v.networkState,error:v.error&&{code:v.error.code,message:v.error.message},time:v.currentTime,videoWidth:v.videoWidth,
             src:v.currentSrc,source:v.querySelector("source").getAttribute("src"),hidden:v.closest("[data-slide]").getAttribute("aria-hidden"),
             rootRect:JSON.stringify(v.closest("[data-carousel]").getBoundingClientRect())
           })))));
