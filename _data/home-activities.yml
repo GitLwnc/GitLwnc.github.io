@@ -1,32 +1,42 @@
-# Existing CV records; images are identified as photographs, slides, or posters.
-# Month-only start values preserve the precision of the source records.
+# Venue locations are linked to official event/institution pages.
 cards:
-  - type: Research Visit
-    title: KAIST, South Korea
+  - type: Joint Doctoral Training
+    title: KAIST
     date: September 2025 – March 2026
     start: "2025-09"
-    description: "CSC-supported Visiting Student Researcher in Mechanical Engineering; cracking in drying colloidal materials."
-    image:
-    image_alt:
-    placeholder: KAIST
+    description: "CSC-supported joint doctoral research training in Mechanical Engineering; cracking in drying colloidal materials."
+    location: Daejeon, South Korea
+    venue: "KAIST Main Campus, 291 Daehak-ro, Yuseong-gu, Daejeon, South Korea"
+    location_url: https://kaist.edu/en/html/kaist/01200201.html
+    image: /images/activities/kaist-joint-training.jpg
+    image_alt: "Photograph supplied for the KAIST doctoral training period, showing the KAIST entrance and a visiting researcher."
   - type: Conference Presentation
     title: 80th Anniversary Conference of KSME
     date: December 2025
     start: "2025-12"
     description: "Oral presentation on pore structure heterogeneity and clay desiccation cracking."
+    location: Jeongseon, South Korea
+    venue: "High1 Grand Hotel Convention Tower, Jeongseon, Gangwon, South Korea"
+    location_url: https://ksme.or.kr/Proceedings/2025a/sub09_4.asp
     image: /images/Oral presentation_ASME2026.jpg
-    image_alt: Yuhan Yang giving an oral presentation at the 80th Anniversary Conference of KSME.
+    image_alt: "Yuhan Yang giving an oral presentation at the 80th Anniversary Conference of KSME."
   - type: Conference Presentation
     title: AGU Fall Meeting 2025
     date: December 2025
     start: "2025-12"
     description: "Oral presentation on measuring fracture toughness of clayey soils across a wide suction range."
-    image: /images/Oral presentation_AGU25.png
-    image_alt: Presentation slide for the AGU Fall Meeting 2025 oral presentation; not an on-site photograph.
+    location: New Orleans, USA
+    venue: "Conference venue: New Orleans Ernest N. Morial Convention Center, 900 Convention Center Blvd, New Orleans, LA 70130, USA"
+    location_url: https://www.agu.org/annual-meeting-2025
+    image: /images/activities/agu-2025-slide.jpg
+    image_alt: "Presentation slide supplied for AGU25; this is not an on-site conference photograph."
   - type: Conference Presentation
     title: Gordon Research Conference
     date: July 2026
     start: "2026-07"
-    description: "Poster presentation, “Clay Desiccation Cracking: Pattern, Mechanisms, and Modeling,” Les Diablerets, Switzerland."
-    image: /images/Poster-GRC2026.jpg
-    image_alt: Research poster for the 2026 Flow and Transport in Permeable Media Gordon Research Conference.
+    description: "Poster presentation, “Clay Desiccation Cracking: Pattern, Mechanisms, and Modeling.”"
+    location: Les Diablerets, Switzerland
+    venue: "Les Diablerets Conference Center, Eurotel Victoria, Les Diablerets, Vaud, Switzerland"
+    location_url: https://www.grc.org/flow-and-transport-in-permeable-media-conference/2026/
+    image: /images/activities/grc-2026-group.jpg
+    image_alt: "Group photograph supplied for the 2026 Flow and Transport in Permeable Media Gordon Research Conference in Les Diablerets."

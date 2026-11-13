@@ -3,9 +3,10 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const {execFileSync}=require("node:child_process");
 const publicationRecords=JSON.parse(execFileSync("ruby",["scripts/check-publications.rb"],{encoding:"utf8"}));
-const expectedCounts=Object.fromEntries(["published","submitted","in_preparation"].map(status=>[status,publicationRecords.filter(p=>p.status===status).length]));
+const expectedCounts=Object.fromEntries(["published","under_review","in_preparation"].map(status=>[status,publicationRecords.filter(p=>p.status===status).length]));
 const publishedRecords=publicationRecords.filter(p=>p.status==="published").sort((a,b)=>a.display_order-b.display_order);
-const manuscriptRecords=["submitted","in_preparation"].flatMap(status=>publicationRecords.filter(p=>p.status===status).sort((a,b)=>a.display_order-b.display_order));
+const manuscriptRecords=["under_review","in_preparation"].flatMap(status=>publicationRecords.filter(p=>p.status===status).sort((a,b)=>a.display_order-b.display_order));
+const markedAuthors=record=>(record.corresponding_authors||[]).reduce((text,name)=>text.replace(name,name+"*"),record.authors||"");
 const normalized=s=>s.replace(/\s+/g," ").trim();
 (async () => {
   fs.mkdirSync("qa-output", {recursive:true});
@@ -37,27 +38,48 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       assert.equal(await page.locator(".expertise-group p").count(),0);
       const numbers=await page.locator(".publication-row-v2__number").allTextContents();
       assert.deepEqual(numbers.map(s=>s.trim()),[...publishedRecords.map((_,i)=>String(i+1).padStart(2,"0")),...manuscriptRecords.map((_,i)=>"M"+(i+1))]);
-      assert.equal(normalized(await page.locator(".publication-counts").innerText()),expectedCounts.published+" Published · "+expectedCounts.submitted+" Submitted · "+expectedCounts.in_preparation+" In Preparation");
+      assert.equal(normalized(await page.locator(".publication-counts").innerText()),expectedCounts.published+" Published · "+expectedCounts.under_review+" Under Review · "+expectedCounts.in_preparation+" In Preparation");
       for(const [status,count] of Object.entries(expectedCounts))
         assert.equal(await page.locator('[data-publication-status="'+status+'"]').count(),count);
       for(const record of publicationRecords) {
         const row=page.locator('[data-publication-id="'+record.record_id+'"]');
         assert.equal(await row.locator(".publication-title").innerText(),record.title);
+        const own=row.locator('.publication-author[data-author-name="Yang, Y."] strong');
+        assert.equal(await own.count(),record.authors?1:0);
+        if(record.authors) {
+          assert.equal(await row.locator(".publication-author strong").count(),1,"Only Yuhan Yang's author name should be bold");
+          assert.equal(await own.innerText(),"Yang, Y.");
+          assert.equal(await own.evaluate(el=>getComputedStyle(el).fontWeight),"700");
+          const marked=await row.locator(".publication-author:has(.corresponding-mark)").evaluateAll(els=>els.map(el=>el.dataset.authorName));
+          assert.deepEqual(marked,record.corresponding_authors||[]);
+        }
         const citation=normalized(await row.locator(".publication-citation").innerText());
         if(record.status==="published") {
           const pagination=record.pages?", "+record.pages:record.article_number?", Article "+record.article_number:"";
-          const expected=record.authors+" ("+record.year+"). "+record.title+". "+record.venue+", "+record.volume+(record.issue?"("+record.issue+")":"")+pagination+". https://doi.org/"+record.doi;
+          const expected=markedAuthors(record)+" ("+record.year+"). "+record.title+". "+record.venue+", "+record.volume+(record.issue?"("+record.issue+")":"")+pagination+". https://doi.org/"+record.doi;
           assert.equal(citation,expected,"Incomplete or repeated APA citation");
           assert.equal(await row.locator(".publication-doi").getAttribute("href"),"https://doi.org/"+record.doi);
           assert.equal(await row.locator("em").innerText(),record.venue+", "+record.volume);
           assert.equal(await row.locator(".publication-status").count(),0);
         } else {
           assert.equal(await row.locator(".publication-doi").count(),0);
-          assert(citation.includes(record.status==="submitted"?"Submitted":"In Preparation"));
+          assert(citation.includes(record.status==="under_review"?"Under Review":"In Preparation"));
+          assert.equal(await row.locator(".publication-status").evaluate(el=>getComputedStyle(el).fontWeight),"400");
           assert(!/\(20\d{2}\)/.test(citation),"Unpublished manuscript has a publication year");
         }
       }
-      assert(!videoRequests.some(url=>url.includes("Fracture toughness.mp4")),"Inactive film loaded at startup");
+      assert.equal(await page.locator(".publication-author-key").count(),1);
+      assert.equal(await page.locator(".publication-author-key").innerText(),"Bold: Yuhan Yang; *: Corresponding author.");
+      assert.deepEqual(publishedRecords.slice(0,3).map(p=>p.record_id),["fracture-toughness-measurement","suction-volume-evolution","stress-stiffness-anisotropies"]);
+      assert(publishedRecords.every((p,i,ps)=>i===0||ps[i-1].year>=p.year));
+      for(const [slide,recordId] of [[0,"nucleation-percolation"],[1,"fracture-toughness-measurement"]]) {
+        const record=publicationRecords.find(p=>p.record_id===recordId),item=page.locator("[data-slide]").nth(slide);
+        assert.equal(await item.locator(".research-slide__authors").innerText(),markedAuthors(record));
+        assert.equal(normalized(await item.locator(".research-slide__venue").innerText()),markedAuthors(record)+" · "+record.venue+" · "+record.year);
+        assert.equal(await item.locator(".research-slide__body > .text-link").getAttribute("href"),"https://doi.org/"+record.doi);
+      }
+      assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__authors").count(),0);
+      assert(!videoRequests.some(url=>url.includes("fracture-toughness-v4.mp4")),"Inactive film loaded at startup");
       assert.equal(await page.locator(".activity-card").count(), 4);
       const carousel = page.locator("[data-carousel]");
       await carousel.scrollIntoViewIfNeeded();
@@ -70,6 +92,10 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
           const response=await page.request.get(new URL(path,page.url()).href);
           console.log("MEDIA_HTTP", JSON.stringify({path,status:response.status(),type:response.headers()["content-type"],bytes:(await response.body()).length}));
           const body=await response.body();
+          const {createHash}=require("node:crypto");
+          const expectedVideo=path.includes("nucleation-percolation-v4")?{bytes:18834988,sha256:"88c072b988224faff59c159004c03ac71fe0fc3a09c6c87388f7ad491e8e9bba"}:{bytes:6147794,sha256:"6f953e146a195fe11857d70825aea8814ce82789b8d7130cc6a5eb9108551505"};
+          assert.equal(body.length,expectedVideo.bytes);
+          assert.equal(createHash("sha256").update(body).digest("hex"),expectedVideo.sha256,"Preview must serve the newly supplied video bytes");
           for(const range of ["bytes=0-1023","bytes="+(body.length-1024)+"-"]) {
             const conditional=await page.request.get(new URL(path,page.url()).href,{headers:{Range:range,"If-Range":response.headers().etag}});
             assert.equal(conditional.status(),206,"Matching If-Range must return video bytes");
@@ -101,10 +127,11 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       const recordMedia=async film=>{
         if(width!==1440) return;
         const video=page.locator("video").nth(film);
-        const metadata=await video.evaluate(v=>({width:v.videoWidth,height:v.videoHeight,ratio:v.videoWidth/v.videoHeight}));
+        const metadata=await video.evaluate(v=>({width:v.videoWidth,height:v.videoHeight,ratio:v.videoWidth/v.videoHeight,duration:v.duration}));
         assert.equal(metadata.width,2160); assert.equal(metadata.height,708);
+        assert(Math.abs(metadata.duration-(film===0?25.0143:22.0113))<0.1,"Unexpected new video duration");
         const frames=[];
-        for(const time of [3,12,23]) {
+        for(const time of [0.12,0.5,0.92].map(f=>Math.round(metadata.duration*f*100)/100)) {
           await video.evaluate((v,time)=>{v.currentTime=time;},time);
           await page.waitForFunction(({film,time})=>{const v=document.querySelectorAll("video")[film];return !v.seeking&&v.readyState>=2&&v.currentTime>=time;},{film,time});
           const bands=await video.evaluate(v=>{
@@ -116,7 +143,7 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
             return {top,bottom};
           });
           frames.push({time,darkHorizontalBands:bands});
-          if(time===12) await video.screenshot({path:"qa-output/video-"+(film+1)+"-natural-frame.png"});
+          if(time===Math.round(metadata.duration*0.5*100)/100) await video.screenshot({path:"qa-output/video-"+(film+1)+"-natural-frame.png"});
         }
         mediaReports.push({film:film+1,...metadata,frames});
       };
@@ -178,7 +205,20 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       }));
       assert(activityLayout.every(r=>r.imageWidth===(width<768?80:120)&&Math.abs(r.imageWidth/r.imageHeight-4/3)<0.02&&r.textFirst&&r.noOverlap),"Activities must use small right-aligned thumbnails");
       if(width>=1024) assert(activityLayout.every(r=>r.height<=125),"Desktop activity rows are too tall");
-      console.log("ROUND3_LAYOUT",JSON.stringify({width,mediaDimensions,publicationLayout,activityLayout}));
+      const footerLayout=await page.evaluate(()=>{
+        const contact=document.querySelector("#contact"),footer=document.querySelector(".page__footer"),cr=contact.getBoundingClientRect(),fr=footer.getBoundingClientRect();
+        return {gap:fr.top-cr.bottom,bodyBottomPadding:getComputedStyle(document.body).paddingBottom,footerPosition:getComputedStyle(footer).position,contactBackground:getComputedStyle(contact).backgroundColor,footerBackground:getComputedStyle(footer).backgroundColor};
+      });
+      assert(Math.abs(footerLayout.gap)<1,"Unexpected blank space after Contact");
+      assert.equal(footerLayout.bodyBottomPadding,"0px");
+      assert.equal(footerLayout.footerPosition,"static");
+      assert.equal(footerLayout.contactBackground,footerLayout.footerBackground);
+      assert.equal(await page.locator(".contact-links a").count(),3);
+      const locations=await page.locator(".activity-card__location a").allTextContents();
+      assert.deepEqual(locations,["Les Diablerets, Switzerland","New Orleans, USA","Jeongseon, South Korea","Daejeon, South Korea"]);
+      assert((await page.locator(".activity-card").last().innerText()).includes("Joint Doctoral Training"));
+      assert.equal(await page.locator(".activity-card__media img").count(),4);
+      console.log("ROUND4_LAYOUT",JSON.stringify({width,mediaDimensions,publicationLayout,activityLayout,footerLayout}));
       // Resolve every local homepage link and media reference against the built site.
       const urls = await page.locator("main a[href], main video[data-src], main img").evaluateAll(els=>els.map(el=>el.href||el.dataset.src||el.src));
       for(const target of urls) {
@@ -199,9 +239,11 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       if(width===1440||width===390) {
         await page.locator("#selected-work").screenshot({path:"qa-output/publications-"+width+".png"});
         await page.locator("#activities").screenshot({path:"qa-output/activities-"+width+".png"});
+        await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
+        await page.screenshot({path:"qa-output/bottom-"+width+".png"});
       }
       await page.screenshot({path:"qa-output/home-"+width+".png",fullPage:true});
-      reports.push({width,result:"passed",dimensions,mediaDimensions,publicationLayout,activityLayout,consoleErrors:errors});
+      reports.push({width,result:"passed",dimensions,mediaDimensions,publicationLayout,activityLayout,footerLayout,consoleErrors:errors});
       await context.close();
     }
     // Reduced-motion users get a still video until they explicitly press Play.

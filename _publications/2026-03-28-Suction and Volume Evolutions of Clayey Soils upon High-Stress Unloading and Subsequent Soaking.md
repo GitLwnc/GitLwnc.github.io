@@ -5,12 +5,14 @@ category: manuscripts
 status: published
 record_id: "suction-volume-evolution"
 authors: "Yang, Y., Zhang, C., Liu, Z., Yuan, J., & Chen, R."
+corresponding_authors: ["Zhang, C."]
+correspondence_source: "Canadian Science Publishing publisher preview via https://www.researchgate.net/publication/402741977 (Corresponding author: Chao Zhang)"
 year: 2026
 volume: "63"
 doi: "10.1139/cgj-2026-0045"
 display_order: 2
-metadata_note: "Publisher-registered Crossref lists pages 1–17; final publisher pagination could not be independently confirmed, so pages and issue are omitted."
-permalink: /publication/2026-03-28-paper-title-number-4/
+pages: "1–17"
+metadata_note: "Volume 63, pages 1–17 confirmed in Canadian Science Publishing publisher preview supplied via ResearchGate."permalink: /publication/2026-03-28-paper-title-number-4/
 redirect_from:
   - /publication/2026-03-28-paper-title-number-4
 date: 2026-03-28

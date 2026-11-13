@@ -5,6 +5,8 @@ category: manuscripts
 status: published
 record_id: "nucleation-percolation"
 authors: "Yang, Y., Zhang, C., Kim, H., & Chen, R."
+corresponding_authors: ["Zhang, C."]
+correspondence_source: "https://journals.aps.org/pre/abstract/10.1103/PhysRevE.111.L053501 (Contact author: Chao Zhang)"
 year: 2025
 volume: "111"
 issue: "5"

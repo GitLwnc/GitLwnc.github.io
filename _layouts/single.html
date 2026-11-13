@@ -37,7 +37,7 @@ layout: default
         {% if page.collection == 'teaching' %}
           <p> {{ page.type }}, <i>{{ page.venue }}</i>, {{ page.date | default: "1900-01-01" | date: "%Y" }} </p>
         {% elsif page.collection == 'publications' %}
-          {% if page.status == 'published' %}<p>Published in <i>{{ page.venue }}</i>, {{ page.year }}</p>{% else %}<p class="publication-status">{% if page.status == 'submitted' %}Submitted{% else %}In Preparation · Working title{% endif %}</p>{% endif %}
+          {% if page.status == 'published' %}<p>Published in <i>{{ page.venue }}</i>, {{ page.year }}</p>{% else %}<p class="publication-status">{% if page.status == 'under_review' %}Under Review{% else %}In Preparation · Working title{% endif %}</p>{% endif %}
         {% elsif page.venue and page.date %}
           <p>Published in <i>{{ page.venue }}</i>, {{ page.date | default: "1900-01-01" | date: "%Y" }} </p>
         {% elsif page.date %}

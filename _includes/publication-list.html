@@ -1,7 +1,8 @@
 {% assign publication_records = site.publications | sort: 'display_order' %}
 {% assign published = publication_records | where: 'status', 'published' %}
-{% assign submitted = publication_records | where: 'status', 'submitted' %}
+{% assign under_review = publication_records | where: 'status', 'under_review' %}
 {% assign in_preparation = publication_records | where: 'status', 'in_preparation' %}
+<p class="publication-author-key">Bold: Yuhan Yang; *: Corresponding author.</p>
 <h3 class="publication-group-title" id="published-papers-title">Published Papers</h3>
 <ol class="publication-list-v2" aria-labelledby="published-papers-title">
   {% for paper in published %}
@@ -12,7 +13,7 @@
   {% endfor %}
 </ol>
 <h3 class="publication-group-title" id="manuscripts-title">Manuscripts</h3>
-{% assign manuscripts = submitted | concat: in_preparation %}
+{% assign manuscripts = under_review | concat: in_preparation %}
 <ol class="publication-list-v2" aria-labelledby="manuscripts-title">
   {% for paper in manuscripts %}
   <li class="publication-row-v2" data-publication-status="{{ paper.status }}" data-publication-id="{{ paper.record_id }}">

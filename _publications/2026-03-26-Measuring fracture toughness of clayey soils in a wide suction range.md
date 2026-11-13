@@ -5,12 +5,14 @@ category: manuscripts
 status: published
 record_id: "fracture-toughness-measurement"
 authors: "Yang, Y., & Zhang, C."
+corresponding_authors: ["Zhang, C."]
+correspondence_source: "https://www.emerald.com/jgeot/article/76/3/437/1334542/Measuring-fracture-toughness-of-clayey-soils-in-a (Corresponding author: Chao Zhang)"
 year: 2026
 volume: "76"
 issue: "3"
 pages: "437–451"
 doi: "10.1680/jgeot.25.00080"
-display_order: 3
+display_order: 1
 permalink: /publication/2026-03-26-paper-title-number-3/
 redirect_from:
   - /publication/2026-03-26-paper-title-number-3

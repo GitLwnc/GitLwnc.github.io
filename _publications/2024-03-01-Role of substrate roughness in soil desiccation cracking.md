@@ -5,6 +5,8 @@ category: manuscripts
 status: published
 record_id: "substrate-roughness"
 authors: "Yang, Y., Zhang, C., Gou, L., Chen, R., & Dong, Y."
+corresponding_authors: ["Zhang, C."]
+correspondence_source: "User explicitly confirmed Chao Zhang as the only corresponding author in round 4."
 year: 2024
 volume: "61"
 issue: "12"

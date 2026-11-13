@@ -5,7 +5,7 @@ require "date"
 records = Dir["_publications/*.md"].map do |path|
   metadata = YAML.safe_load(File.read(path).split(/^---\s*$\n?/, 3)[1], permitted_classes: [Date, Time], aliases: true)
   raise "Missing publication ID: #{path}" unless metadata["record_id"]
-  raise "Unknown publication status: #{path}" unless %w[published submitted in_preparation].include?(metadata["status"])
+  raise "Unknown publication status: #{path}" unless %w[published under_review in_preparation].include?(metadata["status"])
   if metadata["status"] == "published"
     %w[authors year title venue volume doi display_order permalink].each do |field|
       raise "Missing #{field}: #{path}" if metadata[field].nil? || metadata[field].to_s.empty?
@@ -17,6 +17,14 @@ records = Dir["_publications/*.md"].map do |path|
       raise "Unpublished manuscript has publication field #{field}: #{path}" if metadata[field]
     end
     raise "Preparation manuscript must not invent authors" if metadata["status"] == "in_preparation" && metadata["authors"]
+  end
+  if metadata["authors"]
+    parts = metadata["authors"].gsub("& ", "").split(", ")
+    raise "Invalid APA author list: #{path}" unless parts.length.even?
+    names = parts.each_slice(2).map { |family, initials| "#{family}, #{initials}" }
+    corresponding = metadata["corresponding_authors"] || []
+    raise "Corresponding author not in author list: #{path}" unless (corresponding - names).empty?
+    raise "Missing correspondence evidence: #{path}" if corresponding.any? && !metadata["correspondence_source"]
   end
   metadata
 end

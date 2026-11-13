@@ -1,18 +1,14 @@
-# Keep original video filenames. Image and poster paths are site-root relative.
+# Published research resolves title, authors, journal and DOI from _publications.
 - kind: published
   label: Published Research
-  title: Nucleation-percolation transition in desiccation cracking of clay
-  venue: Physical Review E · 2025
-  url: https://doi.org/10.1103/PhysRevE.111.L053501
-  video: /images/网站视屏-nucleation percolation transition.mp4
-  poster: /images/research/pre-poster.jpg
+  publication_id: nucleation-percolation
+  video: /images/research/nucleation-percolation-v4.mp4
+  poster: /images/research/pre-poster-v4.jpg
 - kind: published
   label: Published Research
-  title: Measuring fracture toughness of clayey soils in a wide suction range
-  venue: Géotechnique · 2026
-  url: https://doi.org/10.1680/jgeot.25.00080
-  video: /images/网站视屏-Fracture toughness.mp4
-  poster: /images/research/fracture-poster.jpg
+  publication_id: fracture-toughness-measurement
+  video: /images/research/fracture-toughness-v4.mp4
+  poster: /images/research/fracture-poster-v4.jpg
 - kind: ongoing
   label: Ongoing Research
   title: Phase-field modelling of soil desiccation cracking

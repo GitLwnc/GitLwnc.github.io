@@ -4,8 +4,10 @@ title: "Stress and stiffness anisotropies of sands during high-stress oedometer 
 collection: publications
 category: manuscripts
 status: published
-display_order: 1
+display_order: 3
 authors: "Yang, Y., Liu, Z., Zhang, C., Huang, Q., Ding, W., & Chen, R."
+corresponding_authors: ["Zhang, C."]
+correspondence_source: "User explicitly confirmed Chao Zhang as the only corresponding author in round 4."
 year: 2026
 publication_month: "2026-11"
 venue: "Transportation Geotechnics"
