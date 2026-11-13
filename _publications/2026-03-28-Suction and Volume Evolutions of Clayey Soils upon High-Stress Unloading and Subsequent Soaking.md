@@ -12,7 +12,8 @@ volume: "63"
 doi: "10.1139/cgj-2026-0045"
 display_order: 2
 pages: "1–17"
-metadata_note: "Volume 63, pages 1–17 confirmed in Canadian Science Publishing publisher preview supplied via ResearchGate."permalink: /publication/2026-03-28-paper-title-number-4/
+metadata_note: "Volume 63, pages 1–17 confirmed in Canadian Science Publishing publisher preview supplied via ResearchGate."
+permalink: /publication/2026-03-28-paper-title-number-4/
 redirect_from:
   - /publication/2026-03-28-paper-title-number-4
 date: 2026-03-28
