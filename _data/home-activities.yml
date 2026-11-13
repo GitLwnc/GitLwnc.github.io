@@ -5,7 +5,7 @@ cards:
     title: KAIST, South Korea
     date: September 2025 – March 2026
     start: "2025-09"
-    description: CSC-supported Visiting Student Researcher in Mechanical Engineering; cracking in drying colloidal materials.
+    description: "CSC-supported Visiting Student Researcher in Mechanical Engineering; cracking in drying colloidal materials."
     image:
     image_alt:
     placeholder: KAIST
@@ -13,20 +13,20 @@ cards:
     title: 80th Anniversary Conference of KSME
     date: December 2025
     start: "2025-12"
-    description: Oral presentation on pore structure heterogeneity and clay desiccation cracking.
+    description: "Oral presentation on pore structure heterogeneity and clay desiccation cracking."
     image: /images/Oral presentation_ASME2026.jpg
     image_alt: Yuhan Yang giving an oral presentation at the 80th Anniversary Conference of KSME.
   - type: Conference Presentation
     title: AGU Fall Meeting 2025
     date: December 2025
     start: "2025-12"
-    description: Oral presentation on measuring fracture toughness of clayey soils across a wide suction range.
+    description: "Oral presentation on measuring fracture toughness of clayey soils across a wide suction range."
     image: /images/Oral presentation_AGU25.png
     image_alt: Presentation slide for the AGU Fall Meeting 2025 oral presentation; not an on-site photograph.
   - type: Conference Presentation
     title: Gordon Research Conference
     date: July 2026
     start: "2026-07"
-    description: Poster presentation, “Clay Desiccation Cracking: Pattern, Mechanisms, and Modeling,” Les Diablerets, Switzerland.
+    description: "Poster presentation, “Clay Desiccation Cracking: Pattern, Mechanisms, and Modeling,” Les Diablerets, Switzerland."
     image: /images/Poster-GRC2026.jpg
     image_alt: Research poster for the 2026 Flow and Transport in Permeable Media Gordon Research Conference.
