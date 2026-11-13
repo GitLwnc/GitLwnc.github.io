@@ -1,5 +1,7 @@
 # 第三轮首页优化与论文数据更新交付记录（2026-11-13）
 
+> 历史阶段记录。最新视频/照片、作者与通讯标记、Under Review 状态、论文顺序及页脚修复，见 [第四轮交付报告](HOMEPAGE-ROUND-4.md)。
+
 ## 仓库、分支与范围
 - 仓库：https://github.com/GitLwnc/GitLwnc.github.io
 - 开发分支：phase-1-foundation-v2。修改前 HEAD：c546626316851744aab8c3a47ccc0f0c5dcd9d15。

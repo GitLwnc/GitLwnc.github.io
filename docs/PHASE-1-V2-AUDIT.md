@@ -1,6 +1,6 @@
 # Phase 1 Foundation V2 交付审计（2026-11-12）
 
-> 这是历史阶段快照。当前宽幅视频布局、5 篇已发表论文及 2 篇手稿、紧凑活动列表，以 [第三轮交付记录](HOMEPAGE-ROUND-3.md) 为准。
+> 这是历史阶段快照。当前素材、作者标注、5 Published · 1 Under Review · 1 In Preparation 及布局状态，以 [第四轮交付报告](HOMEPAGE-ROUND-4.md) 为准。
 
 > 视频验证更正：本记录此前的播放检查只核对暂停状态，未证明成功解码。用户本地预览故障后，已在真实 Jekyll + Google Chrome 中复现并修复 WEBrick 的 If-Range 错误；新增检查要求画面数据就绪及播放时间推进。请以 [视频修复记录](VIDEO-PLAYBACK-FIX.md) 的原因、结果和更新步骤为准。
 ## 仓库与发布边界

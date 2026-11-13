@@ -43,4 +43,4 @@ bundle exec jekyll serve --livereload --host 127.0.0.1
 
 ## 后续补充
 在 _data/featured-research.yml 管理轮播素材：video、poster、image 均为站点根目录路径。第三项 image 留空时显示占位。仅填入已上传的真实资源路径。
-第三轮已更新为 5 Published · 1 Submitted · 1 In Preparation。已发表论文和手稿统一维护于 _publications；详情与后续字段说明见 [第三轮交付记录](HOMEPAGE-ROUND-3.md)。仍缺正式相场模拟图和 KAIST 访问照片；CGJ 2026 最终页码暂不填，等待出版社页面确认。
+第四轮已更新为 5 Published · 1 Under Review · 1 In Preparation。已发表论文和手稿统一维护于 _publications；详情与后续字段说明见 [第三轮交付记录](HOMEPAGE-ROUND-3.md)。KAIST 照片和 CGJ 2026 页码已在第四轮补齐；正式相场模拟图仍待提供。最新素材、作者与活动地点说明见 [第四轮报告](HOMEPAGE-ROUND-4.md)。
