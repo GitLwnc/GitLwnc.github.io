@@ -196,6 +196,10 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
           await carousel.screenshot({path:"qa-output/research-"+width+"-0"+(slide+1)+".png"});
         }
       }
+      if(width===1440||width===390) {
+        await page.locator("#selected-work").screenshot({path:"qa-output/publications-"+width+".png"});
+        await page.locator("#activities").screenshot({path:"qa-output/activities-"+width+".png"});
+      }
       await page.screenshot({path:"qa-output/home-"+width+".png",fullPage:true});
       reports.push({width,result:"passed",dimensions,mediaDimensions,publicationLayout,activityLayout,consoleErrors:errors});
       await context.close();
