@@ -36,11 +36,11 @@ bundle exec jekyll serve --livereload --host 127.0.0.1
 - 主页保留 Hero，后续依次为 Featured Research、Research Expertise、Publications、Academic Activities、Contact。
 - 左右箭头、三个数字按钮和键盘方向键均可切换，第三页明确为 Ongoing Research。
 - 当前页视频静音循环；切换离开后暂停；滚离整个轮播也暂停。暂停按钮可手动控制；浏览器阻止自动播放时点击 Play video。
-- 浏览器 F12 → 切换设备工具栏，检查 390px、320px 手机宽度；视频保持完整超宽比例，不裁切科研图像。
+- 浏览器 F12 → 切换设备工具栏，检查 390px、320px 手机宽度；视频容器采用实际 2160:708 比例，不裁切科研图像。
 - 相场模拟图目前是稳定尺寸的文字占位，不是正式研究结果。
 - 检查论文 DOI、CV、Research 和联系入口；F12 → Console 检查报错。
 - GitHub Homepage check 用真实视频检查播放/暂停、桌面和移动宽度、链接及图片。触摸识别另有指针事件检查，真实手机仍建议查看一次。
 
 ## 后续补充
 在 _data/featured-research.yml 管理轮播素材：video、poster、image 均为站点根目录路径。第三项 image 留空时显示占位。仅填入已上传的真实资源路径。
-第五篇已发表论文尚缺可核验记录；在写论文也缺准确标题。仓库 CV 记录了一项 Acta Geotechnica 在投研究，但状态可能过期，未将其作为当前已确认手稿上首页。请核对后再补入。
+第三轮已更新为 5 Published · 1 Submitted · 1 In Preparation。已发表论文和手稿统一维护于 _publications；详情与后续字段说明见 [第三轮交付记录](HOMEPAGE-ROUND-3.md)。仍缺正式相场模拟图和 KAIST 访问照片；CGJ 2026 最终页码暂不填，等待出版社页面确认。
