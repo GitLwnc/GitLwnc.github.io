@@ -8,7 +8,8 @@
       <div class="research-carousel__viewport">
         <div class="research-carousel__track" id="research-slides">
           {% for item in site.data.featured-research %}
-          {% assign research_paper = site.publications | where: 'record_id', item.publication_id | first %}
+          {% assign research_paper = nil %}
+          {% if item.publication_id %}{% assign research_paper = site.publications | where: 'record_id', item.publication_id | first %}{% endif %}
           {% assign research_title = research_paper.title | default: item.title %}
           <article class="research-slide" data-slide role="group" aria-roledescription="slide" aria-label="{{ forloop.index }} of {{ forloop.length }}: {{ research_title | escape }}">
             <div class="research-slide__media">
@@ -53,7 +54,8 @@
         <button type="button" data-prev aria-label="Previous research" aria-controls="research-slides">←</button>
         <div class="research-carousel__indicators" aria-label="Choose research">
           {% for item in site.data.featured-research %}
-          {% assign research_paper = site.publications | where: 'record_id', item.publication_id | first %}
+          {% assign research_paper = nil %}
+          {% if item.publication_id %}{% assign research_paper = site.publications | where: 'record_id', item.publication_id | first %}{% endif %}
           {% assign research_title = research_paper.title | default: item.title %}
           <button type="button" data-go="{{ forloop.index0 }}" aria-label="Show research {{ forloop.index }}: {{ research_title | escape }}" aria-controls="research-slides">{{ forloop.index }}</button>
           {% endfor %}
