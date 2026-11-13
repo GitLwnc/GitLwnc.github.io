@@ -171,8 +171,9 @@
 .activity-card__location a { color: inherit; text-decoration: none; }
 .activity-card__location a:hover { text-decoration: underline; }
 /* The legacy theme reserves 9em for an absolutely positioned footer.
-   Homepage uses the normal document flow so Contact has no empty trailing band. */
-.home-page { padding-bottom: 0; }
+   Its script also writes an inline bottom margin on resize. Homepage uses
+   normal document flow and needs neither footer reservation. */
+.home-page { padding-bottom: 0; margin-bottom: 0 !important; }
 .home-page .page__footer { position: static; float: none; border-top: 0; background: var(--text-primary); }
 .home-page .page__footer footer { padding-top: 16px; padding-bottom: 16px; }
 .home-page .footer-v2 { color: #cdcdc7; }

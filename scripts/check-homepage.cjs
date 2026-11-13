@@ -207,10 +207,12 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       if(width>=1024) assert(activityLayout.every(r=>r.height<=125),"Desktop activity rows are too tall");
       const footerLayout=await page.evaluate(()=>{
         const contact=document.querySelector("#contact"),footer=document.querySelector(".page__footer"),cr=contact.getBoundingClientRect(),fr=footer.getBoundingClientRect();
-        return {gap:fr.top-cr.bottom,bodyBottomPadding:getComputedStyle(document.body).paddingBottom,footerPosition:getComputedStyle(footer).position,contactBackground:getComputedStyle(contact).backgroundColor,footerBackground:getComputedStyle(footer).backgroundColor};
+        return {gap:fr.top-cr.bottom,bottomGap:document.documentElement.scrollHeight-(fr.bottom+window.scrollY),bodyBottomMargin:getComputedStyle(document.body).marginBottom,bodyBottomPadding:getComputedStyle(document.body).paddingBottom,footerPosition:getComputedStyle(footer).position,contactBackground:getComputedStyle(contact).backgroundColor,footerBackground:getComputedStyle(footer).backgroundColor};
       });
       assert(Math.abs(footerLayout.gap)<1,"Unexpected blank space after Contact");
       assert.equal(footerLayout.bodyBottomPadding,"0px");
+      assert.equal(footerLayout.bodyBottomMargin,"0px");
+      assert(Math.abs(footerLayout.bottomGap)<1,"Unexpected blank space below the footer");
       assert.equal(footerLayout.footerPosition,"static");
       assert.equal(footerLayout.contactBackground,footerLayout.footerBackground);
       assert.equal(await page.locator(".contact-links a").count(),3);
