@@ -9,6 +9,6 @@
 {% else %}
 {% if paper.authors %}{{ paper.authors | escape }} {% endif %}
 <a class="publication-title" href="{{ paper.url | relative_url }}">{{ paper.title | escape }}</a>.
-<span class="publication-status">{% if paper.status == 'submitted' %}Submitted{% else %}In Preparation{% endif %}</span>{% if paper.working_title %} · Working title{% endif %}{% if paper.target_journal %}. Submitted to <em>{{ paper.target_journal | escape }}</em>{% endif %}.
+<span class="publication-status">{% if paper.status == 'submitted' %}Submitted{% else %}In Preparation{% endif %}</span>{% if paper.working_title %} · Working title{% endif %}{% if paper.target_journal %} to <em>{{ paper.target_journal | escape }}</em>{% endif %}.
 {% endif %}
 </span>
