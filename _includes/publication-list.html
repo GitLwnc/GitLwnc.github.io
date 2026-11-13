@@ -1,0 +1,23 @@
+{% assign publication_records = site.publications | sort: 'display_order' %}
+{% assign published = publication_records | where: 'status', 'published' %}
+{% assign submitted = publication_records | where: 'status', 'submitted' %}
+{% assign in_preparation = publication_records | where: 'status', 'in_preparation' %}
+<h3 class="publication-group-title" id="published-papers-title">Published Papers</h3>
+<ol class="publication-list-v2" aria-labelledby="published-papers-title">
+  {% for paper in published %}
+  <li class="publication-row-v2" data-publication-status="published" data-publication-id="{{ paper.record_id }}">
+    <span class="publication-row-v2__number" aria-hidden="true">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+    {% include publication-citation.html paper=paper %}
+  </li>
+  {% endfor %}
+</ol>
+<h3 class="publication-group-title" id="manuscripts-title">Manuscripts</h3>
+{% assign manuscripts = submitted | concat: in_preparation %}
+<ol class="publication-list-v2" aria-labelledby="manuscripts-title">
+  {% for paper in manuscripts %}
+  <li class="publication-row-v2" data-publication-status="{{ paper.status }}" data-publication-id="{{ paper.record_id }}">
+    <span class="publication-row-v2__number" aria-hidden="true">M{{ forloop.index }}</span>
+    {% include publication-citation.html paper=paper %}
+  </li>
+  {% endfor %}
+</ol>

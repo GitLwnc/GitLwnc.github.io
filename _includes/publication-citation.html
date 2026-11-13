@@ -1,0 +1,14 @@
+{% assign paper = include.paper %}
+<span class="publication-citation">
+{% if paper.status == 'published' %}
+{{ paper.authors | escape }} ({{ paper.year }}).
+<a class="publication-title" href="{{ paper.url | relative_url }}">{{ paper.title | escape }}</a>.
+<em>{{ paper.venue | escape }}{% if paper.volume %}, {{ paper.volume }}{% endif %}</em>{% if paper.issue %}({{ paper.issue }}){% endif %}{% if paper.pages %}, {{ paper.pages }}{% elsif paper.article_number %}, Article {{ paper.article_number }}{% endif %}.
+{% if paper.doi %}<a class="publication-doi" href="https://doi.org/{{ paper.doi }}">https://doi.org/{{ paper.doi }}</a>{% endif %}
+{% if paper.pdfurl %}<a class="publication-extra" href="{{ paper.pdfurl | relative_url }}">PDF</a>{% endif %}
+{% else %}
+{% if paper.authors %}{{ paper.authors | escape }} {% endif %}
+<a class="publication-title" href="{{ paper.url | relative_url }}">{{ paper.title | escape }}</a>.
+<span class="publication-status">{% if paper.status == 'submitted' %}Submitted{% else %}In Preparation{% endif %}</span>{% if paper.working_title %} · Working title{% endif %}{% if paper.target_journal %}. Submitted to <em>{{ paper.target_journal | escape }}</em>{% endif %}.
+{% endif %}
+</span>

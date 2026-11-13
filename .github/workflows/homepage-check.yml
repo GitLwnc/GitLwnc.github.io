@@ -21,6 +21,8 @@ jobs:
           node --check assets/js/home-carousel.js
           node --check scripts/check-homepage.cjs
           ruby -c scripts/webrick_video_ranges.rb
+          ruby -c scripts/check-publications.rb
+          ruby scripts/check-publications.rb > /tmp/publication-metadata.json
           bundle exec ruby -e 'require "bundler"; Bundler.require(:jekyll_plugins); abort "Video range fix was not loaded" unless WEBrick::HTTPServlet::DefaultFileHandler.ancestors.include?(AcademicSiteVideoRanges)'
       - name: Build Jekyll
         run: bundle exec jekyll build --trace

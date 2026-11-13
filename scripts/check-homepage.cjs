@@ -1,17 +1,16 @@
 const { chromium } = require("playwright");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
-const publicationRecords = fs.readdirSync("_publications").filter(f=>f.endsWith(".md")).map(file=>{
-  const text=fs.readFileSync("_publications/"+file,"utf8");
-  const field=name=>(text.match(new RegExp("^"+name+": ['\\\"]?(.*?)['\\\"]?$","m"))||[])[1];
-  return {title:field("title"),status:field("status"),citation:field("citation"),paperurl:field("paperurl")};
-});
-assert(publicationRecords.every(p=>["published","under_review","in_preparation"].includes(p.status)),"Unclassified publication record");
-const expectedCounts = Object.fromEntries(["published","under_review","in_preparation"].map(status=>[status,publicationRecords.filter(p=>p.status===status).length]));
+const {execFileSync}=require("node:child_process");
+const publicationRecords=JSON.parse(execFileSync("ruby",["scripts/check-publications.rb"],{encoding:"utf8"}));
+const expectedCounts=Object.fromEntries(["published","submitted","in_preparation"].map(status=>[status,publicationRecords.filter(p=>p.status===status).length]));
+const publishedRecords=publicationRecords.filter(p=>p.status==="published").sort((a,b)=>a.display_order-b.display_order);
+const manuscriptRecords=["submitted","in_preparation"].flatMap(status=>publicationRecords.filter(p=>p.status===status).sort((a,b)=>a.display_order-b.display_order));
+const normalized=s=>s.replace(/\s+/g," ").trim();
 (async () => {
   fs.mkdirSync("qa-output", {recursive:true});
   const browser = await chromium.launch({channel:"chrome"});
-  const reports = [];
+  const reports = [], mediaReports=[];
   try {
     for (const width of [1440, 1024, 768, 390, 320]) {
       const context = await browser.newContext({viewport:{width,height:1000}, isMobile:width<768, hasTouch:width<768});
@@ -37,17 +36,29 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
       assert.equal(await page.locator(".expertise-group").count(),3);
       assert.equal(await page.locator(".expertise-group p").count(),0);
       const numbers=await page.locator(".publication-row-v2__number").allTextContents();
-      assert.deepEqual(numbers.map(s=>s.trim()),publicationRecords.map((_,i)=>String(i+1).padStart(2,"0")));
+      assert.deepEqual(numbers.map(s=>s.trim()),[...publishedRecords.map((_,i)=>String(i+1).padStart(2,"0")),...manuscriptRecords.map((_,i)=>"M"+(i+1))]);
+      assert.equal(normalized(await page.locator(".publication-counts").innerText()),expectedCounts.published+" Published · "+expectedCounts.submitted+" Submitted · "+expectedCounts.in_preparation+" In Preparation");
       for(const [status,count] of Object.entries(expectedCounts))
         assert.equal(await page.locator('[data-publication-status="'+status+'"]').count(),count);
       for(const record of publicationRecords) {
-        const row=page.locator(".publication-row-v2").filter({has:page.locator("h3",{hasText:record.title})});
-        assert.equal(await row.locator("h3").innerText(),record.title);
-        assert.equal(await row.locator(".publication-row-v2__authors").innerText(),record.citation.split(" (")[0]);
-        if(record.paperurl) assert.equal(await row.locator(".publication-row-v2__details a").getAttribute("href"),record.paperurl);
+        const row=page.locator('[data-publication-id="'+record.record_id+'"]');
+        assert.equal(await row.locator(".publication-title").innerText(),record.title);
+        const citation=normalized(await row.locator(".publication-citation").innerText());
+        if(record.status==="published") {
+          const pagination=record.pages?", "+record.pages:record.article_number?", Article "+record.article_number:"";
+          const expected=record.authors+" ("+record.year+"). "+record.title+". "+record.venue+", "+record.volume+(record.issue?"("+record.issue+")":"")+pagination+". https://doi.org/"+record.doi;
+          assert.equal(citation,expected,"Incomplete or repeated APA citation");
+          assert.equal(await row.locator(".publication-doi").getAttribute("href"),"https://doi.org/"+record.doi);
+          assert.equal(await row.locator("em").innerText(),record.venue+", "+record.volume);
+          assert.equal(await row.locator(".publication-status").count(),0);
+        } else {
+          assert.equal(await row.locator(".publication-doi").count(),0);
+          assert(citation.includes(record.status==="submitted"?"Submitted":"In Preparation"));
+          assert(!/\(20\d{2}\)/.test(citation),"Unpublished manuscript has a publication year");
+        }
       }
       assert(!videoRequests.some(url=>url.includes("Fracture toughness.mp4")),"Inactive film loaded at startup");
-      assert.equal(await page.locator(".activity-card").count(), 2);
+      assert.equal(await page.locator(".activity-card").count(), 4);
       const carousel = page.locator("[data-carousel]");
       await carousel.scrollIntoViewIfNeeded();
       const active = async n => {
@@ -87,11 +98,35 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
           throw error;
         }
       };
+      const recordMedia=async film=>{
+        if(width!==1440) return;
+        const video=page.locator("video").nth(film);
+        const metadata=await video.evaluate(v=>({width:v.videoWidth,height:v.videoHeight,ratio:v.videoWidth/v.videoHeight}));
+        assert.equal(metadata.width,2160); assert.equal(metadata.height,708);
+        const frames=[];
+        for(const time of [3,12,23]) {
+          await video.evaluate((v,time)=>{v.currentTime=time;},time);
+          await page.waitForFunction(({film,time})=>{const v=document.querySelectorAll("video")[film];return !v.seeking&&v.readyState>=2&&v.currentTime>=time;},{film,time});
+          const bands=await video.evaluate(v=>{
+            const canvas=document.createElement("canvas");canvas.width=v.videoWidth;canvas.height=v.videoHeight;
+            const ctx=canvas.getContext("2d");ctx.drawImage(v,0,0);
+            const pixels=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+            const darkRow=y=>{let dark=0;for(let x=0;x<canvas.width;x++){const i=(y*canvas.width+x)*4;if(pixels[i]<16&&pixels[i+1]<16&&pixels[i+2]<16)dark++;}return dark/canvas.width>0.98;};
+            let top=0,bottom=0;while(top<canvas.height&&darkRow(top))top++;while(bottom<canvas.height-top&&darkRow(canvas.height-1-bottom))bottom++;
+            return {top,bottom};
+          });
+          frames.push({time,darkHorizontalBands:bands});
+          if(time===12) await video.screenshot({path:"qa-output/video-"+(film+1)+"-natural-frame.png"});
+        }
+        mediaReports.push({film:film+1,...metadata,frames});
+      };
       await playing(0);
+      await recordMedia(0);
       assert.equal(await page.locator("video").nth(1).getAttribute("src"),null);
       await page.locator("[data-sound-toggle]").first().click();
       assert.equal(await page.locator("video").first().evaluate(v=>v.muted),false);
       await page.locator("[data-next]").click(); await active(1); await playing(1);
+      await recordMedia(1);
       assert.equal(await page.locator("video").first().getAttribute("src"),null);
       await page.locator("[data-next]").click(); await active(2); await playing(-1);
       assert(await page.locator("video").evaluateAll(ss=>ss.every(s=>!s.hasAttribute("src"))));
@@ -131,10 +166,19 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
       assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),"Page overflows horizontally");
       await page.locator("img").evaluateAll(imgs=>imgs.forEach(img=>img.loading="eager"));
       await page.waitForFunction(()=>Array.from(document.images).every(img=>img.complete&&img.naturalWidth>0));
-      assert(await page.locator(".research-slide__media, .activity-card__media").evaluateAll(els=>els.every(el=>{
-        const r=el.getBoundingClientRect(); return Math.abs(r.width/r.height-16/9)<0.02;
-      })),"Media frames must be 16:9");
-      assert(await page.locator(".publication-row-v2").evaluateAll(rows=>rows.every(row=>parseFloat(getComputedStyle(row).paddingTop)<=18)),"Publication rows are too loose");
+      const mediaDimensions=await page.locator(".research-slide__media").evaluateAll(els=>els.map(el=>{const r=el.getBoundingClientRect();return {width:r.width,height:r.height,ratio:r.width/r.height};}));
+      assert(mediaDimensions.every(r=>Math.abs(r.ratio-2160/708)<0.02),"Research media must match the real video ratio");
+      assert(mediaDimensions.every(r=>r.width<=1080&&r.height<360),"Research media should remain compact");
+      assert(await page.locator(".research-slide__media video, .research-slide__media img").evaluateAll(els=>els.every(el=>getComputedStyle(el).objectFit==="contain")),"Research images must not be cropped");
+      const publicationLayout=await page.locator(".publication-row-v2").evaluateAll(rows=>rows.map(row=>{const css=getComputedStyle(row);return {fontSize:parseFloat(css.fontSize),lineHeight:parseFloat(css.lineHeight)/parseFloat(css.fontSize),padding:parseFloat(css.paddingTop)};}));
+      assert(publicationLayout.every(r=>r.fontSize>=14&&r.fontSize<=15&&r.lineHeight>=1.4&&r.lineHeight<=1.5&&r.padding===0),"APA list density is incorrect");
+      const activityLayout=await page.locator(".activity-card").evaluateAll(cards=>cards.map(card=>{
+        const image=card.querySelector(".activity-card__media").getBoundingClientRect(),body=card.querySelector(".activity-card__body").getBoundingClientRect(),r=card.getBoundingClientRect();
+        return {width:r.width,height:r.height,imageWidth:image.width,imageHeight:image.height,textFirst:body.left<image.left,noOverlap:body.right<=image.left};
+      }));
+      assert(activityLayout.every(r=>r.imageWidth===(width<768?80:120)&&Math.abs(r.imageWidth/r.imageHeight-4/3)<0.02&&r.textFirst&&r.noOverlap),"Activities must use small right-aligned thumbnails");
+      if(width>=1024) assert(activityLayout.every(r=>r.height<=125),"Desktop activity rows are too tall");
+      console.log("ROUND3_LAYOUT",JSON.stringify({width,mediaDimensions,publicationLayout,activityLayout}));
       // Resolve every local homepage link and media reference against the built site.
       const urls = await page.locator("main a[href], main video[data-src], main img").evaluateAll(els=>els.map(el=>el.href||el.dataset.src||el.src));
       for(const target of urls) {
@@ -153,7 +197,7 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
         }
       }
       await page.screenshot({path:"qa-output/home-"+width+".png",fullPage:true});
-      reports.push({width,result:"passed",dimensions,consoleErrors:errors});
+      reports.push({width,result:"passed",dimensions,mediaDimensions,publicationLayout,activityLayout,consoleErrors:errors});
       await context.close();
     }
     // Reduced-motion users get a still video until they explicitly press Play.
@@ -228,7 +272,21 @@ const expectedCounts = Object.fromEntries(["published","under_review","in_prepar
       await popup.close();
     }
     await linkContext.close();
-    fs.writeFileSync("qa-output/report.json",JSON.stringify({reports,reducedMotion:"passed",autoplayDenied:"passed",publicationCounts:expectedCounts,jekyllPreview:"passed",decodedPlayback:"passed",fullSizeLinks:"passed",unsupportedCodecFallback:"passed",networkRetry:"passed"},null,2));
+    // Existing publication URLs and navigation must survive the data update.
+    const contentContext=await browser.newContext();
+    const contentPage=await contentContext.newPage();
+    for(const route of ["/publications/","/cv/","/research/",...publicationRecords.map(p=>p.permalink)]) {
+      const response=await contentPage.goto("http://127.0.0.1:4000"+route);
+      assert(response.ok(),"Broken publication or navigation route: "+route);
+      if(route==="/publications/"||route==="/cv/") assert.equal(await contentPage.locator(".publication-row-v2").count(),publicationRecords.length);
+    }
+    for(const manuscript of manuscriptRecords) {
+      await contentPage.goto("http://127.0.0.1:4000"+manuscript.permalink);
+      assert(!(await contentPage.locator(".page__inner-wrap header").innerText()).includes("Published"));
+      assert.equal(await contentPage.locator('meta[property="article:published_time"],meta[itemprop="datePublished"]').count(),0);
+    }
+    await contentContext.close();
+    fs.writeFileSync("qa-output/report.json",JSON.stringify({reports,mediaReports,reducedMotion:"passed",autoplayDenied:"passed",publicationCounts:expectedCounts,jekyllPreview:"passed",decodedPlayback:"passed",fullSizeLinks:"passed",unsupportedCodecFallback:"passed",networkRetry:"passed"},null,2));
     console.log(JSON.stringify({reports,reducedMotion:"passed"}));
   } finally { await browser.close(); }
 })().catch(error=>{console.error(error);process.exit(1);});

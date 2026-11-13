@@ -31,9 +31,7 @@ Desiccation Cracking in Porous Media; Drying Process of Colloidal Material; Frac
 
 Publications
 ======
-  <ul>{% for post in site.publications reversed %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
+{% include publication-list.html %}
 
 
 Research Experience: Taking the Lead
@@ -44,16 +42,16 @@ Research Experience: Taking the Lead
 
 * Suction and volume evolutions of clayey soils upon high-stress unloading and subsequent Soaking (Apr. 2025 ~ Mar. 2026).
 
-  * Published paper: **Yang, Y.**, <u>Zhang</u>, C., Liu, Z., Yuan, J., & Chen, R. (2026). Suction and Volume Evolutions of Clayey Soils upon High-Stress Unloading and Subsequent Soaking. _Canadian Geotechnical Journal_, (ja).
+  * {% assign paper = site.publications | where: "record_id", "suction-volume-evolution" | first %}{% include publication-citation.html paper=paper %}
 
 * A new equipment for measuring fracture toughness of soil with variable water contents (Nov. 2022 ~ Oct. 2025).
 
   * Granted national invention patent: <u>Zhang</u>, **Yang**, Chen. CN118090432B, 2024-06-28.
-  * Published paper: **Yang, Y.**, & <u>Zhang, C</u>. (2026). Measuring fracture toughness of clayey soils in a wide suction range. _Géotechnique_, 1-15.
+  * {% assign paper = site.publications | where: "record_id", "fracture-toughness-measurement" | first %}{% include publication-citation.html paper=paper %}
 
 * Stress, and modulus anisotropies of deep-buried soil (Jul. 2023 ~ Jul. 2024).
 
-  * The paper is under review: **Yang**, Liu, <u>Zhang</u>, et al. Stress and Modulus Anisotropies in Sand during High-Stress Oedometer Test, submitted to _Acta Geotechnica_.
+  * {% assign paper = site.publications | where: "record_id", "stress-stiffness-anisotropies" | first %}{% include publication-citation.html paper=paper %}
 
 * Role of pore heterogenity on desiccation cracking of clayey soil (May 2023 ~ Jun. 2024).
 
