@@ -32,14 +32,14 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       assert.deepEqual(await credentials.locator("p").allTextContents(),[
         "Ph.D. Candidate · Geotechnical Engineering, Hunan University · Expected Ph.D.: December 2026",
         "Visiting Ph.D. Researcher · Mechanical Engineering, KAIST · 2025–2026",
-        "Ph.D. advisor: Prof. Chao Zhang · KAIST supervisor: Prof. Hyoungsoo Kim"
+        "Ph.D. supervisor: Prof. Chao Zhang · KAIST supervisor: Prof. Hyoungsoo Kim"
       ]);
       assert.equal((await hero.innerText()).split("Ph.D. Candidate").length-1,1);
       assert.equal((await hero.innerText()).split("Expected Ph.D.: December 2026").length-1,1);
       assert(!(await credentials.locator("p").nth(1).innerText()).includes("Expected Ph.D."));
       const focus="My doctoral research focuses on desiccation cracking and the hydro-mechanical behavior of variably saturated clayey soils.";
       const output="I have published five first-author papers in peer-reviewed journals, including Géotechnique and Physical Review E.";
-      const future="I aim to extend my research to fracture phenomena in other porous media and soft materials.";
+      const future="My broader research interests include fracture in other porous media and soft materials, as well as the implications of soil desiccation cracking for engineering and geoscience.";
       assert.deepEqual(await hero.locator(".hero-v2__bio > p").allTextContents(),[focus,output,future]);
       const heroText=await hero.innerText();
       for(const sentence of [focus,output,future]) assert.equal(heroText.split(sentence).length-1,1,"Hero sentence repeated or missing");
