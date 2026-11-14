@@ -40,10 +40,25 @@
   text-transform: uppercase;
 }
 
-.hero-v2__affiliations { margin: 0 0 18px; }
-.hero-v2__affiliations .eyebrow { margin: 0; line-height: 1.5; letter-spacing: 0; text-transform: none; }
-.hero-v2__affiliations .eyebrow + .eyebrow { margin-top: 6px; font-weight: 400; }
-.hero-v2__affiliations a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.hero-v2__affiliations {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 24px 0;
+}
+.hero-v2__affiliation {
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  gap: 6px;
+  min-width: 0;
+  color: var(--text-body);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.hero-v2__affiliation h2 { margin: 0; color: var(--text-primary); font-size: 16px; font-weight: 600; line-height: 1.5; }
+.hero-v2__affiliation p { margin: 0; font-weight: 400; }
+.hero-v2__affiliation .hero-v2__date { color: var(--text-muted); font-size: 13px; }
+.hero-v2__affiliation a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 
 .hero-v2 h1 {
   margin: 0;
@@ -54,22 +69,15 @@
   line-height: 0.98;
 }
 
-.hero-v2__identity {
-  max-width: 700px;
-  margin: 28px 0 22px;
-  color: var(--text-primary);
-  font-size: 1.75rem;
-  font-weight: 600;
-  line-height: 1.24;
-}
-
 .hero-v2__bio {
   max-width: 610px;
-  margin: 0;
   color: var(--text-body);
-  font-size: 1.05rem;
-  line-height: 1.65;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.55;
 }
+.hero-v2__bio p { margin: 0; }
+.hero-v2__bio p + p { margin-top: 12px; }
 
 .hero-actions {
   display: flex;
@@ -204,8 +212,7 @@
   .hero-v2__grid { display: flex; flex-direction: column; gap: 42px; align-items: stretch; }
   .hero-v2__portrait { width: 240px; max-width: 100%; }
   .hero-v2 h1 { font-size: 3.4rem; }
-  .hero-v2__identity { font-size: 1.32rem; }
-  .hero-v2__bio { font-size: 1rem; }
+  .hero-v2__affiliations { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .hero-actions { display: grid; grid-template-columns: repeat(2, 92px); gap: 14px; }
   .hero-action { width: 92px; height: 92px; }
   .home-section { padding: 48px 0; }
