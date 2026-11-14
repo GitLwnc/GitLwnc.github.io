@@ -5,7 +5,7 @@
     - Digital Image Correlation (DIC)
     - High-Speed Imaging
     - Micro-PIV
-    - Microstructural Characterization (MIP, SEM)
+    - Microstructural Characterization (MIP, SEM, SAXS)
 - title: Theory & Analysis
   skills:
     - Fracture Mechanics
@@ -16,5 +16,5 @@
 - title: Numerical Modelling
   skills:
     - Phase-Field Fracture Modelling
-    - Finite Element Modelling (FEM)
-    - Discrete Element Modelling (DEM)
+    - Finite Element Method (FEM)
+    - Discrete Element Method (DEM)

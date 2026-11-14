@@ -108,9 +108,9 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
         groups.map(group=>Array.from(group.querySelectorAll("li"),li=>li.textContent.trim()))
       );
       assert.deepEqual(expertiseSkills,[
-        ["Fracture Toughness Testing","Digital Image Correlation (DIC)","High-Speed Imaging","Micro-PIV","Microstructural Characterization (MIP, SEM)"],
+        ["Fracture Toughness Testing","Digital Image Correlation (DIC)","High-Speed Imaging","Micro-PIV","Microstructural Characterization (MIP, SEM, SAXS)"],
         ["Fracture Mechanics","Unsaturated Soil Mechanics","Fractal & Scaling Analysis","Percolation & Critical Phenomena","Interfacial Mechanics"],
-        ["Phase-Field Fracture Modelling","Finite Element Modelling (FEM)","Discrete Element Modelling (DEM)"]
+        ["Phase-Field Fracture Modelling","Finite Element Method (FEM)","Discrete Element Method (DEM)"]
       ]);
       const numbers=await page.locator(".publication-row-v2__number").allTextContents();
       assert.deepEqual(numbers.map(s=>s.trim()),[...publishedRecords.map((_,i)=>String(i+1).padStart(2,"0")),...manuscriptRecords.map((_,i)=>"M"+(i+1))]);
