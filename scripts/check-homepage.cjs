@@ -48,8 +48,10 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       assert.deepEqual(await hero.locator(".hero-v2__bio em").allTextContents(),["Géotechnique","Physical Review E"]);
       assert.equal(await hero.locator('a:has-text("Chao Zhang")').getAttribute("href"),"https://chaozhanghnu.github.io/");
       assert.equal(await hero.locator('a:has-text("Hyoungsoo Kim")').getAttribute("href"),"https://fil.kaist.ac.kr/");
-      assert.deepEqual(await hero.locator(".hero-actions a").allTextContents(),["Research","Papers","CV","Contact"]);
-      assert.deepEqual(await hero.locator(".hero-actions a").evaluateAll(els=>els.map(el=>el.getAttribute("href"))),["/research/","/publications/","/cv/","#contact"]);
+      assert.equal(await hero.locator(".hero-actions, .hero-action").count(),0,"Duplicate Hero shortcuts should be removed");
+      assert.deepEqual(await page.locator(".site-nav-v2 a").allTextContents(),["Publications","CV","Contact"]);
+      assert.deepEqual(await page.locator(".site-nav-v2 a").evaluateAll(els=>els.map(el=>el.getAttribute("href"))),["/publications/","/cv/","/#contact"]);
+      assert.equal(await page.locator('.site-nav-v2 a[href="/research/"]').count(),0,"Research navigation should be hidden");
       const heroLayout=await hero.evaluate(el=>{
         const style=selector=>getComputedStyle(el.querySelector(selector));
         const rect=node=>{const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
@@ -64,8 +66,7 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
           portrait:rect(el.querySelector(".hero-v2__portrait")),
           name:rect(el.querySelector("h1")),
           credentials:rect(el.querySelector(".hero-v2__credentials")),
-          bio:rect(el.querySelector(".hero-v2__bio")),
-          actions:rect(el.querySelector(".hero-actions"))
+          bio:rect(el.querySelector(".hero-v2__bio"))
         };
       });
       assert.equal(heroLayout.nameWeight,"700");
@@ -80,10 +81,11 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
         assert(["left","start"].includes(p.textAlign));
       }
       assert.deepEqual(heroLayout.paragraphs.map(p=>p.marginTop),["0px","9px","9px"]);
-      assert(heroLayout.name.bottom<=heroLayout.credentials.top&&heroLayout.credentials.bottom<=heroLayout.bio.top&&heroLayout.bio.bottom<=heroLayout.actions.top);
-      assert(heroLayout.actions.top-heroLayout.bio.bottom<=28,"Excessive gap before Hero buttons");
+      assert(heroLayout.name.bottom<=heroLayout.credentials.top&&heroLayout.credentials.bottom<=heroLayout.bio.top,
+        "Hero text hierarchy should remain correctly ordered");
       if(width>=1024) {
-        assert(heroLayout.content.height<600,"Hero text column is still too tall");
+        assert(heroLayout.content.height<560,"Hero text column should remain compact without buttons");
+        assert(heroLayout.content.height<heroLayout.portrait.height*1.65,"Hero text and portrait are visually unbalanced");
         assert(heroLayout.portrait.right<heroLayout.content.left,"Hero columns overlap");
       }
       if(width<=900) assert(heroLayout.portrait.bottom<=heroLayout.name.top+1,"Stacked Hero ordering is incorrect");
