@@ -40,6 +40,11 @@
   text-transform: uppercase;
 }
 
+.hero-v2__affiliations { margin: 0 0 18px; }
+.hero-v2__affiliations .eyebrow { margin: 0; line-height: 1.5; letter-spacing: 0; text-transform: none; }
+.hero-v2__affiliations .eyebrow + .eyebrow { margin-top: 6px; font-weight: 400; }
+.hero-v2__affiliations a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+
 .hero-v2 h1 {
   margin: 0;
   color: var(--text-primary);

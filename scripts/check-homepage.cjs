@@ -24,6 +24,36 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       page.on("console", msg => {if(msg.type()==="error") errors.push(msg.text());});
       await page.goto("http://127.0.0.1:4000/", {waitUntil:"networkidle"});
       assert.equal(await page.locator("main").count(), 1);
+      const hero=page.locator(".hero-v2");
+      const identities=[
+        "Ph.D. Candidate in Geotechnical Engineering · Hunan University · Supervised by Prof. Chao Zhang",
+        "Visiting Ph.D. Researcher in Mechanical Engineering · KAIST (2025–2026) · Supervised by Prof. Hyoungsoo Kim"
+      ];
+      assert.deepEqual(await hero.locator(".hero-v2__affiliations p").allTextContents(),identities);
+      assert.equal(await hero.locator("#hero-title").innerText(),"Yuhan Yang");
+      const focus="My doctoral research focuses on desiccation cracking and the hydro-mechanical behavior of variably saturated clayey soils.";
+      const output="I have published five first-author papers in peer-reviewed journals, including Géotechnique and Physical Review E.";
+      const future="I aim to extend my research to fracture phenomena in other porous media and soft materials.";
+      assert.equal(await hero.locator(".hero-v2__identity").innerText(),focus);
+      assert.equal(await hero.locator(".hero-v2__bio").innerText(),output+" "+future);
+      const heroText=await hero.innerText();
+      for(const sentence of [focus,output,future]) assert.equal(heroText.split(sentence).length-1,1,"Hero sentence repeated or missing");
+      for(const oldText of ["I study how heterogeneity","I am a Ph.D. candidate","digital image correlation","multiscale characterization","computational modeling"])
+        assert(!heroText.includes(oldText),"Superseded Hero biography remains");
+      assert.deepEqual(await hero.locator(".hero-v2__bio em").allTextContents(),["Géotechnique","Physical Review E"]);
+      assert.equal(await hero.locator('a:has-text("Chao Zhang")').getAttribute("href"),"https://chaozhanghnu.github.io/");
+      assert.equal(await hero.locator('a:has-text("Hyoungsoo Kim")').getAttribute("href"),"https://fil.kaist.ac.kr/");
+      assert.deepEqual(await hero.locator(".hero-actions a").allTextContents(),["Research","Papers","CV","Contact"]);
+      assert.deepEqual(await hero.locator(".hero-actions a").evaluateAll(els=>els.map(el=>el.getAttribute("href"))),["/research/","/publications/","/cv/","#contact"]);
+      const heroType=await hero.evaluate(el=>{
+        const style=selector=>getComputedStyle(el.querySelector(selector));
+        return {nameSize:parseFloat(style("h1").fontSize),nameWeight:style("h1").fontWeight,focusSize:parseFloat(style(".hero-v2__identity").fontSize),focusWeight:style(".hero-v2__identity").fontWeight,bodySize:parseFloat(style(".hero-v2__bio").fontSize),bodyWeight:style(".hero-v2__bio").fontWeight};
+      });
+      assert.equal(heroType.nameWeight,"700");
+      assert.equal(heroType.focusWeight,"600");
+      assert.equal(heroType.bodyWeight,"400");
+      assert(heroType.nameSize>heroType.focusSize&&heroType.focusSize>heroType.bodySize,"Hero visual hierarchy is lost");
+      assert(await hero.locator(".hero-v2__content *").evaluateAll(els=>els.every(el=>el.getBoundingClientRect().right<=innerWidth+1)),"Hero content overflows");
       for (const id of ["hero-title","highlights","research","selected-work","activities","contact"])
         assert.equal(await page.locator("#"+id).count(), 1);
       assert.equal(await page.locator("[data-slide]").count(), 3);
@@ -244,6 +274,7 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
         await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
         await page.screenshot({path:"qa-output/bottom-"+width+".png"});
       }
+      await hero.screenshot({path:"qa-output/hero-"+width+".png"});
       await page.screenshot({path:"qa-output/home-"+width+".png",fullPage:true});
       reports.push({width,result:"passed",dimensions,mediaDimensions,publicationLayout,activityLayout,footerLayout,consoleErrors:errors});
       await context.close();
