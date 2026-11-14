@@ -30,13 +30,13 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       const credentials=hero.locator(".hero-v2__credentials");
       assert.equal(await credentials.count(),1);
       assert.deepEqual(await credentials.locator("p").allTextContents(),[
-        "Ph.D. Candidate · Geotechnical Engineering, Hunan University · Expected Ph.D.: December 2026",
+        "Ph.D. Candidate · Geotechnical Engineering, Hunan University · Expected December 2026",
         "Visiting Ph.D. Researcher · Mechanical Engineering, KAIST · 2025–2026",
         "Ph.D. supervisor: Prof. Chao Zhang · KAIST supervisor: Prof. Hyoungsoo Kim"
       ]);
       assert.equal((await hero.innerText()).split("Ph.D. Candidate").length-1,1);
-      assert.equal((await hero.innerText()).split("Expected Ph.D.: December 2026").length-1,1);
-      assert(!(await credentials.locator("p").nth(1).innerText()).includes("Expected Ph.D."));
+      assert.equal((await hero.innerText()).split("Expected December 2026").length-1,1);
+      assert(!(await credentials.locator("p").nth(1).innerText()).includes("Expected"));
       const focus="My doctoral research focuses on desiccation cracking and the hydro-mechanical behavior of variably saturated clayey soils.";
       const output="I have published five first-author papers in peer-reviewed journals, including Géotechnique and Physical Review E.";
       const future="My broader research interests include fracture in other porous media and soft materials, as well as the implications of soil desiccation cracking for engineering and geoscience.";
