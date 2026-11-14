@@ -27,21 +27,16 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       const hero=page.locator(".hero-v2");
       assert.equal(await hero.locator(".hero-v2__content > :first-child").getAttribute("id"),"hero-title");
       assert.equal(await hero.locator("#hero-title").innerText(),"Yuhan Yang");
-      const groups=hero.locator(".hero-v2__affiliation");
-      assert.equal(await groups.count(),2);
-      assert.deepEqual(await groups.locator("h2").allTextContents(),["Hunan University","KAIST"]);
-      assert.deepEqual(await groups.locator(".hero-v2__role").allTextContents(),[
-        "Ph.D. Candidate in Geotechnical Engineering",
-        "Visiting Ph.D. Researcher in Mechanical Engineering"
+      const credentials=hero.locator(".hero-v2__credentials");
+      assert.equal(await credentials.count(),1);
+      assert.deepEqual(await credentials.locator("p").allTextContents(),[
+        "Ph.D. Candidate · Geotechnical Engineering, Hunan University · Expected Ph.D.: December 2026",
+        "Visiting Ph.D. Researcher · Mechanical Engineering, KAIST · 2025–2026",
+        "Ph.D. advisor: Prof. Chao Zhang · KAIST supervisor: Prof. Hyoungsoo Kim"
       ]);
-      assert.equal(await groups.nth(0).locator(".hero-v2__date").innerText(),"Expected Ph.D.: December 2026");
-      assert.equal(await groups.nth(1).locator(".hero-v2__date").innerText(),"2025–2026");
-      assert(!(await groups.nth(1).innerText()).includes("Expected Ph.D."));
       assert.equal((await hero.innerText()).split("Ph.D. Candidate").length-1,1);
-      assert.equal((await page.locator("body").innerText()).split("Expected Ph.D.: December 2026").length-1,1);
-      assert.deepEqual(await groups.locator(".hero-v2__supervisor").allTextContents(),[
-        "Supervised by Prof. Chao Zhang","Supervised by Prof. Hyoungsoo Kim"
-      ]);
+      assert.equal((await hero.innerText()).split("Expected Ph.D.: December 2026").length-1,1);
+      assert(!(await credentials.locator("p").nth(1).innerText()).includes("Expected Ph.D."));
       const focus="My doctoral research focuses on desiccation cracking and the hydro-mechanical behavior of variably saturated clayey soils.";
       const output="I have published five first-author papers in peer-reviewed journals, including Géotechnique and Physical Review E.";
       const future="I aim to extend my research to fracture phenomena in other porous media and soft materials.";
@@ -57,36 +52,41 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       assert.deepEqual(await hero.locator(".hero-actions a").evaluateAll(els=>els.map(el=>el.getAttribute("href"))),["/research/","/publications/","/cv/","#contact"]);
       const heroLayout=await hero.evaluate(el=>{
         const style=selector=>getComputedStyle(el.querySelector(selector));
-        const rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom};};
+        const rect=node=>{const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
         const paragraphs=Array.from(el.querySelectorAll(".hero-v2__bio > p")).map(p=>{
           const s=getComputedStyle(p);
           return {fontSize:s.fontSize,fontWeight:s.fontWeight,lineHeight:s.lineHeight,color:s.color,marginTop:s.marginTop,textAlign:s.textAlign};
         });
-        return {nameSize:parseFloat(style("h1").fontSize),nameWeight:style("h1").fontWeight,paragraphs,
-          groups:Array.from(el.querySelectorAll(".hero-v2__affiliation")).map(rect),
-          roles:Array.from(el.querySelectorAll(".hero-v2__role")).map(p=>getComputedStyle(p).fontWeight),
-          groupHeadings:Array.from(el.querySelectorAll(".hero-v2__affiliation h2")).map(p=>({size:parseFloat(getComputedStyle(p).fontSize),weight:getComputedStyle(p).fontWeight,transform:getComputedStyle(p).textTransform})),
-          dates:Array.from(el.querySelectorAll(".hero-v2__date")).map(p=>parseFloat(getComputedStyle(p).fontSize)),
-          name:rect(el.querySelector("h1")),affiliations:rect(el.querySelector(".hero-v2__affiliations")),bio:rect(el.querySelector(".hero-v2__bio")),actions:rect(el.querySelector(".hero-actions"))};
+        return {
+          nameSize:parseFloat(style("h1").fontSize),nameWeight:style("h1").fontWeight,
+          credentialFontSize:parseFloat(style(".hero-v2__credentials").fontSize),
+          paragraphs,content:rect(el.querySelector(".hero-v2__content")),
+          portrait:rect(el.querySelector(".hero-v2__portrait")),
+          name:rect(el.querySelector("h1")),
+          credentials:rect(el.querySelector(".hero-v2__credentials")),
+          bio:rect(el.querySelector(".hero-v2__bio")),
+          actions:rect(el.querySelector(".hero-actions"))
+        };
       });
       assert.equal(heroLayout.nameWeight,"700");
-      assert(heroLayout.nameSize>heroLayout.groupHeadings[0].size*3,"Hero name must remain dominant");
+      assert(heroLayout.nameSize>heroLayout.credentialFontSize*3,"Name must remain dominant");
+      assert(heroLayout.credentialFontSize>=13&&heroLayout.credentialFontSize<=14,"Academic details should be compact");
       for(const p of heroLayout.paragraphs) {
-        assert.equal(p.fontSize,"18px"); assert.equal(p.fontWeight,"400");
+        assert.equal(p.fontSize,width<768?"16px":"17px");
+        assert.equal(p.fontWeight,"400");
         assert(parseFloat(p.lineHeight)/parseFloat(p.fontSize)>=1.5&&parseFloat(p.lineHeight)/parseFloat(p.fontSize)<=1.6);
-        assert.equal(p.color,heroLayout.paragraphs[0].color); assert.equal(p.lineHeight,heroLayout.paragraphs[0].lineHeight);
+        assert.equal(p.color,heroLayout.paragraphs[0].color);
+        assert.equal(p.lineHeight,heroLayout.paragraphs[0].lineHeight);
         assert(["left","start"].includes(p.textAlign));
       }
-      assert.deepEqual(heroLayout.paragraphs.map(p=>p.marginTop),["0px","12px","12px"]);
-      assert(heroLayout.roles.every(weight=>weight==="400"));
-      assert(heroLayout.groupHeadings.every(h=>h.weight==="600"&&h.transform==="none"));
-      assert(heroLayout.dates.every(size=>size<14));
-      assert(heroLayout.name.bottom<=heroLayout.affiliations.top&&heroLayout.affiliations.bottom<=heroLayout.bio.top&&heroLayout.bio.bottom<=heroLayout.actions.top);
-      assert(heroLayout.actions.top-heroLayout.bio.bottom<=36,"Excessive gap before Hero buttons");
-      if(width>=768) {
-        assert(Math.abs(heroLayout.groups[0].top-heroLayout.groups[1].top)<1,"Academic groups must align at the top");
-        assert(heroLayout.groups[0].right<heroLayout.groups[1].left,"Academic groups overlap");
-      } else assert(heroLayout.groups[0].bottom<heroLayout.groups[1].top,"Mobile academic groups must stack");
+      assert.deepEqual(heroLayout.paragraphs.map(p=>p.marginTop),["0px","9px","9px"]);
+      assert(heroLayout.name.bottom<=heroLayout.credentials.top&&heroLayout.credentials.bottom<=heroLayout.bio.top&&heroLayout.bio.bottom<=heroLayout.actions.top);
+      assert(heroLayout.actions.top-heroLayout.bio.bottom<=28,"Excessive gap before Hero buttons");
+      if(width>=1024) {
+        assert(heroLayout.content.height<600,"Hero text column is still too tall");
+        assert(heroLayout.portrait.right<heroLayout.content.left,"Hero columns overlap");
+      }
+      if(width<=900) assert(heroLayout.portrait.bottom<=heroLayout.name.top+1,"Stacked Hero ordering is incorrect");
       assert(await hero.locator(".hero-v2__content *").evaluateAll(els=>els.every(el=>el.getBoundingClientRect().right<=innerWidth+1)),"Hero content overflows");
       console.log("HERO_LAYOUT",JSON.stringify({width,...heroLayout}));
       for (const id of ["hero-title","highlights","research","selected-work","activities","contact"])
