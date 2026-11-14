@@ -1,19 +1,20 @@
-# Sources: existing CV, published methods and the current Research page.
+# Research expertise drawn from published work, Ph.D. research and KAIST visiting research.
 - title: Experimental Methods
   skills:
-    - Soil Shrinkage Testing
     - Fracture Toughness Testing
-    - J-integral Evaluation
     - Digital Image Correlation (DIC)
-    - High-stress Oedometer Testing
-- title: Research Areas
+    - High-Speed Imaging
+    - Micro-PIV
+    - Microstructural Characterization (MIP, SEM)
+- title: Theory & Analysis
   skills:
-    - Unsaturated Soil Mechanics
-    - Soil Desiccation Cracking
     - Fracture Mechanics
-    - Hydro-mechanical Coupling
+    - Unsaturated Soil Mechanics
+    - Fractal & Scaling Analysis
+    - Percolation & Critical Phenomena
+    - Interfacial Mechanics
 - title: Numerical Modelling
   skills:
-    - Phase-field Modelling
-    - Finite Element Modelling
-    - Discrete Element Modelling
+    - Phase-Field Fracture Modelling
+    - Finite Element Modelling (FEM)
+    - Discrete Element Modelling (DEM)

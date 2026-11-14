@@ -101,6 +101,17 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
         assert(!(await page.locator("main").innerText()).includes(phrase));
       assert.equal(await page.locator(".expertise-group").count(),3);
       assert.equal(await page.locator(".expertise-group p").count(),0);
+      assert.deepEqual(await page.locator(".expertise-group h3").allTextContents(),[
+        "Experimental Methods","Theory & Analysis","Numerical Modelling"
+      ]);
+      const expertiseSkills=await page.locator(".expertise-group").evaluateAll(groups=>
+        groups.map(group=>Array.from(group.querySelectorAll("li"),li=>li.textContent.trim()))
+      );
+      assert.deepEqual(expertiseSkills,[
+        ["Fracture Toughness Testing","Digital Image Correlation (DIC)","High-Speed Imaging","Micro-PIV","Microstructural Characterization (MIP, SEM)"],
+        ["Fracture Mechanics","Unsaturated Soil Mechanics","Fractal & Scaling Analysis","Percolation & Critical Phenomena","Interfacial Mechanics"],
+        ["Phase-Field Fracture Modelling","Finite Element Modelling (FEM)","Discrete Element Modelling (DEM)"]
+      ]);
       const numbers=await page.locator(".publication-row-v2__number").allTextContents();
       assert.deepEqual(numbers.map(s=>s.trim()),[...publishedRecords.map((_,i)=>String(i+1).padStart(2,"0")),...manuscriptRecords.map((_,i)=>"M"+(i+1))]);
       assert.equal(normalized(await page.locator(".publication-counts").innerText()),expectedCounts.published+" Published · "+expectedCounts.under_review+" Under Review · "+expectedCounts.in_preparation+" In Preparation");
