@@ -295,6 +295,15 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       const locations=await page.locator(".activity-card__location a").allTextContents();
       assert.deepEqual(locations,["Les Diablerets, Switzerland","New Orleans, USA","Jeongseon, South Korea","Daejeon, South Korea"]);
       assert((await page.locator(".activity-card").last().innerText()).includes("Joint Doctoral Training"));
+      const descriptions=await page.locator(".activity-card").evaluateAll(cards=>Object.fromEntries(
+        cards.map(card=>[card.querySelector("h3").textContent.trim(),card.querySelector(".activity-card__body > p:last-child").textContent.trim()])
+      ));
+      assert.deepEqual(descriptions,{
+        "Gordon Research Conference":"Poster presentation on the patterns, mechanisms, and modeling of clay desiccation cracking.",
+        "AGU Fall Meeting 2025":"Oral presentation on measuring the fracture toughness of clayey soils across a wide suction range.",
+        "80th Anniversary Conference of KSME":"Oral presentation on pore-structure heterogeneity and clay desiccation cracking.",
+        "KAIST":"Research on crack suppression in drying colloidal suspensions via slippery substrates."
+      });
       assert.equal(await page.locator(".activity-card__media img").count(),4);
       console.log("ROUND4_LAYOUT",JSON.stringify({width,mediaDimensions,publicationLayout,activityLayout,footerLayout}));
       // Resolve every local homepage link and media reference against the built site.
