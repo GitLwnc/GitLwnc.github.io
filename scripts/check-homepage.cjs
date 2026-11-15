@@ -370,15 +370,22 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       reports.push({width,result:"passed",dimensions,mediaDimensions,publicationLayout,activityLayout,footerLayout,consoleErrors:errors});
       await context.close();
     }
-    // Reduced-motion users get a still video until they explicitly press Play.
+    // The homepage keeps muted autoplay and slide transitions active
+    // even when the OS/browser requests reduced motion.
     const context = await browser.newContext({reducedMotion:"reduce"});
     const page = await context.newPage();
     await page.goto("http://127.0.0.1:4000/");
     await page.locator("[data-carousel]").scrollIntoViewIfNeeded();
-    await page.waitForTimeout(500);
-    assert(await page.locator("video").evaluateAll(vs=>vs.every(v=>v.paused)));
-    await page.locator("[data-video-toggle]").first().click();
     await page.waitForFunction(()=>{const v=document.querySelector("video");return !v.paused&&!v.error&&v.readyState>=2&&v.currentTime>0.1;});
+    const track=page.locator(".research-carousel__track");
+    assert.equal(await track.evaluate(el=>getComputedStyle(el).transitionDuration),"0.36s",
+      "Research carousel slide transition must remain enabled");
+    await page.locator("[data-next]").click();
+    await page.waitForFunction(()=>Array.from(document.querySelector(".research-carousel__track").getAnimations())
+      .some(animation=>animation.playState==="running"),null,{timeout:1000});
+    assert(await page.locator("video").first().evaluate(v=>v.paused),
+      "Previous video must pause during the slide transition");
+    await page.waitForFunction(()=>{const v=document.querySelectorAll("video")[1];return !v.paused&&!v.error&&v.readyState>=2&&v.currentTime>0.1;});
     await context.close();
     // Exercise denied autoplay without disabling the user's manual play control.
     const deniedContext = await browser.newContext();
@@ -456,7 +463,7 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       assert.equal(await contentPage.locator('meta[property="article:published_time"],meta[itemprop="datePublished"]').count(),0);
     }
     await contentContext.close();
-    fs.writeFileSync("qa-output/report.json",JSON.stringify({reports,mediaReports,reducedMotion:"passed",autoplayDenied:"passed",publicationCounts:expectedCounts,jekyllPreview:"passed",decodedPlayback:"passed",fullSizeLinks:"passed",unsupportedCodecFallback:"passed",networkRetry:"passed"},null,2));
+    fs.writeFileSync("qa-output/report.json",JSON.stringify({reports,mediaReports,reducedMotion:"autoplay-and-transition-enabled",autoplayDenied:"passed",publicationCounts:expectedCounts,jekyllPreview:"passed",decodedPlayback:"passed",fullSizeLinks:"passed",unsupportedCodecFallback:"passed",networkRetry:"passed"},null,2));
     console.log(JSON.stringify({reports,reducedMotion:"passed"}));
   } finally { await browser.close(); }
 })().catch(error=>{console.error(error);process.exit(1);});

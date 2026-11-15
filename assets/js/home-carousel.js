@@ -6,16 +6,15 @@
     var track = root.querySelector(".research-carousel__track");
     var dots = Array.from(root.querySelectorAll("[data-go]"));
     var videos = Array.from(root.querySelectorAll("video"));
-    var index = 0, inView = false, pageActive = true, start = null;
-    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var index = 0, inView = false, start = null;
     var manualPlay = new WeakSet(), manualPause = new WeakSet();
     var loaded = new WeakSet(), resumeTimes = new WeakMap();
-    var generations = new WeakMap(), pending = new WeakMap(), failures = new WeakSet(), playRetries = new WeakMap();
+    var generations = new WeakMap(), pending = new WeakMap(), failures = new WeakSet();
     if (slides.length < 2) return;
 
     function allowed(video) {
-      return !document.hidden && pageActive && inView && slides[index].contains(video) &&
-        !manualPause.has(video) && (!reduced.matches || manualPlay.has(video));
+      return !document.hidden && inView && slides[index].contains(video) &&
+        !manualPause.has(video);
     }
     function buttonState(video) {
       var button = video.closest("[data-slide]").querySelector("[data-video-toggle]");
@@ -44,8 +43,6 @@
         showIssue(video, "This browser does not support H.264 MP4 playback. Open this page in Google Chrome or Microsoft Edge to watch the video.");
         return;
       }
-      // An active, visible video should actually buffer; inactive videos remain unloaded.
-      video.preload = "auto";
       video.src = video.dataset.src;
       video.load();
     }
@@ -56,7 +53,6 @@
       generations.set(video, (generations.get(video) || 0) + 1);
       pending.delete(video);
       video.removeAttribute("src");
-      video.preload = "none";
       video.load();
       clearIssue(video);
     }
@@ -64,24 +60,14 @@
       videos.forEach(function (video) {
         if (!allowed(video)) {
           video.pause();
-          if (!slides[index].contains(video) || !inView || !pageActive || document.hidden) releaseVideo(video);
+          if (!slides[index].contains(video) || !inView || document.hidden) releaseVideo(video);
           buttonState(video);
           return;
         }
         loadActiveVideo(video);
         if (failures.has(video) || pending.has(video) || !video.paused) return;
-        // Wait for decoded frames instead of racing play() against video.load().
-        // The canplay handler will call syncMedia() once decoding is ready.
-        if (video.readyState < 3) return;
         var generation = generations.get(video);
-        var play;
-        try {
-          play = video.play();
-        } catch (error) {
-          // Synchronous playback errors must not break the carousel.
-          buttonState(video);
-          return;
-        }
+        var play = video.play();
         if (play && play.then) {
           pending.set(video, play);
           play.then(function () {
@@ -89,17 +75,10 @@
             pending.delete(video);
             if (!allowed(video)) video.pause();
             buttonState(video);
-          }).catch(function (error) {
+          }).catch(function () {
             if (generations.get(video) !== generation) return;
             pending.delete(video);
-            // A load/seek race can reject play() with AbortError just before canplay.
-            // Retry a small, bounded number of times if this video is still the active one.
-            var retries = playRetries.get(video) || 0;
-            if (error && error.name === "AbortError" && allowed(video) && retries < 2) {
-              playRetries.set(video, retries + 1);
-              window.setTimeout(syncMedia, 80);
-            }
-            // Autoplay rejection leaves a usable manual play control.
+            // Autoplay rejection and aborts leave a usable manual play control.
             buttonState(video);
           });
         }
@@ -138,15 +117,7 @@
           try { video.currentTime = Math.min(time, Math.max(0, video.duration - 0.1)); } catch (error) { resumeTimes.delete(video); }
         }
       });
-      // Loading and play() can race: retry once the active source is actually playable.
-      video.addEventListener("canplay", function () {
-        if (allowed(video) && video.paused && !pending.has(video) && !failures.has(video)) syncMedia();
-      });
-      video.addEventListener("loadeddata", function () {
-        if (allowed(video) && video.readyState >= 3 && video.paused && !pending.has(video)) syncMedia();
-      });
       video.addEventListener("play", function () {
-        playRetries.delete(video);
         if (!allowed(video)) video.pause();
         buttonState(video);
       });
@@ -193,29 +164,15 @@
     });
     viewport.addEventListener("pointercancel", function () { start = null; });
     document.addEventListener("visibilitychange", syncMedia);
-    function updateInView() {
-      var rect = viewport.getBoundingClientRect();
-      setInView(rect.bottom > 0 && rect.top < window.innerHeight &&
-        rect.right > 0 && rect.left < window.innerWidth);
-    }
-    function setInView(visible) {
-      if (inView === visible) return;
-      inView = visible;
-      syncMedia();
-    }
-    window.addEventListener("pagehide", function () { pageActive = false; syncMedia(); });
-    window.addEventListener("pageshow", function () { pageActive = true; updateInView(); syncMedia(); });
-    if (reduced.addEventListener) reduced.addEventListener("change", syncMedia);
+    window.addEventListener("pagehide", function () { inView = false; syncMedia(); });
+    window.addEventListener("pageshow", function () {
+      var rect = root.getBoundingClientRect();
+      inView = rect.bottom > 0 && rect.top < window.innerHeight; syncMedia();
+    });
     if ("IntersectionObserver" in window) {
-      var observer = new IntersectionObserver(function (entries) {
-        var entry = entries[0];
-        setInView(entry.isIntersecting && entry.intersectionRect.width > 0 && entry.intersectionRect.height > 0);
-      }, { threshold: 0 });
-      observer.observe(viewport);
+      new IntersectionObserver(function (entries) { inView = entries[0].isIntersecting; syncMedia(); }, { threshold: 0.1 }).observe(root);
     } else {
-      window.addEventListener("scroll", updateInView, { passive: true });
-      window.addEventListener("resize", updateInView);
-      updateInView();
+      inView = true;
     }
     root.classList.add("is-enhanced");
     root.querySelector("[data-carousel-controls]").hidden = false;

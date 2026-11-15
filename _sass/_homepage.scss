@@ -206,6 +206,3 @@
   .contact-v2 { padding: 76px 0; }
   .contact-v2__inner { grid-template-columns: 1fr; gap: 36px; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .is-enhanced .research-carousel__track { transition: none; }
-}
