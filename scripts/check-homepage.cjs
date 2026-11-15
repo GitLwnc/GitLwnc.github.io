@@ -157,6 +157,13 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
         assert.equal(await item.locator(".research-slide__body > .text-link").getAttribute("href"),"https://doi.org/"+record.doi);
       }
       assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__authors").count(),0);
+      // The first muted video must autoplay on page entry, even before the carousel is scrolled into view.
+      await page.waitForFunction(() => {
+        const video=document.querySelector("[data-slide] video");
+        return video && !video.paused && !video.error && video.readyState>=2 && video.currentTime>0.05;
+      }, null, {timeout:15000});
+      assert.equal(await page.locator("video").first().evaluate(v=>v.muted),true,"Autoplay must start muted");
+      assert.equal(await page.locator("video").nth(1).getAttribute("src"),null,"Only the active video should load on page entry");
       assert(!videoRequests.some(url=>url.includes("fracture-toughness-v4.mp4")),"Inactive film loaded at startup");
       assert.equal(await page.locator(".activity-card").count(), 4);
       const carousel = page.locator("[data-carousel]");
@@ -231,6 +238,8 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       await page.locator("[data-sound-toggle]").first().click();
       assert.equal(await page.locator("video").first().evaluate(v=>v.muted),false);
       await page.locator("[data-next]").click(); await active(1); await playing(1);
+      assert.equal(await page.locator("video").first().evaluate(v=>v.paused),true,"Previous slide video must pause when switching");
+      assert.equal(await page.locator("video").nth(1).evaluate(v=>!v.paused),true,"New active slide video must autoplay");
       await recordMedia(1);
       assert.equal(await page.locator("video").first().getAttribute("src"),null);
       await page.locator("[data-next]").click(); await active(2); await playing(-1);

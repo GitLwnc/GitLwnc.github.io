@@ -6,7 +6,7 @@
     var track = root.querySelector(".research-carousel__track");
     var dots = Array.from(root.querySelectorAll("[data-go]"));
     var videos = Array.from(root.querySelectorAll("video"));
-    var index = 0, inView = false, start = null;
+    var index = 0, pageActive = true, start = null;
     var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     var manualPlay = new WeakSet(), manualPause = new WeakSet();
     var loaded = new WeakSet(), resumeTimes = new WeakMap();
@@ -14,7 +14,7 @@
     if (slides.length < 2) return;
 
     function allowed(video) {
-      return !document.hidden && inView && slides[index].contains(video) &&
+      return !document.hidden && pageActive && slides[index].contains(video) &&
         !manualPause.has(video) && (!reduced.matches || manualPlay.has(video));
     }
     function buttonState(video) {
@@ -61,7 +61,7 @@
       videos.forEach(function (video) {
         if (!allowed(video)) {
           video.pause();
-          if (!slides[index].contains(video) || !inView || document.hidden) releaseVideo(video);
+          if (!slides[index].contains(video) || !pageActive || document.hidden) releaseVideo(video);
           buttonState(video);
           return;
         }
@@ -165,17 +165,9 @@
     });
     viewport.addEventListener("pointercancel", function () { start = null; });
     document.addEventListener("visibilitychange", syncMedia);
-    window.addEventListener("pagehide", function () { inView = false; syncMedia(); });
-    window.addEventListener("pageshow", function () {
-      var rect = root.getBoundingClientRect();
-      inView = rect.bottom > 0 && rect.top < window.innerHeight; syncMedia();
-    });
+    window.addEventListener("pagehide", function () { pageActive = false; syncMedia(); });
+    window.addEventListener("pageshow", function () { pageActive = true; syncMedia(); });
     if (reduced.addEventListener) reduced.addEventListener("change", syncMedia);
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) { inView = entries[0].isIntersecting; syncMedia(); }, { threshold: 0.1 }).observe(root);
-    } else {
-      inView = true;
-    }
     root.classList.add("is-enhanced");
     root.querySelector("[data-carousel-controls]").hidden = false;
     show(0, false);
