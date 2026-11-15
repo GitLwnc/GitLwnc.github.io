@@ -172,11 +172,16 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
         assert.equal(await item.locator(".research-slide__body > .text-link").getAttribute("href"),"https://doi.org/"+record.doi);
       }
       assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__authors").count(),0);
-      // The first muted video must autoplay on page entry, even before the carousel is scrolled into view.
-      await page.waitForFunction(() => {
-        const video=document.querySelector("[data-slide] video");
-        return video && !video.paused && !video.error && video.readyState>=2 && video.currentTime>0.05;
-      }, null, {timeout:15000});
+      // Autoplay is viewport-gated: it starts only if the carousel is visible on arrival.
+      if(initialCarouselVisible) {
+        await page.waitForFunction(() => {
+          const video=document.querySelector("[data-slide] video");
+          return video && !video.paused && !video.error && video.readyState>=2 && video.currentTime>0.05;
+        }, null, {timeout:15000});
+      } else {
+        assert.equal(await page.locator("video").first().getAttribute("src"),null,
+          "Hidden carousel must not preload its video on page entry");
+      }
       assert.equal(await page.locator("video").first().evaluate(v=>v.muted),true,"Autoplay must start muted");
       assert.equal(await page.locator("video").nth(1).getAttribute("src"),null,"Only the active video should load on page entry");
       assert(!videoRequests.some(url=>url.includes("fracture-toughness-v4.mp4")),"Inactive film loaded at startup");
