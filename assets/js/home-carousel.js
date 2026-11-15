@@ -10,7 +10,7 @@
     var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     var manualPlay = new WeakSet(), manualPause = new WeakSet();
     var loaded = new WeakSet(), resumeTimes = new WeakMap();
-    var generations = new WeakMap(), pending = new WeakMap(), failures = new WeakSet();
+    var generations = new WeakMap(), pending = new WeakMap(), failures = new WeakSet(), playRetries = new WeakMap();
     if (slides.length < 2) return;
 
     function allowed(video) {
@@ -79,7 +79,14 @@
           }).catch(function () {
             if (generations.get(video) !== generation) return;
             pending.delete(video);
-            // Autoplay rejection and aborts leave a usable manual play control.
+            // A load/seek race can reject play() with AbortError just before canplay.
+            // Retry a small, bounded number of times if this video is still the active one.
+            var retries = playRetries.get(video) || 0;
+            if (error && error.name === "AbortError" && allowed(video) && retries < 2) {
+              playRetries.set(video, retries + 1);
+              window.setTimeout(syncMedia, 80);
+            }
+            // Autoplay rejection leaves a usable manual play control.
             buttonState(video);
           });
         }
@@ -123,6 +130,7 @@
         if (allowed(video) && video.paused && !pending.has(video) && !failures.has(video)) syncMedia();
       });
       video.addEventListener("play", function () {
+        playRetries.delete(video);
         if (!allowed(video)) video.pause();
         buttonState(video);
       });
