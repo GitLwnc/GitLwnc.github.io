@@ -527,7 +527,7 @@ async function checkCarouselRuntime(browser) {
       assert.deepEqual(descriptions,{
         "Gordon Research Conference":"Poster presentation: Patterns, mechanisms, and modeling of clay desiccation cracking.",
         "AGU Fall Meeting 2025":"Oral presentation: Measuring the fracture toughness of clayey soils across a wide suction range.",
-        "80th Anniversary Conference of KSME":"Oral presentation: Pore-structure heterogeneity and clay desiccation cracking.",
+        "80th Anniversary Conference of KSME":"Oral presentation: Role of pore-structure heterogeneity on clay desiccation cracking.",
         "KAIST":"Research topic: Crack suppression in drying colloidal suspensions via slippery substrates."
       });
       assert.equal(await page.locator(".activity-card__media img").count(),4);
