@@ -26,13 +26,20 @@ jobs:
           bundle exec ruby -e 'require "bundler"; Bundler.require(:jekyll_plugins); abort "Video range fix was not loaded" unless WEBrick::HTTPServlet::DefaultFileHandler.ancestors.include?(AcademicSiteVideoRanges)'
       - name: Generate and commit final-frame video posters
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -n 1
           extract_last_frame() {
             input="$1"
             output="$2"
-            ffmpeg -hide_banner -loglevel error -sseof -1 -i "$input" -fps_mode passthrough -q:v 2 -update 1 "$output"
+            # ffmpeg 4.4 on ubuntu-22.04 has -vsync, not -fps_mode.
+            # Decode the final second, replacing the JPEG at each frame.
+            # The final output is the *last decoded video frame*, not the midpoint.
+            ffmpeg -hide_banner -loglevel error -y -sseof -1 -i "$input" -vsync 0 -q:v 2 -update 1 "$output"
             test -s "$output"
+            ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 "$output"
           }
           extract_last_frame images/research/nucleation-percolation-v4.mp4 images/research/pre-poster-v4.jpg
           extract_last_frame images/research/fracture-toughness-v4.mp4 images/research/fracture-poster-v4.jpg

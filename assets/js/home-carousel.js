@@ -44,6 +44,8 @@
         showIssue(video, "This browser does not support H.264 MP4 playback. Open this page in Google Chrome or Microsoft Edge to watch the video.");
         return;
       }
+      // An active, visible video should actually buffer; inactive videos remain unloaded.
+      video.preload = "auto";
       video.src = video.dataset.src;
       video.load();
     }
@@ -54,6 +56,7 @@
       generations.set(video, (generations.get(video) || 0) + 1);
       pending.delete(video);
       video.removeAttribute("src");
+      video.preload = "none";
       video.load();
       clearIssue(video);
     }
@@ -67,8 +70,18 @@
         }
         loadActiveVideo(video);
         if (failures.has(video) || pending.has(video) || !video.paused) return;
+        // Wait for decoded frames instead of racing play() against video.load().
+        // The canplay handler will call syncMedia() once decoding is ready.
+        if (video.readyState < 3) return;
         var generation = generations.get(video);
-        var play = video.play();
+        var play;
+        try {
+          play = video.play();
+        } catch (error) {
+          // Synchronous playback errors must not break the carousel.
+          buttonState(video);
+          return;
+        }
         if (play && play.then) {
           pending.set(video, play);
           play.then(function () {
@@ -76,7 +89,7 @@
             pending.delete(video);
             if (!allowed(video)) video.pause();
             buttonState(video);
-          }).catch(function () {
+          }).catch(function (error) {
             if (generations.get(video) !== generation) return;
             pending.delete(video);
             // A load/seek race can reject play() with AbortError just before canplay.
@@ -128,6 +141,9 @@
       // Loading and play() can race: retry once the active source is actually playable.
       video.addEventListener("canplay", function () {
         if (allowed(video) && video.paused && !pending.has(video) && !failures.has(video)) syncMedia();
+      });
+      video.addEventListener("loadeddata", function () {
+        if (allowed(video) && video.readyState >= 3 && video.paused && !pending.has(video)) syncMedia();
       });
       video.addEventListener("play", function () {
         playRetries.delete(video);
