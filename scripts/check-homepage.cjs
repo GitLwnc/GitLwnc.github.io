@@ -66,10 +66,12 @@ async function checkCarouselRuntime(browser) {
       HTMLMediaElement.prototype.play=function(){
         const v=this,record={src:v.dataset.src,readyState:v.readyState,at:performance.now()};
         log.plays.push(record);
+        const interrupt=log.abortMode&&(!log.abortCount||log.abortMode==="always");
+        // Make native play() genuinely pending, then interrupt it with a new load.
+        // When readyState is already 4, play() may resolve before a queued microtask.
+        if(interrupt) v.load();
         const result=play.call(v);
-        if(log.abortMode&&(!log.abortCount||log.abortMode==="always")) {
-          log.abortCount++;queueMicrotask(()=>v.load());
-        }
+        if(interrupt) {log.abortCount++;v.load();}
         if(result&&result.then) result.then(()=>{record.result="resolved";record.time=v.currentTime;},
           e=>{record.result="rejected";record.name=e.name;record.message=e.message;});
         return result;

@@ -28,8 +28,10 @@ const fs=require("node:fs");
         HTMLMediaElement.prototype.play=function(){
           const video=this,id=video.dataset.src;
           log({type:"play-call",id,ready:video.readyState,src:video.getAttribute("src")});
+          const interrupt=nativeAbort&&!aborted;
+          if(interrupt) video.load();
           const result=play.call(video);
-          if(nativeAbort&&!aborted) {aborted=true;queueMicrotask(()=>{log({type:"injected-native-load",id});video.load();});}
+          if(interrupt) {aborted=true;log({type:"injected-native-load",id});video.load();}
           if(result&&result.then) result.then(()=>log({type:"play-resolved",id,time:video.currentTime}),e=>log({type:"play-rejected",id,name:e.name,message:e.message}));
           return result;
         };
