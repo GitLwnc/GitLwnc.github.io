@@ -17,7 +17,15 @@
       return !document.hidden && inView && slides[index].contains(video) &&
         !manualPause.has(video);
     }
+    function soundState(video) {
+      var sound = video.closest("[data-slide]").querySelector("[data-sound-toggle]");
+      if (!sound) return;
+      sound.textContent = video.muted ? "Unmute" : "Mute";
+      sound.setAttribute("aria-label", video.muted ? "Unmute video" : "Mute video");
+      sound.setAttribute("aria-pressed", String(!video.muted));
+    }
     function buttonState(video) {
+      soundState(video);
       var button = video.closest("[data-slide]").querySelector("[data-video-toggle]");
       if (!button) return;
       button.hidden = false;
@@ -136,12 +144,9 @@
       video.playsInline = true;
       var sound = video.closest("[data-slide]").querySelector("[data-sound-toggle]");
       if (sound) {
-        sound.addEventListener("click", function () { video.muted = !video.muted; });
-        video.addEventListener("volumechange", function () {
-          sound.textContent = video.muted ? "Unmute" : "Mute";
-          sound.setAttribute("aria-label", video.muted ? "Unmute video" : "Mute video");
-          sound.setAttribute("aria-pressed", String(!video.muted));
-        });
+        sound.addEventListener("click", function () { video.muted = !video.muted; soundState(video); });
+        video.addEventListener("volumechange", function () { soundState(video); });
+        soundState(video);
       }
       video.addEventListener("loadedmetadata", function () {
         if (!loaded.has(video) || !video.getAttribute("src")) return;

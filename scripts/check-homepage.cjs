@@ -15,7 +15,10 @@ async function checkCarouselRuntime(browser) {
     muted:v.muted,defaultMuted:v.defaultMuted,paused:v.paused,readyState:v.readyState,
     networkState:v.networkState,currentTime:v.currentTime,duration:Number.isFinite(v.duration)?v.duration:null,
     error:v.error&&{code:v.error.code,message:v.error.message},videoWidth:v.videoWidth,videoHeight:v.videoHeight,
-    codec:v.canPlayType('video/mp4; codecs="avc1.42E01E"')
+    codec:v.canPlayType('video/mp4; codecs="avc1.42E01E"'),
+    soundText:v.closest("[data-slide]").querySelector("[data-sound-toggle]").textContent,
+    soundPressed:v.closest("[data-slide]").querySelector("[data-sound-toggle]").getAttribute("aria-pressed"),
+    soundLabel:v.closest("[data-slide]").querySelector("[data-sound-toggle]").getAttribute("aria-label")
   })));
   const enter=page=>page.evaluate(()=>{
     const r=document.querySelector(".research-carousel__viewport").getBoundingClientRect();
@@ -35,6 +38,9 @@ async function checkCarouselRuntime(browser) {
       const delta=b.currentTime>=a.currentTime?b.currentTime-a.currentTime:b.duration-a.currentTime+b.currentTime;
       assert(delta>0.1&&delta<2,"Decoded video time must continue increasing");
       assert.equal(b.paused,false);assert.equal(b.error,null);
+      assert.equal(b.soundText,b.muted?"Unmute":"Mute");
+      assert.equal(b.soundPressed,String(!b.muted));
+      assert.equal(b.soundLabel,b.muted?"Unmute video":"Mute video");
     }
     return samples;
   };
@@ -131,8 +137,10 @@ async function checkCarouselRuntime(browser) {
       await page.locator("[data-video-toggle]").first().click();item.steps.manualPlay=await progress(page,0);
       await page.locator("[data-sound-toggle]").first().click();
       assert.equal((await state(page))[0].muted,false);
+      assert.equal(await page.locator("[data-sound-toggle]").first().innerText(),"Mute");
       await page.locator("[data-sound-toggle]").first().click();
       assert.equal((await state(page))[0].muted,true);
+      assert.equal(await page.locator("[data-sound-toggle]").first().innerText(),"Unmute");
       await page.evaluate(()=>{for(let i=0;i<12;i++) document.querySelector("[data-next]").click();});
       item.steps.rapidSwitches=await progress(page,0);
       await page.locator("#contact").scrollIntoViewIfNeeded();await allPaused(page);
