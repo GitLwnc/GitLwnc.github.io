@@ -15,7 +15,7 @@ Education and Qualifications
 
   Core-curriculum: Numerical Analysis, Rock and Soil Dynamics, Advanced Soil Mechanics.
 
-* **Visiting Student Researcher in Mechanical Engineering, KAIST (No.53 in QS World University Rankings 2025), South Korea**, Sep. 2025 - Mar. 2026, supported by China Scholarship Council (CSC).
+* **Joint Doctoral Research Training in Mechanical Engineering with KAIST (No.53 in QS World University Rankings 2025), Daejeon, South Korea**, Sep. 2025 - Mar. 2026, supported by China Scholarship Council (CSC).
 
   Research topic: Cracking in drying colloidal.
   
@@ -31,9 +31,7 @@ Desiccation Cracking in Porous Media; Drying Process of Colloidal Material; Frac
 
 Publications
 ======
-  <ul>{% for post in site.publications reversed %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
+{% include publication-list.html %}
 
 
 Research Experience: Taking the Lead
@@ -44,16 +42,16 @@ Research Experience: Taking the Lead
 
 * Suction and volume evolutions of clayey soils upon high-stress unloading and subsequent Soaking (Apr. 2025 ~ Mar. 2026).
 
-  * Published paper: **Yang, Y.**, <u>Zhang</u>, C., Liu, Z., Yuan, J., & Chen, R. (2026). Suction and Volume Evolutions of Clayey Soils upon High-Stress Unloading and Subsequent Soaking. _Canadian Geotechnical Journal_, (ja).
+  * {% assign paper = site.publications | where: "record_id", "suction-volume-evolution" | first %}{% include publication-citation.html paper=paper %}
 
 * A new equipment for measuring fracture toughness of soil with variable water contents (Nov. 2022 ~ Oct. 2025).
 
   * Granted national invention patent: <u>Zhang</u>, **Yang**, Chen. CN118090432B, 2024-06-28.
-  * Published paper: **Yang, Y.**, & <u>Zhang, C</u>. (2026). Measuring fracture toughness of clayey soils in a wide suction range. _Géotechnique_, 1-15.
+  * {% assign paper = site.publications | where: "record_id", "fracture-toughness-measurement" | first %}{% include publication-citation.html paper=paper %}
 
 * Stress, and modulus anisotropies of deep-buried soil (Jul. 2023 ~ Jul. 2024).
 
-  * The paper is under review: **Yang**, Liu, <u>Zhang</u>, et al. Stress and Modulus Anisotropies in Sand during High-Stress Oedometer Test, submitted to _Acta Geotechnica_.
+  * {% assign paper = site.publications | where: "record_id", "stress-stiffness-anisotropies" | first %}{% include publication-citation.html paper=paper %}
 
 * Role of pore heterogenity on desiccation cracking of clayey soil (May 2023 ~ Jun. 2024).
 
@@ -138,17 +136,17 @@ Talks
 **Poster**: Clay Desiccation Cracking: Pattern, Mechanisms, and Modeling.
   
 <div style="text-align: center;">
-  <img src="../images/Poster-GRC2026.jpg" alt="Poster" title="Poster" width="1000" />
+  <img src="../images/activities/grc-2026-group.jpg" alt="Group photograph from the GRC 2026 material supplied by Yuhan Yang" width="1000" />
 </div>
 
-* **AGU Fall Meeting 2025**, Washington, D.C., USA, Dec. 2025.
+* **AGU Fall Meeting 2025**, New Orleans, Louisiana, USA (conference venue), Dec. 2025.
 **Oral presentation**: Measuring Fracture Toughness of Clayey Soils in Wide Suction Range.
 
 <div style="text-align: center;">
-  <img src="../images/Oral presentation_AGU25.png" alt="Poster" title="Poster" width="800" />
+  <img src="../images/activities/agu-2025-slide.jpg" alt="AGU25 oral presentation slide" width="800" />
 </div>
 
-* **80th Anniversary Conference of KSME**, South Korea, Dec. 2025.
+* **80th Anniversary Conference of KSME**, High1 Grand Hotel Convention Tower, Jeongseon, South Korea, Dec. 2025.
 **Oral presentation**: Role of pore structure heterogeneity on clay desiccation cracking.
 
 <div style="text-align: center;">
@@ -159,21 +157,21 @@ Talks
 **Poster**: Nucleation-percolation transition in clay desiccation cracking.
 
 <div style="text-align: center;">
-  <img src="../images/Poster_AUG24.png" alt="Poster" title="Poster" width="1000" />
+  <img src="../images/activities/agu-2024-group.jpg" alt="AGU24 group photograph at the conference backdrop" width="1000" />
 </div>
 
 * **IUTAM Symposium Interface Mechanics of Complex Flows and Soft Matter**, Beijing, China, Aug. 2024.
 **Poster**: Role of substrate roughness in soil desiccation cracking.
 
 <div style="text-align: center;">
-  <img src="../images/Poster substrate.jpg" alt="Poster" title="Poster" width="600" />
+  <img src="../images/activities/iutam-2024-group.jpg" alt="Group photograph at the 2024 IUTAM symposium in Beijing" width="600" />
 </div>
 
 * **InterPore 2024**, Qingdao, China, May 2024.
 **Oral presentation**: Role of substrate roughness in soil desiccation cracking. 
 
 <div style="text-align: center;">
-  <img src="../images/Oral presentation_Interpore2024.jpg" alt="Poster" title="Poster" width="800" />
+  <img src="../images/activities/interpore-2024-group.jpg" alt="Group photograph at InterPore 2024 in Qingdao" width="800" />
 </div>
 
 * **1st International Yuelu Symposium on “Geotechnical and Underground Engineering”**, Changsha, China, Jun. 2024.

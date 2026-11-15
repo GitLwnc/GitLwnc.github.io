@@ -1,0 +1,17 @@
+# Published research resolves title, authors, journal and DOI from _publications.
+- kind: published
+  label: Published Research
+  publication_id: nucleation-percolation
+  video: /images/research/nucleation-percolation-v4.mp4
+  poster: /images/research/pre-poster-v4.jpg
+- kind: published
+  label: Published Research
+  publication_id: fracture-toughness-measurement
+  video: /images/research/fracture-toughness-v4.mp4
+  poster: /images/research/fracture-poster-v4.jpg
+- kind: ongoing
+  label: Ongoing Research
+  title: Phase-field modelling of soil desiccation cracking
+  venue: Numerical modelling · Ongoing
+  url: /research/#ongoing
+  image:

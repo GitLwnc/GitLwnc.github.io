@@ -24,5 +24,5 @@ group :jekyll_plugins do
   gem "jekyll-feed"
   gem 'jekyll-sitemap'
   gem 'hawkins'
-  gem "webrick", "~> 1.8"
+  gem "webrick", "~> 1.8", require: ["webrick", File.expand_path("scripts/webrick_video_ranges", __dir__)]
 end

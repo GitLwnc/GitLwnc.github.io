@@ -1,0 +1,13 @@
+{%- assign author_parts = include.paper.authors | remove: '& ' | split: ', ' -%}
+{%- assign author_count = author_parts.size | divided_by: 2 -%}
+{%- assign author_number = 0 -%}
+{%- for author_part in author_parts -%}
+  {%- assign pair_position = forloop.index0 | modulo: 2 -%}
+  {%- if pair_position == 0 -%}
+    {%- assign initial_index = forloop.index0 | plus: 1 -%}
+    {%- capture author_name -%}{{ author_part }}, {{ author_parts[initial_index] }}{%- endcapture -%}
+    {%- assign author_number = author_number | plus: 1 -%}
+    {%- unless author_number == 1 -%}{% if author_number == author_count %}, &amp; {% else %}, {% endif %}{%- endunless -%}
+    <span class="publication-author" data-author-name="{{ author_name | escape }}">{% if author_name == site.data.publication-author-display.self_apa %}<strong>{{ author_name | escape }}</strong>{% else %}{{ author_name | escape }}{% endif %}{% if include.paper.corresponding_authors contains author_name %}<sup class="corresponding-mark" aria-label="Corresponding author">*</sup>{% endif %}</span>
+  {%- endif -%}
+{%- endfor -%}
