@@ -6,7 +6,7 @@
     var track = root.querySelector(".research-carousel__track");
     var dots = Array.from(root.querySelectorAll("[data-go]"));
     var videos = Array.from(root.querySelectorAll("video"));
-    var index = 0, pageActive = true, start = null;
+    var index = 0, inView = false, pageActive = true, start = null;
     var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     var manualPlay = new WeakSet(), manualPause = new WeakSet();
     var loaded = new WeakSet(), resumeTimes = new WeakMap();
@@ -14,7 +14,7 @@
     if (slides.length < 2) return;
 
     function allowed(video) {
-      return !document.hidden && pageActive && slides[index].contains(video) &&
+      return !document.hidden && pageActive && inView && slides[index].contains(video) &&
         !manualPause.has(video) && (!reduced.matches || manualPlay.has(video));
     }
     function buttonState(video) {
@@ -61,7 +61,7 @@
       videos.forEach(function (video) {
         if (!allowed(video)) {
           video.pause();
-          if (!slides[index].contains(video) || !pageActive || document.hidden) releaseVideo(video);
+          if (!slides[index].contains(video) || !inView || !pageActive || document.hidden) releaseVideo(video);
           buttonState(video);
           return;
         }
@@ -118,6 +118,10 @@
           try { video.currentTime = Math.min(time, Math.max(0, video.duration - 0.1)); } catch (error) { resumeTimes.delete(video); }
         }
       });
+      // Loading and play() can race: retry once the active source is actually playable.
+      video.addEventListener("canplay", function () {
+        if (allowed(video) && video.paused && !pending.has(video) && !failures.has(video)) syncMedia();
+      });
       video.addEventListener("play", function () {
         if (!allowed(video)) video.pause();
         buttonState(video);
@@ -165,9 +169,30 @@
     });
     viewport.addEventListener("pointercancel", function () { start = null; });
     document.addEventListener("visibilitychange", syncMedia);
+    function updateInView() {
+      var rect = viewport.getBoundingClientRect();
+      setInView(rect.bottom > 0 && rect.top < window.innerHeight &&
+        rect.right > 0 && rect.left < window.innerWidth);
+    }
+    function setInView(visible) {
+      if (inView === visible) return;
+      inView = visible;
+      syncMedia();
+    }
     window.addEventListener("pagehide", function () { pageActive = false; syncMedia(); });
-    window.addEventListener("pageshow", function () { pageActive = true; syncMedia(); });
+    window.addEventListener("pageshow", function () { pageActive = true; updateInView(); syncMedia(); });
     if (reduced.addEventListener) reduced.addEventListener("change", syncMedia);
+    if ("IntersectionObserver" in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        var entry = entries[0];
+        setInView(entry.isIntersecting && entry.intersectionRect.width > 0 && entry.intersectionRect.height > 0);
+      }, { threshold: 0 });
+      observer.observe(viewport);
+    } else {
+      window.addEventListener("scroll", updateInView, { passive: true });
+      window.addEventListener("resize", updateInView);
+      updateInView();
+    }
     root.classList.add("is-enhanced");
     root.querySelector("[data-carousel-controls]").hidden = false;
     show(0, false);

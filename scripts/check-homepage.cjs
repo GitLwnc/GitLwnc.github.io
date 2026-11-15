@@ -24,6 +24,21 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       page.on("console", msg => {if(msg.type()==="error") errors.push(msg.text());});
       await page.goto("http://127.0.0.1:4000/", {waitUntil:"networkidle"});
       assert.equal(await page.locator("main").count(), 1);
+      const initialCarouselVisible=await page.locator(".research-carousel__viewport").evaluate(el=>{
+        const r=el.getBoundingClientRect();
+        return r.bottom>0&&r.top<innerHeight&&r.right>0&&r.left<innerWidth;
+      });
+      if(!initialCarouselVisible) {
+        assert.equal(await page.locator("video").first().getAttribute("src"),null,"Video must not load before Featured Research enters the viewport");
+        assert.equal(await page.locator("video").first().evaluate(v=>v.paused),true,"Video must remain paused outside the viewport");
+      }
+      const posterPaths=await page.locator("video").evaluateAll(vs=>vs.map(v=>new URL(v.poster).pathname));
+      assert.deepEqual(posterPaths,["/images/research/pre-poster-v4.jpg","/images/research/fracture-poster-v4.jpg"]);
+      for(const posterPath of posterPaths) {
+        const posterResponse=await page.request.get(new URL(posterPath,page.url()).href);
+        assert(posterResponse.ok(),"Video poster must load: "+posterPath);
+        assert((posterResponse.headers()["content-type"]||"").includes("image/jpeg"),"Video poster must be JPEG");
+      }
       const hero=page.locator(".hero-v2");
       assert.equal(await hero.locator(".hero-v2__content > :first-child").getAttribute("id"),"hero-title");
       assert.equal(await hero.locator("#hero-title").innerText(),"Yuhan Yang");
@@ -168,6 +183,10 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       assert.equal(await page.locator(".activity-card").count(), 4);
       const carousel = page.locator("[data-carousel]");
       await carousel.scrollIntoViewIfNeeded();
+      await page.waitForFunction(() => {
+        const video=document.querySelector("[data-slide] video");
+        return video && !video.paused && !video.error && video.readyState>=2 && video.currentTime>0.05;
+      },null,{timeout:15000});
       const active = async n => {
         await page.waitForFunction(n => document.querySelectorAll("[data-slide]")[n].getAttribute("aria-hidden")==="false",n);
         assert.equal(await page.locator('[data-slide][aria-hidden="false"]').count(),1);
@@ -255,6 +274,7 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       await active(2); await playing(-1);
       await page.locator('[data-go="0"]').click(); await playing(0);
       await page.locator("#contact").scrollIntoViewIfNeeded(); await playing(-1);
+      assert(await page.locator("video").evaluateAll(vs=>vs.every(v=>v.paused)),"Videos must pause when the carousel leaves the viewport");
       await carousel.scrollIntoViewIfNeeded(); await playing(0);
       if(width<768) {
         // Pointer events verify the swipe recognizer; physical-device gestures still need manual review.
