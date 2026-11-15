@@ -8,11 +8,189 @@ const publishedRecords=publicationRecords.filter(p=>p.status==="published").sort
 const manuscriptRecords=["under_review","in_preparation"].flatMap(status=>publicationRecords.filter(p=>p.status===status).sort((a,b)=>a.display_order-b.display_order));
 const markedAuthors=record=>(record.corresponding_authors||[]).reduce((text,name)=>text.replace(name,name+"*"),record.authors||"");
 const normalized=s=>s.replace(/\s+/g," ").trim();
+async function checkCarouselRuntime(browser) {
+  const reports=[];
+  const state=page=>page.locator("video").evaluateAll(vs=>vs.map(v=>({
+    currentSrc:v.currentSrc,src:v.getAttribute("src"),datasetSrc:v.dataset.src,
+    muted:v.muted,defaultMuted:v.defaultMuted,paused:v.paused,readyState:v.readyState,
+    networkState:v.networkState,currentTime:v.currentTime,duration:Number.isFinite(v.duration)?v.duration:null,
+    error:v.error&&{code:v.error.code,message:v.error.message},videoWidth:v.videoWidth,videoHeight:v.videoHeight,
+    codec:v.canPlayType('video/mp4; codecs="avc1.42E01E"')
+  })));
+  const enter=page=>page.evaluate(()=>{
+    const r=document.querySelector(".research-carousel__viewport").getBoundingClientRect();
+    scrollTo(0,scrollY+r.top-innerHeight*0.18);
+  });
+  const allPaused=page=>page.waitForFunction(()=>Array.from(document.querySelectorAll("video")).every(v=>v.paused));
+  const progress=async(page,n)=>{
+    await page.waitForFunction(n=>Array.from(document.querySelectorAll("video")).every((v,i)=>
+      i===n?!v.paused&&!v.error&&v.readyState>=2&&v.videoWidth>0&&v.currentTime>0.05:v.paused),n,{timeout:12000});
+    const samples=[];
+    for(let i=0;i<3;i++) {
+      samples.push((await state(page))[n]);
+      if(i<2) await page.waitForTimeout(300);
+    }
+    for(let i=1;i<samples.length;i++) {
+      const a=samples[i-1],b=samples[i];
+      const delta=b.currentTime>=a.currentTime?b.currentTime-a.currentTime:b.duration-a.currentTime+b.currentTime;
+      assert(delta>0.1&&delta<2,"Decoded video time must continue increasing");
+      assert.equal(b.paused,false);assert.equal(b.error,null);
+    }
+    return samples;
+  };
+  const animation=async(page,selector)=> {
+    const result=await page.evaluate(selector=>new Promise(resolve=>{
+      const track=document.querySelector(".research-carousel__track");
+      const x=()=>new DOMMatrixReadOnly(getComputedStyle(track).transform).m41;
+      const before=x(),duration=getComputedStyle(track).transitionDuration,positions=[before];
+      const start=performance.now();let running=false;
+      document.querySelector(selector).click();
+      function sample() {
+        positions.push(x());
+        running=running||track.getAnimations().some(a=>a.playState==="running");
+        if(performance.now()-start<460) requestAnimationFrame(sample);
+        else resolve({duration,before,after:x(),positions,running});
+      }
+      requestAnimationFrame(sample);
+    }),selector);
+    assert.equal(result.duration,"0.36s");
+    assert(result.running,"A real transform transition must run");
+    assert(Math.abs(result.after-result.before)>10,"Slide must move horizontally");
+    assert(result.positions.some(x=>Math.abs(x-result.before)>1&&Math.abs(x-result.after)>1),"Transition must have intermediate horizontal positions");
+    return result;
+  };
+  const instrument=async(context,abortMode)=>{
+    await context.addInitScript(({abortMode})=>{
+      window.__runtime={plays:[],intersections:[],overlap:[],abortMode,abortCount:0};
+      const log=window.__runtime,play=HTMLMediaElement.prototype.play;
+      HTMLMediaElement.prototype.play=function(){
+        const v=this,record={src:v.dataset.src,readyState:v.readyState,at:performance.now()};
+        log.plays.push(record);
+        const result=play.call(v);
+        if(log.abortMode&&(!log.abortCount||log.abortMode==="always")) {
+          log.abortCount++;queueMicrotask(()=>v.load());
+        }
+        if(result&&result.then) result.then(()=>{record.result="resolved";record.time=v.currentTime;},
+          e=>{record.result="rejected";record.name=e.name;record.message=e.message;});
+        return result;
+      };
+      const IO=window.IntersectionObserver;
+      window.IntersectionObserver=class extends IO {
+        constructor(callback,options){super((entries,observer)=>{
+          entries.forEach(e=>log.intersections.push({target:e.target.className,isIntersecting:e.isIntersecting,
+            intersectionRatio:e.intersectionRatio,boundingClientRect:e.boundingClientRect.toJSON()}));
+          callback(entries,observer);
+        },options);}
+      };
+      document.addEventListener("DOMContentLoaded",()=>{
+        setInterval(()=>{
+          const playing=Array.from(document.querySelectorAll("video")).filter(v=>!v.paused);
+          if(playing.length>1) log.overlap.push(playing.map(v=>v.dataset.src));
+        },16);
+      });
+    },{abortMode});
+  };
+  for(const width of [1440,390]) for(const reducedMotion of ["no-preference","reduce"]) {
+    const context=await browser.newContext({viewport:{width,height:width===1440?720:844},isMobile:width<768,hasTouch:width<768,reducedMotion});
+    const page=await context.newPage(),item={width,reducedMotion,events:[],steps:{}};
+    reports.push(item);await instrument(context,null);
+    page.on("pageerror",e=>item.events.push({type:"pageerror",message:e.message}));
+    page.on("console",m=>{if(m.type()==="error") item.events.push({type:"console.error",message:m.text()});});
+    page.on("requestfailed",r=>item.events.push({type:"requestfailed",url:r.url(),error:r.failure()}));
+    page.on("response",r=>{if(r.url().includes(".mp4")) item.events.push({type:"mp4",status:r.status(),headers:r.headers(),url:r.url()});});
+    try {
+      await page.goto("http://127.0.0.1:4000/",{waitUntil:"networkidle"});
+      item.steps.initial=await state(page);
+      assert(item.steps.initial.every(v=>v.src===null&&v.paused),"Test A requires offscreen media to stay unloaded");
+      assert(!item.events.some(e=>e.type==="mp4"),"Offscreen films must not be requested");
+      await enter(page);
+      item.steps.first=await progress(page,0);
+      assert(item.steps.first[0].muted&&item.steps.first[0].defaultMuted);
+      item.steps.nextAnimation=await animation(page,"[data-next]");
+      item.steps.second=await progress(page,1);
+      item.steps.previousAnimation=await animation(page,"[data-prev]");
+      item.steps.returnFirst=await progress(page,0);
+      item.steps.dotAnimation=await animation(page,'[data-go="2"]');
+      await allPaused(page);item.steps.third=await state(page);
+      await animation(page,'[data-go="0"]');item.steps.returnFromThird=await progress(page,0);
+      // The picture is offscreen while its caption is still visible.
+      await page.evaluate(()=>{
+        const viewport=document.querySelector(".research-carousel__viewport").getBoundingClientRect();
+        const height=document.querySelector(".research-slide__media").getBoundingClientRect().height;
+        scrollTo(0,scrollY+viewport.top+height+24);
+      });
+      await allPaused(page);item.steps.captionOnly=await state(page);
+      assert(item.steps.captionOnly.every(v=>v.src===null),"Caption-only visibility must release media");
+      await enter(page);item.steps.reenter=await progress(page,0);
+      await page.locator("[data-video-toggle]").first().click();await allPaused(page);
+      await page.locator("#contact").scrollIntoViewIfNeeded();await allPaused(page);
+      await enter(page);await page.waitForTimeout(700);
+      assert((await state(page)).every(v=>v.paused),"Manual pause must persist after re-entry");
+      await page.locator("[data-video-toggle]").first().click();item.steps.manualPlay=await progress(page,0);
+      await page.locator("[data-sound-toggle]").first().click();
+      assert.equal((await state(page))[0].muted,false);
+      await page.locator("[data-sound-toggle]").first().click();
+      assert.equal((await state(page))[0].muted,true);
+      await page.evaluate(()=>{for(let i=0;i<12;i++) document.querySelector("[data-next]").click();});
+      item.steps.rapidSwitches=await progress(page,0);
+      await page.locator("#contact").scrollIntoViewIfNeeded();await allPaused(page);
+      item.steps.leave=await state(page);
+      await enter(page);item.steps.resume=await progress(page,0);
+      await page.locator(".research-carousel").screenshot({path:"qa-output/autoplay-"+width+"-"+reducedMotion+".png"});
+      assert(!item.events.some(e=>e.type==="pageerror"||e.type==="console.error"),"Unexpected browser error");
+    } catch(error) {
+      item.failure={name:error.name,message:error.message,video:await state(page)};
+      await page.screenshot({path:"qa-output/runtime-failure-"+width+"-"+reducedMotion+".png",fullPage:true});
+      throw error;
+    } finally {
+      item.trace=await page.evaluate(()=>window.__runtime);
+      fs.writeFileSync("qa-output/carousel-state-machine.json",JSON.stringify(reports,null,2));
+      console.log("CAROUSEL_RUNTIME",JSON.stringify(item));
+      await context.close();
+    }
+    assert.deepEqual(item.trace.overlap,[],"Two films must never play together");
+    assert(item.trace.intersections.some(e=>e.target==="research-carousel__viewport"&&e.isIntersecting),"Observe the fixed carousel viewport");
+    assert(item.trace.plays.every(p=>p.readyState>=2),"Wait for decoded media readiness before play()");
+  }
+  for(const abortMode of ["once","always"]) {
+    const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true});
+    const page=await context.newPage(),item={scenario:"native-load-interruption",abortMode};
+    reports.push(item);await instrument(context,abortMode);
+    try {
+      await page.goto("http://127.0.0.1:4000/",{waitUntil:"networkidle"});
+      await enter(page);
+      if(abortMode==="once") item.progress=await progress(page,0);
+      else {
+        await page.waitForFunction(()=>document.querySelector("[data-video-toggle]").textContent==="Retry video");
+        const before=await page.evaluate(()=>window.__runtime.plays.length);
+        await page.waitForTimeout(700);
+        assert.equal(await page.evaluate(()=>window.__runtime.plays.length),before,"Abort retries must be bounded");
+        assert.equal(before,2,"Only one automatic AbortError retry is allowed");
+        await page.evaluate(()=>window.__runtime.abortMode=null);
+        await page.locator("[data-video-toggle]").first().click();
+        item.retryProgress=await progress(page,0);
+      }
+      item.trace=await page.evaluate(()=>window.__runtime);
+      assert(item.trace.plays.some(p=>p.result==="rejected"&&p.name==="AbortError"),"Exercise native Chromium play rejection");
+      assert(item.trace.plays.some(p=>p.result==="resolved"),"Recover after interruption");
+      assert.deepEqual(item.trace.overlap,[]);
+    } catch(error) {
+      item.failure={name:error.name,message:error.message,video:await state(page)};
+      item.trace=await page.evaluate(()=>window.__runtime);throw error;
+    } finally {
+      fs.writeFileSync("qa-output/carousel-state-machine.json",JSON.stringify(reports,null,2));
+      console.log("CAROUSEL_RUNTIME",JSON.stringify(item));await context.close();
+    }
+  }
+  return reports;
+}
+
 (async () => {
   fs.mkdirSync("qa-output", {recursive:true});
   const browser = await chromium.launch({channel:"chrome"});
   const reports = [], mediaReports=[];
   try {
+    const carouselRuntime=await checkCarouselRuntime(browser);
     for (const width of [1440, 1024, 768, 390, 320]) {
       const context = await browser.newContext({viewport:{width,height:1000}, isMobile:width<768, hasTouch:width<768});
       const page = await context.newPage();
@@ -200,6 +378,7 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
         for(const path of await page.locator("video").evaluateAll(ss=>ss.map(s=>s.dataset.src))) {
           const response=await page.request.get(new URL(path,page.url()).href);
           console.log("MEDIA_HTTP", JSON.stringify({path,status:response.status(),type:response.headers()["content-type"],bytes:(await response.body()).length}));
+          assert.equal(response.status(),200); assert((response.headers()["content-type"]||"").includes("video/mp4"));
           const body=await response.body();
           const {createHash}=require("node:crypto");
           const expectedVideo=path.includes("nucleation-percolation-v4")?{bytes:18834988,sha256:"88c072b988224faff59c159004c03ac71fe0fc3a09c6c87388f7ad491e8e9bba"}:{bytes:6147794,sha256:"6f953e146a195fe11857d70825aea8814ce82789b8d7130cc6a5eb9108551505"};
@@ -215,6 +394,7 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
           assert.equal(stale.status(),200,"Stale If-Range must return the full file");
           assert((await stale.body()).equals(body));
           const ranged=await page.request.get(new URL(path,page.url()).href,{headers:{Range:"bytes=0-1023"}});
+          assert.equal(ranged.status(),206);
           console.log("MEDIA_RANGE",JSON.stringify({path,status:ranged.status(),headers:ranged.headers(),bytes:(await ranged.body()).length}));
         }
       }
@@ -463,7 +643,7 @@ const normalized=s=>s.replace(/\s+/g," ").trim();
       assert.equal(await contentPage.locator('meta[property="article:published_time"],meta[itemprop="datePublished"]').count(),0);
     }
     await contentContext.close();
-    fs.writeFileSync("qa-output/report.json",JSON.stringify({reports,mediaReports,reducedMotion:"autoplay-and-transition-enabled",autoplayDenied:"passed",publicationCounts:expectedCounts,jekyllPreview:"passed",decodedPlayback:"passed",fullSizeLinks:"passed",unsupportedCodecFallback:"passed",networkRetry:"passed"},null,2));
+    fs.writeFileSync("qa-output/report.json",JSON.stringify({reports,mediaReports,carouselRuntime:carouselRuntime.map(r=>({width:r.width,reducedMotion:r.reducedMotion,scenario:r.scenario,abortMode:r.abortMode,result:"passed"})),reducedMotion:"autoplay-and-transition-enabled",autoplayDenied:"passed",publicationCounts:expectedCounts,jekyllPreview:"passed",decodedPlayback:"passed",fullSizeLinks:"passed",unsupportedCodecFallback:"passed",networkRetry:"passed"},null,2));
     console.log(JSON.stringify({reports,reducedMotion:"passed"}));
   } finally { await browser.close(); }
 })().catch(error=>{console.error(error);process.exit(1);});

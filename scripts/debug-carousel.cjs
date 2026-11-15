@@ -71,5 +71,5 @@ const fs=require("node:fs");
       console.log("RUNTIME_TRACE",JSON.stringify(item));
       await context.close();
     }
-  } finally {fs.writeFileSync("qa-output/carousel-boundaries-before.json",JSON.stringify(report,null,2));await browser.close();}
+  } finally {fs.writeFileSync("qa-output/carousel-boundaries.json",JSON.stringify(report,null,2));await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

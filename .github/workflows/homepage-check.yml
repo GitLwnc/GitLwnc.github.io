@@ -20,6 +20,7 @@ jobs:
         run: |
           node --check assets/js/home-carousel.js
           node --check scripts/check-homepage.cjs
+          node --check scripts/debug-carousel.cjs
           ruby -c scripts/webrick_video_ranges.rb
           ruby -c scripts/check-publications.rb
           ruby scripts/check-publications.rb > /tmp/publication-metadata.json
