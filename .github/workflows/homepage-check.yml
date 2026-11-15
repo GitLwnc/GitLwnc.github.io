@@ -4,7 +4,7 @@ on:
     branches: [phase-1-foundation-v3]
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 jobs:
   check:
     if: github.ref == 'refs/heads/phase-1-foundation-v3'
@@ -24,32 +24,6 @@ jobs:
           ruby -c scripts/check-publications.rb
           ruby scripts/check-publications.rb > /tmp/publication-metadata.json
           bundle exec ruby -e 'require "bundler"; Bundler.require(:jekyll_plugins); abort "Video range fix was not loaded" unless WEBrick::HTTPServlet::DefaultFileHandler.ancestors.include?(AcademicSiteVideoRanges)'
-      - name: Generate and commit final-frame video posters
-        run: |
-          if ! command -v ffmpeg >/dev/null 2>&1; then
-            sudo apt-get update
-            sudo apt-get install -y ffmpeg
-          fi
-          ffmpeg -version | head -n 1
-          extract_last_frame() {
-            input="$1"
-            output="$2"
-            # ffmpeg 4.4 on ubuntu-22.04 has -vsync, not -fps_mode.
-            # Decode the final second, replacing the JPEG at each frame.
-            # The final output is the *last decoded video frame*, not the midpoint.
-            ffmpeg -hide_banner -loglevel error -y -sseof -1 -i "$input" -vsync 0 -q:v 2 -update 1 "$output"
-            test -s "$output"
-            ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 "$output"
-          }
-          extract_last_frame images/research/nucleation-percolation-v4.mp4 images/research/pre-poster-v4.jpg
-          extract_last_frame images/research/fracture-toughness-v4.mp4 images/research/fracture-poster-v4.jpg
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add images/research/pre-poster-v4.jpg images/research/fracture-poster-v4.jpg
-          if ! git diff --cached --quiet; then
-            git commit -m "Update research video posters to final frames"
-            git push origin HEAD:phase-1-foundation-v3
-          fi
       - name: Build Jekyll
         run: bundle exec jekyll build --trace
       - uses: actions/setup-node@v4
@@ -65,6 +39,7 @@ jobs:
         run: |
           bundle exec jekyll serve --no-watch --host 127.0.0.1 --port 4000 > /tmp/homepage-server.log 2>&1 &
           for attempt in $(seq 1 30); do curl --silent --fail http://127.0.0.1:4000/ > /dev/null && break; sleep 1; done
+          node scripts/debug-carousel.cjs
           node scripts/check-homepage.cjs
       - name: Local preview server diagnostics
         if: always()
