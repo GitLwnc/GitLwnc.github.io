@@ -288,7 +288,7 @@ async function checkCarouselRuntime(browser) {
       assert.equal(heroLayout.linkType.size,14);
       assert.equal(heroLayout.linkType.weight,"400");
       assert(heroLayout.schools.every(g=>g.titleType.size===18&&g.titleType.weight==="600"&&g.dateType.size===14&&g.supervisorType.size===14&&g.roleType.size===16));
-      assert(heroLayout.paragraphs.every(p=>p.size===16&&p.weight==="400"&&p.line>=1.5&&p.line<=1.6));
+      assert(heroLayout.paragraphs.every(p=>p.size===18&&p.weight==="400"&&p.line>=1.5&&p.line<=1.6));
       assert(heroLayout.paragraphs.every(p=>p.color===heroLayout.paragraphs[0].color&&p.line===heroLayout.paragraphs[0].line));
       assert.equal(heroLayout.paragraphs[1].margin,heroLayout.paragraphs[2].margin);
       assert(heroLayout.portrait.right<heroLayout.name.left,"Photo must be left of the name");
