@@ -668,7 +668,12 @@ async function checkCarouselRuntime(browser) {
       await menuPage.goto("http://127.0.0.1:4000/",{waitUntil:"domcontentloaded"});
       await menuPage.locator(".site-nav-v2__button").click();
       await menuPage.locator('.site-nav-v2 a[href="/#contact"]').click();
-      await menuPage.waitForFunction(()=>location.hash==="#contact"&&document.querySelector("#contact").getBoundingClientRect().top<innerHeight);
+      // The existing smooth-scroll plugin prevents the native hash update.
+      await menuPage.waitForFunction(()=>{
+        const r=document.querySelector("#contact").getBoundingClientRect();
+        return scrollY>0&&r.top<innerHeight&&r.bottom>0;
+      });
+      assert.equal(new URL(menuPage.url()).pathname,"/");
       await menuContext.close();
     }
     // Existing publication URLs and navigation must survive the data update.
