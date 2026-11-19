@@ -21,6 +21,7 @@ jobs:
           node --check assets/js/home-carousel.js
           node --check scripts/check-homepage.cjs
           node --check scripts/debug-carousel.cjs
+          node --check scripts/capture-homepage.cjs
           ruby -c scripts/webrick_video_ranges.rb
           ruby -c scripts/check-publications.rb
           ruby scripts/check-publications.rb > /tmp/publication-metadata.json
@@ -40,6 +41,7 @@ jobs:
         run: |
           bundle exec jekyll serve --no-watch --host 127.0.0.1 --port 4000 > /tmp/homepage-server.log 2>&1 &
           for attempt in $(seq 1 30); do curl --silent --fail http://127.0.0.1:4000/ > /dev/null && break; sleep 1; done
+          node scripts/capture-homepage.cjs
           node scripts/debug-carousel.cjs
           node scripts/check-homepage.cjs
       - name: Local preview server diagnostics
