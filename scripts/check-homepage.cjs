@@ -264,6 +264,21 @@ async function checkCarouselRuntime(browser) {
         const rect=node=>{const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
         const info=node=>{const s=getComputedStyle(node);return {size:parseFloat(s.fontSize),weight:s.fontWeight,line:parseFloat(s.lineHeight)/parseFloat(s.fontSize),color:s.color};};
         const identity=pick(".hero-identity"),background=pick(".hero-background"),research=pick(".hero-research");
+        const baseline=node=>{
+          const probe=document.createElement("span");
+          probe.setAttribute("aria-hidden","true");
+          probe.style.cssText="display:inline-block;width:0;height:0;margin:0;padding:0;border:0;vertical-align:baseline";
+          node.append(probe);
+          const y=probe.getBoundingClientRect().top;
+          probe.remove();
+          return y;
+        };
+        const researchParagraphs=Array.from(pick(".hero-v2__bio").children);
+        const paragraphRects=researchParagraphs.map(rect);
+        const lastBaselines={
+          left:baseline(background.querySelector(".hero-background__institution:last-child .hero-background__supervisor")),
+          right:baseline(researchParagraphs[researchParagraphs.length-1])
+        };
         return {
           siblings:identity.parentElement===research.parentElement,
           backgroundOnLeft:identity.contains(background),
@@ -271,7 +286,12 @@ async function checkCarouselRuntime(browser) {
           linksUnderName:pick(".hero-identity__person h1").parentElement.contains(pick(".hero-identity__links")),
           identity:rect(identity),background:rect(background),research:rect(research),shell:rect(pick(".site-shell")),
           portrait:rect(pick("img")),name:rect(pick("h1")),nameType:info(pick("h1")),links:rect(pick(".hero-identity__links")),
-          paragraphs:Array.from(pick(".hero-v2__bio").children).map(p=>({...info(p),margin:getComputedStyle(p).marginTop})),
+          paragraphs:researchParagraphs.map(p=>({...info(p),margin:getComputedStyle(p).marginTop})),
+          lastBaselines,
+          paragraphGaps:paragraphRects.slice(1).map((r,i)=>r.top-paragraphRects[i].bottom),
+          emphasis:Array.from(pick(".hero-v2__bio").querySelectorAll("strong, strong em")).map(node=>({
+            weight:getComputedStyle(node).fontWeight,style:getComputedStyle(node).fontStyle,tag:node.tagName
+          })),
           schools:Array.from(background.querySelectorAll(".hero-background__institution")).map(group=>({
             title:rect(group.querySelector("h3")),date:rect(group.querySelector(".hero-background__date")),
             titleType:info(group.querySelector("h3")),dateType:info(group.querySelector(".hero-background__date")),
@@ -291,6 +311,9 @@ async function checkCarouselRuntime(browser) {
       assert(heroLayout.paragraphs.every(p=>p.size===18&&p.weight==="400"&&p.line>=1.5&&p.line<=1.6));
       assert(heroLayout.paragraphs.every(p=>p.color===heroLayout.paragraphs[0].color&&p.line===heroLayout.paragraphs[0].line));
       assert.equal(heroLayout.paragraphs[1].margin,heroLayout.paragraphs[2].margin);
+      assert(heroLayout.emphasis.length===6&&heroLayout.emphasis.every(e=>e.weight==="600"),"All research emphasis must use semibold 600");
+      assert(heroLayout.emphasis.filter(e=>e.tag==="EM").every(e=>e.style==="italic"),"Journal names must remain italic");
+      assert(heroLayout.paragraphGaps.every(g=>g>=23.5)&&Math.abs(heroLayout.paragraphGaps[0]-heroLayout.paragraphGaps[1])<0.75,"Research paragraph spacing must remain consistent");
       assert(heroLayout.portrait.right<heroLayout.name.left,"Photo must be left of the name");
       assert(heroLayout.links.top>=heroLayout.name.bottom);
       assert(heroLayout.portrait.width>=90&&heroLayout.portrait.width<=100);
@@ -298,6 +321,7 @@ async function checkCarouselRuntime(browser) {
       if(width>900) {
         assert(heroLayout.identity.right<heroLayout.research.left);
         assert(Math.abs(heroLayout.identity.top-heroLayout.research.top)<1,"Columns must align at the top");
+        assert(Math.abs(heroLayout.lastBaselines.left-heroLayout.lastBaselines.right)<0.75,"Final text baselines must align across desktop columns");
         assert(heroLayout.schools.every(g=>Math.abs(g.title.top+g.title.height-g.date.top-g.date.height)<5),"School and date should share a baseline when desktop space allows");
       } else assert(heroLayout.background.bottom<heroLayout.research.top,"Mobile order: identity, education, research");
       assert(await hero.locator("*").evaluateAll(els=>els.every(el=>el.getBoundingClientRect().right<=innerWidth+1)),"Hero content must not overflow");
