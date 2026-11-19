@@ -229,6 +229,8 @@ async function checkCarouselRuntime(browser) {
       }
       const hero=page.locator(".hero-v2");
       assert.equal(await hero.locator(".hero-v2__content > :first-child").getAttribute("id"),"hero-title");
+      assert.deepEqual(await hero.locator(".hero-v2__institution").allTextContents(),["Hunan University","KAIST"]);
+      assert.equal(await hero.locator(".hero-v2__achievement").innerText(),"five first-author papers");
       assert.equal(await hero.locator("#hero-title").innerText(),"Yuhan Yang");
       const credentials=hero.locator(".hero-v2__credentials");
       assert.equal(await credentials.count(),1);
@@ -273,25 +275,29 @@ async function checkCarouselRuntime(browser) {
         };
       });
       assert.equal(heroLayout.nameWeight,"700");
-      assert(heroLayout.nameSize>heroLayout.credentialFontSize*3,"Name must remain dominant");
-      assert(heroLayout.credentialFontSize>=13&&heroLayout.credentialFontSize<=14,"Academic details should be compact");
+      assert(heroLayout.nameSize>heroLayout.credentialFontSize*2.1,"Identity remains readable without overwhelming affiliations");
+      assert(heroLayout.credentialFontSize>=14&&heroLayout.credentialFontSize<=16,"Academic affiliations remain readable");
       for(const p of heroLayout.paragraphs) {
-        assert.equal(p.fontSize,width<768?"16px":"17px");
+        assert.equal(p.fontSize,width<768?"15.5px":"16.5px");
         assert.equal(p.fontWeight,"400");
         assert(parseFloat(p.lineHeight)/parseFloat(p.fontSize)>=1.5&&parseFloat(p.lineHeight)/parseFloat(p.fontSize)<=1.6);
         assert.equal(p.color,heroLayout.paragraphs[0].color);
         assert.equal(p.lineHeight,heroLayout.paragraphs[0].lineHeight);
         assert(["left","start"].includes(p.textAlign));
       }
-      assert.deepEqual(heroLayout.paragraphs.map(p=>p.marginTop),["0px","9px","9px"]);
+      assert.deepEqual(heroLayout.paragraphs.map(p=>p.marginTop),["0px","8px","8px"]);
       assert(heroLayout.name.bottom<=heroLayout.credentials.top&&heroLayout.credentials.bottom<=heroLayout.bio.top,
         "Hero text hierarchy should remain correctly ordered");
       if(width>=1024) {
-        assert(heroLayout.content.height<560,"Hero text column should remain compact without buttons");
-        assert(heroLayout.content.height<heroLayout.portrait.height*1.65,"Hero text and portrait are visually unbalanced");
-        assert(heroLayout.portrait.right<heroLayout.content.left,"Hero columns overlap");
+        assert(heroLayout.content.height<440,"Hero must be compact and scannable");
+        assert(heroLayout.portrait.width<=185,"Portrait should not dominate the academic profile");
+        assert(heroLayout.bio.right<=heroLayout.portrait.left+1,"Biography must not overlap the portrait");
       }
-      if(width<=900) assert(heroLayout.portrait.bottom<=heroLayout.name.top+1,"Stacked Hero ordering is incorrect");
+      if(width<768) {
+        assert(heroLayout.portrait.width<=98,"Mobile portrait should be compact");
+        assert(heroLayout.portrait.left>=heroLayout.name.right-1,"Portrait should sit alongside the name");
+        assert(heroLayout.credentials.top>=heroLayout.portrait.bottom-1,"Full-width affiliations should follow the identity row");
+      }
       assert(await hero.locator(".hero-v2__content *").evaluateAll(els=>els.every(el=>el.getBoundingClientRect().right<=innerWidth+1)),"Hero content overflows");
       console.log("HERO_LAYOUT",JSON.stringify({width,...heroLayout}));
       for (const id of ["hero-title","highlights","research","selected-work","activities","contact"])
@@ -304,6 +310,8 @@ async function checkCarouselRuntime(browser) {
       assert.equal(await page.locator("#activities-title").textContent(), "Academic Activities");
       for(const phrase of ["Research in motion","From experiment to prediction","Exchange and collaboration"])
         assert(!(await page.locator("main").innerText()).includes(phrase));
+      const sectionOrder=await page.locator("main > section[id]").evaluateAll(nodes=>nodes.map(node=>node.id));
+      assert.deepEqual(sectionOrder,["highlights","selected-work","research","activities","contact"]);
       assert.equal(await page.locator(".expertise-group").count(),3);
       assert.equal(await page.locator(".expertise-group p").count(),0);
       assert.deepEqual(await page.locator(".expertise-group h3").allTextContents(),[
@@ -497,7 +505,7 @@ async function checkCarouselRuntime(browser) {
       await page.waitForFunction(()=>Array.from(document.images).every(img=>img.complete&&img.naturalWidth>0));
       const mediaDimensions=await page.locator(".research-slide__media").evaluateAll(els=>els.map(el=>{const r=el.getBoundingClientRect();return {width:r.width,height:r.height,ratio:r.width/r.height};}));
       assert(mediaDimensions.every(r=>Math.abs(r.ratio-2160/708)<0.02),"Research media must match the real video ratio");
-      assert(mediaDimensions.every(r=>r.width<=1080&&r.height<360),"Research media should remain compact");
+      assert(mediaDimensions.every(r=>r.width<=1120&&r.height<360),"Research media should remain compact");
       assert(await page.locator(".research-slide__media video, .research-slide__media img").evaluateAll(els=>els.every(el=>getComputedStyle(el).objectFit==="contain")),"Research images must not be cropped");
       const publicationLayout=await page.locator(".publication-row-v2").evaluateAll(rows=>rows.map(row=>{const css=getComputedStyle(row);return {fontSize:parseFloat(css.fontSize),lineHeight:parseFloat(css.lineHeight)/parseFloat(css.fontSize),padding:parseFloat(css.paddingTop)};}));
       assert(publicationLayout.every(r=>r.fontSize>=14&&r.fontSize<=15&&r.lineHeight>=1.4&&r.lineHeight<=1.5&&r.padding===0),"APA list density is incorrect");
@@ -505,8 +513,8 @@ async function checkCarouselRuntime(browser) {
         const image=card.querySelector(".activity-card__media").getBoundingClientRect(),body=card.querySelector(".activity-card__body").getBoundingClientRect(),r=card.getBoundingClientRect();
         return {width:r.width,height:r.height,imageWidth:image.width,imageHeight:image.height,textFirst:body.left<image.left,noOverlap:body.right<=image.left};
       }));
-      assert(activityLayout.every(r=>r.imageWidth===(width<768?80:120)&&Math.abs(r.imageWidth/r.imageHeight-4/3)<0.02&&r.textFirst&&r.noOverlap),"Activities must use small right-aligned thumbnails");
-      if(width>=1024) assert(activityLayout.every(r=>r.height<=125),"Desktop activity rows are too tall");
+      assert(activityLayout.every(r=>r.imageWidth===(width<768?80:96)&&Math.abs(r.imageWidth/r.imageHeight-4/3)<0.02&&r.textFirst&&r.noOverlap),"Activities must use small right-aligned thumbnails");
+      if(width>=1024) assert(activityLayout.every(r=>r.height<=175),"Desktop activity cards should remain compact");
       const footerLayout=await page.evaluate(()=>{
         const contact=document.querySelector("#contact"),footer=document.querySelector(".page__footer"),cr=contact.getBoundingClientRect(),fr=footer.getBoundingClientRect();
         return {gap:fr.top-cr.bottom,bottomGap:document.documentElement.scrollHeight-(fr.bottom+window.scrollY),bodyBottomMargin:getComputedStyle(document.body).marginBottom,bodyBottomPadding:getComputedStyle(document.body).paddingBottom,footerPosition:getComputedStyle(footer).position,contactBackground:getComputedStyle(contact).backgroundColor,footerBackground:getComputedStyle(footer).backgroundColor};
