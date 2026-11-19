@@ -67,20 +67,6 @@
   </div>
 </section>
 
-<section class="home-section home-section--soft" id="research" aria-labelledby="research-title">
-  <div class="site-shell">
-    <div class="section-heading"><h2 id="research-title">Research Expertise</h2></div>
-    <div class="expertise-grid">
-      {% for group in site.data.home-expertise %}
-      <section class="expertise-group" aria-labelledby="expertise-{{ forloop.index }}">
-        <h3 id="expertise-{{ forloop.index }}">{{ group.title }}</h3>
-        <ul>{% for skill in group.skills %}<li>{{ skill }}</li>{% endfor %}</ul>
-      </section>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
 {% assign papers = site.publications | sort: 'display_order' %}
 {% assign published = papers | where: 'status', 'published' %}
 {% assign under_review = papers | where: 'status', 'under_review' %}
@@ -98,7 +84,21 @@
   </div>
 </section>
 
-<section class="home-section home-section--soft" id="activities" aria-labelledby="activities-title">
+<section class="home-section home-section--soft" id="research" aria-labelledby="research-title">
+  <div class="site-shell">
+    <div class="section-heading"><h2 id="research-title">Research Expertise</h2></div>
+    <div class="expertise-grid">
+      {% for group in site.data.home-expertise %}
+      <section class="expertise-group" aria-labelledby="expertise-{{ forloop.index }}">
+        <h3 id="expertise-{{ forloop.index }}">{{ group.title }}</h3>
+        <ul>{% for skill in group.skills %}<li>{{ skill }}</li>{% endfor %}</ul>
+      </section>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="home-section" id="activities" aria-labelledby="activities-title">
   <div class="site-shell">
     <div class="section-heading"><h2 id="activities-title">Academic Activities</h2></div>
     <div class="activities-grid">
