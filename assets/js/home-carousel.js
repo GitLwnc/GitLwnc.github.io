@@ -185,7 +185,13 @@
     });
     root.querySelector("[data-prev]").addEventListener("click", function () { show(index - 1, true); });
     root.querySelector("[data-next]").addEventListener("click", function () { show(index + 1, true); });
-    dots.forEach(function (dot) { dot.addEventListener("click", function () { show(Number(dot.dataset.go), true); }); });
+    dots.forEach(function (dot) {
+      dot.addEventListener("click", function () {
+        show(Number(dot.dataset.go), true);
+        // On narrow layouts, selecting a project below the media brings its picture back into view.
+        if (window.matchMedia("(max-width: 900px)").matches) viewport.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    });
     root.addEventListener("keydown", function (event) {
       if (event.target.closest("video, [data-sound-toggle]")) return;
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {

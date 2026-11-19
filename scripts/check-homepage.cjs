@@ -99,7 +99,7 @@ async function checkCarouselRuntime(browser) {
     },{abortMode});
   };
   for(const width of [1440,390]) for(const reducedMotion of ["no-preference","reduce"]) {
-    const context=await browser.newContext({viewport:{width,height:width===1440?720:844},isMobile:width<768,hasTouch:width<768,reducedMotion});
+    const context=await browser.newContext({viewport:{width,height:480},isMobile:width<768,hasTouch:width<768,reducedMotion});
     const page=await context.newPage(),item={width,reducedMotion,events:[],steps:{}};
     reports.push(item);await instrument(context,null);
     page.on("pageerror",e=>item.events.push({type:"pageerror",message:e.message}));
@@ -111,6 +111,7 @@ async function checkCarouselRuntime(browser) {
       item.steps.initial=await state(page);
       assert(item.steps.initial.every(v=>v.src===null&&v.paused),"Test A requires offscreen media to stay unloaded");
       assert(!item.events.some(e=>e.type==="mp4"),"Offscreen films must not be requested");
+      await page.setViewportSize({width,height:width===1440?720:844});
       await enter(page);
       item.steps.first=await progress(page,0);
       assert(item.steps.first[0].muted&&item.steps.first[0].defaultMuted);
@@ -228,78 +229,85 @@ async function checkCarouselRuntime(browser) {
         assert((posterResponse.headers()["content-type"]||"").includes("image/jpeg"),"Video poster must be JPEG");
       }
       const hero=page.locator(".hero-v2");
-      assert.equal(await hero.locator(".hero-v2__content > :first-child").getAttribute("id"),"hero-title");
-      assert.deepEqual(await hero.locator(".hero-v2__institution").allTextContents(),["Hunan University","KAIST"]);
-      assert.equal(await hero.locator(".hero-v2__achievement").innerText(),"five first-author papers");
       assert.equal(await hero.locator("#hero-title").innerText(),"Yuhan Yang");
-      const credentials=hero.locator(".hero-v2__credentials");
-      assert.equal(await credentials.count(),1);
-      assert.deepEqual(await credentials.locator("p").allTextContents(),[
-        "Ph.D. Candidate · Geotechnical Engineering, Hunan University · Expected December 2026",
-        "Visiting Ph.D. Researcher · Mechanical Engineering, KAIST · 2025–2026",
-        "Ph.D. supervisor: Prof. Chao Zhang · KAIST supervisor: Prof. Hyoungsoo Kim"
+      assert.deepEqual(await hero.locator(".hero-background__institution h3").allTextContents(),["Hunan University","KAIST"]);
+      assert.deepEqual(await hero.locator(".hero-background__institution > p:not(.hero-background__date)").allTextContents(),[
+        "Ph.D. Candidate · Geotechnical Engineering","Visiting Ph.D. Researcher · Mechanical Engineering"
       ]);
-      assert.equal((await hero.innerText()).split("Ph.D. Candidate").length-1,1);
-      assert.equal((await hero.innerText()).split("Expected December 2026").length-1,1);
-      assert(!(await credentials.locator("p").nth(1).innerText()).includes("Expected"));
+      assert.deepEqual(await hero.locator(".hero-background__date").allTextContents(),["Expected December 2026","2025–2026"]);
+      assert.deepEqual(await hero.locator(".hero-background__supervisors p").allTextContents(),[
+        "Ph.D. supervisor: Prof. Chao Zhang","KAIST supervisor: Prof. Hyoungsoo Kim"
+      ]);
+      assert.equal(await hero.locator(".hero-identity__role").innerText(),"Ph.D. Candidate");
+      assert.equal(await hero.locator(".hero-identity__email").getAttribute("href"),"mailto:yhyang@hnu.edu.cn");
+      assert.equal(await hero.locator(".hero-background .hero-focus, .hero-background .hero-v2__bio").count(),0);
+      assert.equal(await hero.locator("#research-focus-title").innerText(),"Research Focus");
       const focus="My doctoral research focuses on desiccation cracking and the hydro-mechanical behavior of variably saturated clayey soils.";
       const output="I have published five first-author papers in peer-reviewed journals, including Géotechnique and Physical Review E.";
       const future="My broader research interests include fracture in other porous media and soft materials, as well as the implications of soil desiccation cracking for engineering and geoscience.";
-      assert.deepEqual(await hero.locator(".hero-v2__bio > p").allTextContents(),[focus,output,future]);
+      assert.deepEqual(await hero.locator(".hero-focus .hero-v2__bio > p").allTextContents(),[focus,output,future]);
+      assert.equal(await hero.locator(".hero-v2__bio strong").innerText(),"five first-author papers");
       const heroText=await hero.innerText();
-      for(const sentence of [focus,output,future]) assert.equal(heroText.split(sentence).length-1,1,"Hero sentence repeated or missing");
-      for(const oldText of ["I study how heterogeneity","I am a Ph.D. candidate","digital image correlation","multiscale characterization","computational modeling"])
-        assert(!heroText.includes(oldText),"Superseded Hero biography remains");
+      for(const sentence of [focus,output,future]) assert.equal(heroText.split(sentence).length-1,1,"Research sentence repeated or missing");
       assert.deepEqual(await hero.locator(".hero-v2__bio em").allTextContents(),["Géotechnique","Physical Review E"]);
       assert.equal(await hero.locator('a:has-text("Chao Zhang")').getAttribute("href"),"https://chaozhanghnu.github.io/");
       assert.equal(await hero.locator('a:has-text("Hyoungsoo Kim")').getAttribute("href"),"https://fil.kaist.ac.kr/");
-      assert.equal(await hero.locator(".hero-actions, .hero-action").count(),0,"Duplicate Hero shortcuts should be removed");
+      assert.equal(await page.locator("header nav[aria-label='Primary navigation']").count(),1);
       assert.deepEqual(await page.locator(".site-nav-v2 a").allTextContents(),["Publications","CV","Contact"]);
       assert.deepEqual(await page.locator(".site-nav-v2 a").evaluateAll(els=>els.map(el=>el.getAttribute("href"))),["/publications/","/cv/","/#contact"]);
-      assert.equal(await page.locator('.site-nav-v2 a[href="/research/"]').count(),0,"Research navigation should be hidden");
       const heroLayout=await hero.evaluate(el=>{
-        const style=selector=>getComputedStyle(el.querySelector(selector));
+        const pick=s=>el.querySelector(s);
         const rect=node=>{const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
-        const paragraphs=Array.from(el.querySelectorAll(".hero-v2__bio > p")).map(p=>{
-          const s=getComputedStyle(p);
-          return {fontSize:s.fontSize,fontWeight:s.fontWeight,lineHeight:s.lineHeight,color:s.color,marginTop:s.marginTop,textAlign:s.textAlign};
-        });
+        const info=s=>{const css=getComputedStyle(pick(s));return {size:parseFloat(css.fontSize),weight:css.fontWeight,line:parseFloat(css.lineHeight)/parseFloat(css.fontSize),align:css.textAlign};};
+        const identity=pick(".hero-identity"),background=pick(".hero-background"),focus=pick(".hero-focus");
         return {
-          nameSize:parseFloat(style("h1").fontSize),nameWeight:style("h1").fontWeight,
-          credentialFontSize:parseFloat(style(".hero-v2__credentials").fontSize),
-          paragraphs,content:rect(el.querySelector(".hero-v2__content")),
-          portrait:rect(el.querySelector(".hero-v2__portrait")),
-          name:rect(el.querySelector("h1")),
-          credentials:rect(el.querySelector(".hero-v2__credentials")),
-          bio:rect(el.querySelector(".hero-v2__bio"))
+          siblings:identity.parentElement===background.parentElement&&background.parentElement===focus.parentElement,
+          pictureSharesIdentity:pick(".hero-identity__person").contains(pick("#hero-title"))&&pick(".hero-identity__person").contains(pick("img")),
+          identity:rect(identity),background:rect(background),focus:rect(focus),shell:rect(pick(".site-shell")),
+          portrait:rect(pick("img")),name:rect(pick("h1")),nameType:info("h1"),focusType:info(".hero-focus h2"),
+          paragraphs:Array.from(pick(".hero-v2__bio").children).map(p=>{const s=getComputedStyle(p);return {size:parseFloat(s.fontSize),weight:s.fontWeight,line:parseFloat(s.lineHeight)/parseFloat(s.fontSize),color:s.color};}),
+          backgroundHeadings:Array.from(background.querySelectorAll("h3")).map(h=>({size:parseFloat(getComputedStyle(h).fontSize),weight:getComputedStyle(h).fontWeight})),
+          pageHeight:document.documentElement.scrollHeight
         };
       });
-      assert.equal(heroLayout.nameWeight,"700");
-      assert(heroLayout.nameSize>heroLayout.credentialFontSize*2.1,"Identity remains readable without overwhelming affiliations");
-      assert(heroLayout.credentialFontSize>=14&&heroLayout.credentialFontSize<=16,"Academic affiliations remain readable");
-      for(const p of heroLayout.paragraphs) {
-        assert.equal(p.fontSize,width<768?"15.5px":"16.5px");
-        assert.equal(p.fontWeight,"400");
-        assert(parseFloat(p.lineHeight)/parseFloat(p.fontSize)>=1.5&&parseFloat(p.lineHeight)/parseFloat(p.fontSize)<=1.6);
-        assert.equal(p.color,heroLayout.paragraphs[0].color);
-        assert.equal(p.lineHeight,heroLayout.paragraphs[0].lineHeight);
-        assert(["left","start"].includes(p.textAlign));
-      }
-      assert.deepEqual(heroLayout.paragraphs.map(p=>p.marginTop),["0px","8px","8px"]);
-      assert(heroLayout.name.bottom<=heroLayout.credentials.top&&heroLayout.credentials.bottom<=heroLayout.bio.top,
-        "Hero text hierarchy should remain correctly ordered");
-      if(width>=1024) {
-        assert(heroLayout.content.height<440,"Hero must be compact and scannable");
-        assert(heroLayout.portrait.width<=185,"Portrait should not dominate the academic profile");
-        assert(heroLayout.bio.right<=heroLayout.portrait.left+1,"Biography must not overlap the portrait");
-      }
+      assert(heroLayout.siblings,"Identity, academic background, and focus must be direct siblings");
+      assert(heroLayout.pictureSharesIdentity,"Avatar and name must share one horizontal identity group");
+      assert.equal(heroLayout.nameType.size,width<768?28:32);
+      assert.equal(heroLayout.nameType.weight,"700");
+      assert.equal(heroLayout.focusType.size,width<768?24:26);
+      assert(heroLayout.backgroundHeadings.every(h=>h.size===18&&h.weight==="600"));
+      assert(heroLayout.paragraphs.every(p=>p.size===16&&p.weight==="400"&&p.line>=1.5&&p.line<=1.6));
+      assert(heroLayout.paragraphs.every(p=>p.color===heroLayout.paragraphs[0].color));
+      assert(Math.abs(heroLayout.focus.left-heroLayout.shell.left)<1&&Math.abs(heroLayout.focus.width-heroLayout.shell.width)<1,"Research Focus must span the entire Hero shell");
+      assert(heroLayout.focus.top>Math.max(heroLayout.identity.bottom,heroLayout.background.bottom),"Full-width focus must follow both columns");
+      assert(heroLayout.portrait.right<heroLayout.name.left,"Avatar must sit to the left of the name");
+      assert.equal(heroLayout.portrait.width,width<768?90:96);
+      assert(heroLayout.shell.width<=1120);
+      if(width>=768) {
+        assert(heroLayout.identity.right<heroLayout.background.left);
+        assert(Math.abs(heroLayout.identity.top-heroLayout.background.top)<1);
+      } else assert(heroLayout.identity.bottom<heroLayout.background.top);
+      const typography=await page.locator(".home-v2 h2, .home-v2 h3, .expertise-group li, .publication-row-v2, .activity-card__description").evaluateAll(els=>els.map(el=>({
+        tag:el.tagName,size:parseFloat(getComputedStyle(el).fontSize),weight:getComputedStyle(el).fontWeight
+      })));
+      assert(typography.every(t=>t.size===(t.tag==="H2"?(width<768?24:26):t.tag==="H3"?18:16)),"Shared typography must remain consistent across modules");
       if(width<768) {
-        assert(heroLayout.portrait.width<=98,"Mobile portrait should be compact");
-        assert(heroLayout.portrait.left>=heroLayout.name.right-1,"Portrait should sit alongside the name");
-        assert(heroLayout.credentials.top>=heroLayout.portrait.bottom-1,"Full-width affiliations should follow the identity row");
+        await page.locator(".site-nav-v2__button").click();
+        assert(await page.locator(".site-nav-v2").isVisible(),"Mobile menu must open");
+        await page.locator(".site-nav-v2__button").click();
+        assert(await page.locator(".site-nav-v2").isHidden(),"Mobile menu must close");
       }
-      assert(await hero.locator(".hero-v2__content *").evaluateAll(els=>els.every(el=>el.getBoundingClientRect().right<=innerWidth+1)),"Hero content overflows");
-      console.log("HERO_LAYOUT",JSON.stringify({width,...heroLayout}));
+      const projects=page.locator(".research-index [data-go]");
+      assert.equal(await projects.count(),3);
+      for(const project of await projects.all()) assert(await project.isVisible(),"All project titles must be visible without switching");
+      assert.equal(await page.locator(".research-index__item").nth(2).locator(".card-meta").innerText(),"Ongoing Research");
+      const directoryLayout=await page.locator(".research-carousel").evaluate(root=>{
+        const media=root.querySelector(".research-carousel__viewport").getBoundingClientRect(),index=root.querySelector(".research-index").getBoundingClientRect();
+        return {mediaLeft:media.left,mediaRight:media.right,indexLeft:index.left,indexTop:index.top,mediaBottom:media.bottom};
+      });
+      if(width>900) assert(directoryLayout.mediaRight<directoryLayout.indexLeft,"Research directory must sit beside the media");
+      else assert(directoryLayout.indexTop>directoryLayout.mediaBottom,"Narrow layouts must keep the directory beneath the media");
+      console.log("HERO_LAYOUT",JSON.stringify({width,...heroLayout,typography,directoryLayout}));
       for (const id of ["hero-title","highlights","research","selected-work","activities","contact"])
         assert.equal(await page.locator("#"+id).count(), 1);
       assert.equal(await page.locator("[data-slide]").count(), 3);
@@ -362,12 +370,12 @@ async function checkCarouselRuntime(browser) {
       assert.deepEqual(publishedRecords.slice(0,3).map(p=>p.record_id),["fracture-toughness-measurement","suction-volume-evolution","stress-stiffness-anisotropies"]);
       assert(publishedRecords.every((p,i,ps)=>i===0||ps[i-1].year>=p.year));
       for(const [slide,recordId] of [[0,"nucleation-percolation"],[1,"fracture-toughness-measurement"]]) {
-        const record=publicationRecords.find(p=>p.record_id===recordId),item=page.locator("[data-slide]").nth(slide);
+        const record=publicationRecords.find(p=>p.record_id===recordId),item=page.locator("[data-research-item]").nth(slide);
         assert.equal(await item.locator(".research-slide__authors").innerText(),markedAuthors(record));
         assert.equal(normalized(await item.locator(".research-slide__venue").innerText()),markedAuthors(record)+" · "+record.venue+" · "+record.year);
-        assert.equal(await item.locator(".research-slide__body > .text-link").getAttribute("href"),"https://doi.org/"+record.doi);
+        assert.equal(await item.locator(":scope > .text-link").getAttribute("href"),"https://doi.org/"+record.doi);
       }
-      assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__authors").count(),0);
+      assert.equal(await page.locator("[data-research-item]").nth(2).locator(".research-slide__authors").count(),0);
       // Autoplay is viewport-gated: it starts only if the carousel is visible on arrival.
       if(initialCarouselVisible) {
         await page.waitForFunction(() => {
@@ -508,13 +516,13 @@ async function checkCarouselRuntime(browser) {
       assert(mediaDimensions.every(r=>r.width<=1120&&r.height<360),"Research media should remain compact");
       assert(await page.locator(".research-slide__media video, .research-slide__media img").evaluateAll(els=>els.every(el=>getComputedStyle(el).objectFit==="contain")),"Research images must not be cropped");
       const publicationLayout=await page.locator(".publication-row-v2").evaluateAll(rows=>rows.map(row=>{const css=getComputedStyle(row);return {fontSize:parseFloat(css.fontSize),lineHeight:parseFloat(css.lineHeight)/parseFloat(css.fontSize),padding:parseFloat(css.paddingTop)};}));
-      assert(publicationLayout.every(r=>r.fontSize>=14&&r.fontSize<=15&&r.lineHeight>=1.4&&r.lineHeight<=1.5&&r.padding===0),"APA list density is incorrect");
+      assert(publicationLayout.every(r=>r.fontSize===16&&r.lineHeight>=1.5&&r.lineHeight<=1.6&&r.padding===0),"APA list density is incorrect");
       const activityLayout=await page.locator(".activity-card").evaluateAll(cards=>cards.map(card=>{
         const image=card.querySelector(".activity-card__media").getBoundingClientRect(),body=card.querySelector(".activity-card__body").getBoundingClientRect(),r=card.getBoundingClientRect();
         return {width:r.width,height:r.height,imageWidth:image.width,imageHeight:image.height,textFirst:body.left<image.left,noOverlap:body.right<=image.left};
       }));
-      assert(activityLayout.every(r=>r.imageWidth===(width<768?80:96)&&Math.abs(r.imageWidth/r.imageHeight-4/3)<0.02&&r.textFirst&&r.noOverlap),"Activities must use small right-aligned thumbnails");
-      if(width>=1024) assert(activityLayout.every(r=>r.height<=175),"Desktop activity cards should remain compact");
+      assert(activityLayout.every(r=>r.imageWidth===(width<=360?64:width<768?80:96)&&Math.abs(r.imageWidth/r.imageHeight-4/3)<0.02&&r.textFirst&&r.noOverlap),"Activities must use small right-aligned thumbnails");
+      if(width>=1024) assert(activityLayout.every(r=>r.height<=260),"Desktop activity cards should remain compact");
       const footerLayout=await page.evaluate(()=>{
         const contact=document.querySelector("#contact"),footer=document.querySelector(".page__footer"),cr=contact.getBoundingClientRect(),fr=footer.getBoundingClientRect();
         return {gap:fr.top-cr.bottom,bottomGap:document.documentElement.scrollHeight-(fr.bottom+window.scrollY),bodyBottomMargin:getComputedStyle(document.body).marginBottom,bodyBottomPadding:getComputedStyle(document.body).paddingBottom,footerPosition:getComputedStyle(footer).position,contactBackground:getComputedStyle(contact).backgroundColor,footerBackground:getComputedStyle(footer).backgroundColor};
@@ -530,7 +538,7 @@ async function checkCarouselRuntime(browser) {
       assert.deepEqual(locations,["Les Diablerets, Switzerland","New Orleans, USA","Jeongseon, South Korea","Daejeon, South Korea"]);
       assert((await page.locator(".activity-card").last().innerText()).includes("Joint Doctoral Training"));
       const descriptions=await page.locator(".activity-card").evaluateAll(cards=>Object.fromEntries(
-        cards.map(card=>[card.querySelector("h3").textContent.trim(),card.querySelector(".activity-card__body > p:last-child").textContent.trim()])
+        cards.map(card=>[card.querySelector("h3").textContent.trim(),card.querySelector(".activity-card__description").textContent.trim()])
       ));
       assert.deepEqual(descriptions,{
         "Gordon Research Conference":"Poster presentation: Patterns, mechanisms, and modeling of clay desiccation cracking.",
