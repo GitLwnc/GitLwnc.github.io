@@ -27,7 +27,7 @@ Shared tokens live in `_sass/_academic-v2.scss`; components live in `_sass/_home
 | H2 | 26 px | 24 px |
 | H3 | 18 px | 18 px |
 | Body | 16 px | 16 px |
-| Supporting text | 14 px | 14 px |
+| Supporting text / DOI links | 14 px | 14 px |
 
 Type sizes use rem tokens based on the browser default, preserving user font scaling. Weights are 400, 600, and 700. Body line-height is 1.55 and heading line-height is 1.25. Spacing tokens are 8, 16, 24, 32, and 48 px at the default font size. Content width is capped at 1120 px.
 
@@ -57,11 +57,15 @@ From the existing repository:
 
 ```bash
 git status --short
-git fetch origin
+git fetch origin refs/heads/phase-1-foundation-v4:refs/remotes/origin/phase-1-foundation-v4
 git switch phase-1-foundation-v4
 git pull --ff-only origin phase-1-foundation-v4
 bundle install
 bundle exec jekyll serve -l -H localhost
 ```
+
+If no local V4 branch exists yet, replace the switch command with:
+
+`git switch -c phase-1-foundation-v4 --track origin/phase-1-foundation-v4`
 
 Open http://localhost:4000/ and hard-refresh after restarting the server. The backup remains available as its own remote branch.

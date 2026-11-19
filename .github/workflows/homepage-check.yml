@@ -34,7 +34,11 @@ jobs:
       - name: Install browser checks
         run: |
           npm install --prefix "$RUNNER_TEMP/homepage-qa" playwright@1.56.1
-          "$RUNNER_TEMP/homepage-qa/node_modules/.bin/playwright" install --with-deps chrome
+          if command -v google-chrome >/dev/null 2>&1; then
+            google-chrome --version
+          else
+            timeout 180 "$RUNNER_TEMP/homepage-qa/node_modules/.bin/playwright" install --with-deps chrome
+          fi
       - name: Check homepage
         env:
           NODE_PATH: ${{ runner.temp }}/homepage-qa/node_modules

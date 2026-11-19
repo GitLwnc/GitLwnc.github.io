@@ -76,7 +76,7 @@
 .publication-citation { min-width: 0; overflow-wrap: anywhere; }
 .publication-title { color: inherit; font-weight: 600; text-decoration: none; }
 .publication-title:hover, .publication-doi:hover, .publication-extra:hover { text-decoration: underline; }
-.publication-doi, .publication-extra { color: var(--link-hover); text-decoration: none; }
+.publication-doi, .publication-extra { color: var(--link-hover); text-decoration: none; font-size: var(--font-meta); }
 .publication-status { color: var(--text-body); font-weight: 400; }
 .publication-author strong { font-weight: 700; }
 .corresponding-mark { font-size: 0.75em; line-height: 0; }

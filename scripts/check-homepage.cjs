@@ -356,6 +356,7 @@ async function checkCarouselRuntime(browser) {
           const expected=markedAuthors(record)+" ("+record.year+"). "+record.title+". "+record.venue+", "+record.volume+(record.issue?"("+record.issue+")":"")+pagination+". https://doi.org/"+record.doi;
           assert.equal(citation,expected,"Incomplete or repeated APA citation");
           assert.equal(await row.locator(".publication-doi").getAttribute("href"),"https://doi.org/"+record.doi);
+          assert.equal(await row.locator(".publication-doi").evaluate(el=>getComputedStyle(el).fontSize),"14px");
           assert.equal(await row.locator("em").innerText(),record.venue+", "+record.volume);
           assert.equal(await row.locator(".publication-status").count(),0);
         } else {
