@@ -9,22 +9,26 @@
 .text-link { color: var(--link-hover); font-weight: 600; text-decoration: none; }
 .text-link:hover { text-decoration: underline; }
 
-/* Three direct siblings: personal identity, academic background, full-width focus. */
+/* Hero: identity and education beside a separate, equally weighted research profile. */
 .hero-v2 { padding: var(--space-4) 0; }
-.hero-v2__grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); column-gap: var(--space-5); row-gap: var(--space-4); align-items: start; }
-.hero-identity, .hero-background, .hero-focus { min-width: 0; }
+.hero-v2__grid { display: grid; grid-template-columns: minmax(0, 42fr) minmax(0, 58fr); column-gap: var(--space-5); align-items: start; }
+.hero-identity, .hero-background, .hero-research { min-width: 0; }
+.hero-identity { display: grid; gap: var(--space-3); }
 .hero-identity__person { display: flex; align-items: center; gap: var(--space-2); }
 .hero-v2__portrait { display: block; width: 96px; height: 96px; flex: 0 0 96px; border-radius: 50%; object-fit: cover; object-position: 49% 46%; margin: 0; }
-.hero-identity__role { margin-top: var(--space-1) !important; color: var(--text-muted); }
-.hero-identity__email { display: inline-block; margin-top: var(--space-2); }
-.hero-background { display: grid; gap: var(--space-2); }
-.hero-background__institution p { margin-top: var(--space-1); }
-.hero-background__date, .hero-background__supervisors { color: var(--text-muted); font-size: var(--font-meta); }
-.hero-background__supervisors p + p { margin-top: var(--space-1); }
-.hero-background__supervisors a { color: inherit; }
-.hero-focus { grid-column: 1 / -1; padding-top: var(--space-3); border-top: 1px solid var(--border); }
-.hero-v2__bio { margin-top: var(--space-2); font-size: var(--font-body); line-height: var(--leading-body); }
-.hero-v2__bio p + p { margin-top: var(--space-1); }
+.hero-v2 h1 { font-size: 2rem; }
+.hero-identity__links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); margin-top: var(--space-1); font-size: var(--font-meta); }
+.hero-identity__links a { font-weight: 400; text-decoration: none; }
+.hero-identity__links a:hover { text-decoration: underline; }
+.hero-background { display: grid; gap: var(--space-3); }
+.hero-background__heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px var(--space-1); }
+.hero-background__date { color: var(--text-muted); font-size: var(--font-meta); white-space: nowrap; }
+.hero-background__date::before { content: "·"; margin-right: var(--space-1); }
+.hero-background__role, .hero-background__supervisor { margin-top: var(--space-1) !important; }
+.hero-background__supervisor { color: var(--text-muted); font-size: var(--font-meta); }
+.hero-background__supervisor a { color: inherit; }
+.hero-v2__bio { font-size: var(--font-body); font-weight: 400; line-height: var(--leading-body); }
+.hero-v2__bio p + p { margin-top: var(--space-2); }
 
 /* Quiet section structure and consistent heading hierarchy. */
 .home-section { padding: var(--space-4) 0; border-top: 1px solid var(--border); }
@@ -107,13 +111,13 @@
 .home-page .footer-v2 { color: var(--bg-main); }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 @media (max-width: 900px) {
+  .hero-v2__grid { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-3); }
   .research-carousel { grid-template-columns: minmax(0, 1fr); grid-template-areas: "media" "controls" "index"; }
   .research-index { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); }
   .research-index__item { padding-left: var(--space-1); }
   .activities-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 767px) {
-  .hero-v2__grid { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-3); }
   .hero-v2__portrait { width: 90px; height: 90px; flex-basis: 90px; }
   .section-heading--row { flex-direction: column; gap: var(--space-2); }
   .research-index { grid-template-columns: minmax(0, 1fr); }

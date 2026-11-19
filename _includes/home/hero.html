@@ -1,36 +1,44 @@
 {% include base_path %}
 <section class="hero-v2" aria-labelledby="hero-title">
   <div class="site-shell hero-v2__grid">
-    <section class="hero-identity" aria-labelledby="hero-title">
+    <section class="hero-identity" aria-label="Identity and Academic Background">
       <div class="hero-identity__person">
         <img class="hero-v2__portrait" src="{{ base_path }}/images/profile/yuhan-hero-alps.jpg" alt="Portrait of Yuhan Yang in the Alps" width="96" height="96" loading="eager" decoding="async">
-        <div><h1 id="hero-title">Yuhan Yang</h1><p class="hero-identity__role">Ph.D. Candidate</p></div>
+        <div>
+          <h1 id="hero-title">Yuhan Yang</h1>
+          <div class="hero-identity__links">
+            <a href="mailto:{{ site.author.email }}">Email</a>
+            {% if site.author.googlescholar and site.author.googlescholar != '' %}
+            <span aria-hidden="true">·</span><a href="{{ site.author.googlescholar }}" rel="noopener">Google Scholar</a>
+            {% endif %}
+          </div>
+        </div>
       </div>
-      <a class="text-link hero-identity__email" href="mailto:yhyang@hnu.edu.cn">Email</a>
+
+      <div class="hero-background">
+        <div class="hero-background__institution">
+          <div class="hero-background__heading">
+            <h3>Hunan University</h3>
+            <p class="hero-background__date">Sep. 2021 – Expected Dec. 2026</p>
+          </div>
+          <p class="hero-background__role">Ph.D. Candidate · Geotechnical Engineering</p>
+          <p class="hero-background__supervisor">Supervisor: Prof. <a href="https://chaozhanghnu.github.io/">Chao Zhang</a></p>
+        </div>
+        <div class="hero-background__institution">
+          <div class="hero-background__heading">
+            <h3>KAIST</h3>
+            <p class="hero-background__date">Sep. 2025 – Mar. 2026</p>
+          </div>
+          <p class="hero-background__role">Visiting Ph.D. Researcher · Mechanical Engineering</p>
+          <p class="hero-background__supervisor">Supervisor: Prof. <a href="https://fil.kaist.ac.kr/">Hyoungsoo Kim</a></p>
+        </div>
+      </div>
     </section>
 
-    <section class="hero-background" aria-label="Academic Background">
-      <div class="hero-background__institution">
-        <h3>Hunan University</h3>
-        <p>Ph.D. Candidate · Geotechnical Engineering</p>
-        <p class="hero-background__date">Expected December 2026</p>
-      </div>
-      <div class="hero-background__institution">
-        <h3>KAIST</h3>
-        <p>Visiting Ph.D. Researcher · Mechanical Engineering</p>
-        <p class="hero-background__date">2025–2026</p>
-      </div>
-      <div class="hero-background__supervisors">
-        <p>Ph.D. supervisor: Prof. <a href="https://chaozhanghnu.github.io/">Chao Zhang</a></p>
-        <p>KAIST supervisor: Prof. <a href="https://fil.kaist.ac.kr/">Hyoungsoo Kim</a></p>
-      </div>
-    </section>
-
-    <section class="hero-focus" aria-labelledby="research-focus-title">
-      <h2 id="research-focus-title">Research Focus</h2>
+    <section class="hero-research" aria-label="Research Profile">
       <div class="hero-v2__bio">
-        <p>My doctoral research focuses on desiccation cracking and the hydro-mechanical behavior of variably saturated clayey soils.</p>
-        <p>I have published <strong>five first-author papers</strong> in peer-reviewed journals, including <em>Géotechnique</em> and <em>Physical Review E</em>.</p>
+        <p>My doctoral research focuses on <strong>desiccation cracking</strong> and the hydro-mechanical behavior of variably saturated clayey soils.</p>
+        <p>I have published <strong>five first-author papers</strong> in peer-reviewed journals, including <strong><em>Géotechnique</em></strong> and <strong><em>Physical Review E</em></strong>.</p>
         <p>My broader research interests include fracture in other porous media and soft materials, as well as the implications of soil desiccation cracking for engineering and geoscience.</p>
       </div>
     </section>

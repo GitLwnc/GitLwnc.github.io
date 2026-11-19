@@ -231,62 +231,76 @@ async function checkCarouselRuntime(browser) {
       const hero=page.locator(".hero-v2");
       assert.equal(await hero.locator("#hero-title").innerText(),"Yuhan Yang");
       assert.deepEqual(await hero.locator(".hero-background__institution h3").allTextContents(),["Hunan University","KAIST"]);
-      assert.deepEqual(await hero.locator(".hero-background__institution > p:not(.hero-background__date)").allTextContents(),[
+      assert.deepEqual(await hero.locator(".hero-background__role").allTextContents(),[
         "Ph.D. Candidate · Geotechnical Engineering","Visiting Ph.D. Researcher · Mechanical Engineering"
       ]);
-      assert.deepEqual(await hero.locator(".hero-background__date").allTextContents(),["Expected December 2026","2025–2026"]);
-      assert.deepEqual(await hero.locator(".hero-background__supervisors p").allTextContents(),[
-        "Ph.D. supervisor: Prof. Chao Zhang","KAIST supervisor: Prof. Hyoungsoo Kim"
+      assert.deepEqual(await hero.locator(".hero-background__date").allTextContents(),["Sep. 2021 – Expected Dec. 2026","Sep. 2025 – Mar. 2026"]);
+      assert.deepEqual(await hero.locator(".hero-background__supervisor").allTextContents(),[
+        "Supervisor: Prof. Chao Zhang","Supervisor: Prof. Hyoungsoo Kim"
       ]);
-      assert.equal(await hero.locator(".hero-identity__role").innerText(),"Ph.D. Candidate");
-      assert.equal(await hero.locator(".hero-identity__email").getAttribute("href"),"mailto:yhyang@hnu.edu.cn");
-      assert.equal(await hero.locator(".hero-background .hero-focus, .hero-background .hero-v2__bio").count(),0);
-      assert.equal(await hero.locator("#research-focus-title").innerText(),"Research Focus");
+      assert.equal(await hero.locator(".hero-background__institution").nth(0).locator('a').getAttribute("href"),"https://chaozhanghnu.github.io/");
+      assert.equal(await hero.locator(".hero-background__institution").nth(1).locator('a').getAttribute("href"),"https://fil.kaist.ac.kr/");
+      assert.equal(await hero.locator(".hero-identity__links a").first().getAttribute("href"),"mailto:yhyang@hnu.edu.cn");
+      assert.equal(await hero.locator(".hero-identity__links a").count(),1,"No verified Scholar URL is configured; do not show a guessed profile");
+      assert(!(await hero.locator(".hero-identity__person").innerText()).includes("Ph.D. Candidate"),"Doctoral identity belongs to Hunan University");
+      assert.equal(await hero.locator(".hero-background .hero-research, .hero-background .hero-v2__bio").count(),0);
+      assert.equal(await hero.locator("h2, .hero-focus, #research-focus-title").count(),0,"No standalone Research Focus section");
       const focus="My doctoral research focuses on desiccation cracking and the hydro-mechanical behavior of variably saturated clayey soils.";
       const output="I have published five first-author papers in peer-reviewed journals, including Géotechnique and Physical Review E.";
       const future="My broader research interests include fracture in other porous media and soft materials, as well as the implications of soil desiccation cracking for engineering and geoscience.";
-      assert.deepEqual(await hero.locator(".hero-focus .hero-v2__bio > p").allTextContents(),[focus,output,future]);
-      assert.equal(await hero.locator(".hero-v2__bio strong").innerText(),"five first-author papers");
+      const paragraphs=hero.locator(".hero-research .hero-v2__bio > p");
+      assert.deepEqual(await paragraphs.allTextContents(),[focus,output,future]);
+      assert.deepEqual(await paragraphs.nth(0).locator("strong").allTextContents(),["desiccation cracking"]);
+      assert.deepEqual(await paragraphs.nth(1).locator("strong").allTextContents(),["five first-author papers","Géotechnique","Physical Review E"]);
+      assert.deepEqual(await paragraphs.nth(1).locator("strong > em").allTextContents(),["Géotechnique","Physical Review E"]);
+      assert.equal(await paragraphs.nth(2).locator("strong, b").count(),0);
       const heroText=await hero.innerText();
       for(const sentence of [focus,output,future]) assert.equal(heroText.split(sentence).length-1,1,"Research sentence repeated or missing");
-      assert.deepEqual(await hero.locator(".hero-v2__bio em").allTextContents(),["Géotechnique","Physical Review E"]);
-      assert.equal(await hero.locator('a:has-text("Chao Zhang")').getAttribute("href"),"https://chaozhanghnu.github.io/");
-      assert.equal(await hero.locator('a:has-text("Hyoungsoo Kim")').getAttribute("href"),"https://fil.kaist.ac.kr/");
       assert.equal(await page.locator("header nav[aria-label='Primary navigation']").count(),1);
       assert.deepEqual(await page.locator(".site-nav-v2 a").allTextContents(),["Publications","CV","Contact"]);
       assert.deepEqual(await page.locator(".site-nav-v2 a").evaluateAll(els=>els.map(el=>el.getAttribute("href"))),["/publications/","/cv/","/#contact"]);
       const heroLayout=await hero.evaluate(el=>{
         const pick=s=>el.querySelector(s);
         const rect=node=>{const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
-        const info=s=>{const css=getComputedStyle(pick(s));return {size:parseFloat(css.fontSize),weight:css.fontWeight,line:parseFloat(css.lineHeight)/parseFloat(css.fontSize),align:css.textAlign};};
-        const identity=pick(".hero-identity"),background=pick(".hero-background"),focus=pick(".hero-focus");
+        const info=node=>{const s=getComputedStyle(node);return {size:parseFloat(s.fontSize),weight:s.fontWeight,line:parseFloat(s.lineHeight)/parseFloat(s.fontSize),color:s.color};};
+        const identity=pick(".hero-identity"),background=pick(".hero-background"),research=pick(".hero-research");
         return {
-          siblings:identity.parentElement===background.parentElement&&background.parentElement===focus.parentElement,
+          siblings:identity.parentElement===research.parentElement,
+          backgroundOnLeft:identity.contains(background),
           pictureSharesIdentity:pick(".hero-identity__person").contains(pick("#hero-title"))&&pick(".hero-identity__person").contains(pick("img")),
-          identity:rect(identity),background:rect(background),focus:rect(focus),shell:rect(pick(".site-shell")),
-          portrait:rect(pick("img")),name:rect(pick("h1")),nameType:info("h1"),focusType:info(".hero-focus h2"),
-          paragraphs:Array.from(pick(".hero-v2__bio").children).map(p=>{const s=getComputedStyle(p);return {size:parseFloat(s.fontSize),weight:s.fontWeight,line:parseFloat(s.lineHeight)/parseFloat(s.fontSize),color:s.color};}),
-          backgroundHeadings:Array.from(background.querySelectorAll("h3")).map(h=>({size:parseFloat(getComputedStyle(h).fontSize),weight:getComputedStyle(h).fontWeight})),
-          pageHeight:document.documentElement.scrollHeight
+          linksUnderName:pick(".hero-identity__person h1").parentElement.contains(pick(".hero-identity__links")),
+          identity:rect(identity),background:rect(background),research:rect(research),shell:rect(pick(".site-shell")),
+          portrait:rect(pick("img")),name:rect(pick("h1")),nameType:info(pick("h1")),links:rect(pick(".hero-identity__links")),
+          paragraphs:Array.from(pick(".hero-v2__bio").children).map(p=>({...info(p),margin:getComputedStyle(p).marginTop})),
+          schools:Array.from(background.querySelectorAll(".hero-background__institution")).map(group=>({
+            title:rect(group.querySelector("h3")),date:rect(group.querySelector(".hero-background__date")),
+            titleType:info(group.querySelector("h3")),dateType:info(group.querySelector(".hero-background__date")),
+            supervisorType:info(group.querySelector(".hero-background__supervisor")),roleType:info(group.querySelector(".hero-background__role"))
+          })),
+          linkType:info(pick(".hero-identity__links a")),
+          height:el.getBoundingClientRect().height,pageHeight:document.documentElement.scrollHeight
         };
       });
-      assert(heroLayout.siblings,"Identity, academic background, and focus must be direct siblings");
-      assert(heroLayout.pictureSharesIdentity,"Avatar and name must share one horizontal identity group");
-      assert.equal(heroLayout.nameType.size,width<768?28:32);
+      assert(heroLayout.siblings&&heroLayout.backgroundOnLeft,"Education belongs inside the left column, research is its right sibling");
+      assert(heroLayout.pictureSharesIdentity&&heroLayout.linksUnderName,"Photo, name and identity links must stay grouped");
+      assert(heroLayout.nameType.size>=30&&heroLayout.nameType.size<=32);
       assert.equal(heroLayout.nameType.weight,"700");
-      assert.equal(heroLayout.focusType.size,width<768?24:26);
-      assert(heroLayout.backgroundHeadings.every(h=>h.size===18&&h.weight==="600"));
+      assert.equal(heroLayout.linkType.size,14);
+      assert.equal(heroLayout.linkType.weight,"400");
+      assert(heroLayout.schools.every(g=>g.titleType.size===18&&g.titleType.weight==="600"&&g.dateType.size===14&&g.supervisorType.size===14&&g.roleType.size===16));
       assert(heroLayout.paragraphs.every(p=>p.size===16&&p.weight==="400"&&p.line>=1.5&&p.line<=1.6));
-      assert(heroLayout.paragraphs.every(p=>p.color===heroLayout.paragraphs[0].color));
-      assert(Math.abs(heroLayout.focus.left-heroLayout.shell.left)<1&&Math.abs(heroLayout.focus.width-heroLayout.shell.width)<1,"Research Focus must span the entire Hero shell");
-      assert(heroLayout.focus.top>Math.max(heroLayout.identity.bottom,heroLayout.background.bottom),"Full-width focus must follow both columns");
-      assert(heroLayout.portrait.right<heroLayout.name.left,"Avatar must sit to the left of the name");
-      assert.equal(heroLayout.portrait.width,width<768?90:96);
+      assert(heroLayout.paragraphs.every(p=>p.color===heroLayout.paragraphs[0].color&&p.line===heroLayout.paragraphs[0].line));
+      assert.equal(heroLayout.paragraphs[1].margin,heroLayout.paragraphs[2].margin);
+      assert(heroLayout.portrait.right<heroLayout.name.left,"Photo must be left of the name");
+      assert(heroLayout.links.top>=heroLayout.name.bottom);
+      assert(heroLayout.portrait.width>=90&&heroLayout.portrait.width<=100);
       assert(heroLayout.shell.width<=1120);
-      if(width>=768) {
-        assert(heroLayout.identity.right<heroLayout.background.left);
-        assert(Math.abs(heroLayout.identity.top-heroLayout.background.top)<1);
-      } else assert(heroLayout.identity.bottom<heroLayout.background.top);
+      if(width>900) {
+        assert(heroLayout.identity.right<heroLayout.research.left);
+        assert(Math.abs(heroLayout.identity.top-heroLayout.research.top)<1,"Columns must align at the top");
+        assert(heroLayout.schools.every(g=>Math.abs(g.title.top+g.title.height-g.date.top-g.date.height)<5),"School and date should share a baseline when desktop space allows");
+      } else assert(heroLayout.background.bottom<heroLayout.research.top,"Mobile order: identity, education, research");
+      assert(await hero.locator("*").evaluateAll(els=>els.every(el=>el.getBoundingClientRect().right<=innerWidth+1)),"Hero content must not overflow");
       const typography=await page.locator(".home-v2 h2, .home-v2 h3, .expertise-group li, .publication-row-v2, .activity-card__description").evaluateAll(els=>els.map(el=>({
         tag:el.tagName,size:parseFloat(getComputedStyle(el).fontSize),weight:getComputedStyle(el).fontWeight
       })));
