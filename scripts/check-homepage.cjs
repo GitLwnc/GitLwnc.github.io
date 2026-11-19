@@ -655,6 +655,21 @@ async function checkCarouselRuntime(browser) {
       await popup.close();
     }
     await linkContext.close();
+    // Verify real mobile menu navigation as well as its open/close state.
+    for(const width of [390,320]) {
+      const menuContext=await browser.newContext({viewport:{width,height:844},isMobile:true,hasTouch:true});
+      const menuPage=await menuContext.newPage();
+      await menuPage.goto("http://127.0.0.1:4000/",{waitUntil:"domcontentloaded"});
+      await menuPage.locator(".site-nav-v2__button").click();
+      await menuPage.locator('.site-nav-v2 a[href="/cv/"]').click();
+      await menuPage.waitForURL("**/cv/");
+      assert.equal(await menuPage.locator(".publication-row-v2").count(),publicationRecords.length);
+      await menuPage.goto("http://127.0.0.1:4000/",{waitUntil:"domcontentloaded"});
+      await menuPage.locator(".site-nav-v2__button").click();
+      await menuPage.locator('.site-nav-v2 a[href="/#contact"]').click();
+      await menuPage.waitForFunction(()=>location.hash==="#contact"&&document.querySelector("#contact").getBoundingClientRect().top<innerHeight);
+      await menuContext.close();
+    }
     // Existing publication URLs and navigation must survive the data update.
     const contentContext=await browser.newContext();
     const contentPage=await contentContext.newPage();

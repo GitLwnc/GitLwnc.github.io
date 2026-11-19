@@ -53,7 +53,7 @@ strong { font-weight: 700; }
 .site-nav-v2__toggle { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .site-nav-v2__button { display: none; }
 .page__footer { margin-top: 0; padding: 0; background: var(--bg-soft); color: var(--text-body); }
-.page__footer footer { max-width: var(--page-max-width); margin-inline: auto; padding: var(--space-2) var(--space-3); }
+.page__footer footer { max-width: var(--page-max-width); margin: 0 auto; padding: var(--space-2) var(--space-3); }
 .footer-v2 { display: flex; font-size: var(--font-meta); color: var(--text-muted); }
 @media (max-width: 767px) {
   :root { --font-h1: 1.75rem; --font-h2: 1.5rem; }
