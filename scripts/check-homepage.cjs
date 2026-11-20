@@ -319,7 +319,7 @@ async function checkCarouselRuntime(browser) {
       assert(heroLayout.emphasis.length===6&&heroLayout.emphasis.every(e=>e.weight==="600"),"All research emphasis must use semibold 600");
       assert(heroLayout.emphasis.filter(e=>e.tag==="EM").every(e=>e.style==="italic"),"Journal names must remain italic");
       assert(heroLayout.paragraphGaps.every(g=>g>=16&&g<=20)&&Math.abs(heroLayout.paragraphGaps[0]-heroLayout.paragraphGaps[1])<0.75,"Research paragraph spacing must stay consistent within 16–20px");
-      assert.equal(heroLayout.researchTitle.size,18);
+      assert.equal(heroLayout.researchTitle.size,await page.locator("#highlights-title").evaluate(el=>parseFloat(getComputedStyle(el).fontSize)),"Hero and Featured Research headings must use the same font size");
       assert.equal(heroLayout.researchTitle.weight,"600");
       assert(heroLayout.firstParagraph.top-heroLayout.researchTitle.bottom>=11.5,"Research title must sit above the paragraphs");
       assert(heroLayout.schools.every(g=>Math.abs(g.roleType.line-1.45)<0.01&&Math.abs(g.supervisorType.line-1.45)<0.01),"School information should use compact, readable line height");
@@ -334,7 +334,7 @@ async function checkCarouselRuntime(browser) {
         assert(heroLayout.schools.every(g=>Math.abs(g.title.top+g.title.height-g.date.top-g.date.height)<5),"School and date should share a baseline when desktop space allows");
       } else assert(heroLayout.background.bottom<heroLayout.research.top,"Mobile order: identity, education, research");
       assert(await hero.locator("*").evaluateAll(els=>els.every(el=>el.getBoundingClientRect().right<=innerWidth+1)),"Hero content must not overflow");
-      const typography=await page.locator(".home-v2 h2:not(.hero-research__title), .home-v2 h3, .expertise-group li, .publication-row-v2, .activity-card__description").evaluateAll(els=>els.map(el=>({
+      const typography=await page.locator(".home-v2 h2, .home-v2 h3, .expertise-group li, .publication-row-v2, .activity-card__description").evaluateAll(els=>els.map(el=>({
         tag:el.tagName,size:parseFloat(getComputedStyle(el).fontSize),weight:getComputedStyle(el).fontWeight
       })));
       assert(typography.every(t=>t.size===(t.tag==="H2"?(width<768?24:26):t.tag==="H3"?18:16)),"Shared typography must remain consistent across modules");
