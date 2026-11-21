@@ -15,10 +15,7 @@ async function checkCarouselRuntime(browser) {
     muted:v.muted,defaultMuted:v.defaultMuted,paused:v.paused,readyState:v.readyState,
     networkState:v.networkState,currentTime:v.currentTime,duration:Number.isFinite(v.duration)?v.duration:null,
     error:v.error&&{code:v.error.code,message:v.error.message},videoWidth:v.videoWidth,videoHeight:v.videoHeight,
-    codec:v.canPlayType('video/mp4; codecs="avc1.42E01E"'),
-    soundText:v.closest("[data-slide]").querySelector("[data-sound-toggle]").textContent,
-    soundPressed:v.closest("[data-slide]").querySelector("[data-sound-toggle]").getAttribute("aria-pressed"),
-    soundLabel:v.closest("[data-slide]").querySelector("[data-sound-toggle]").getAttribute("aria-label")
+    codec:v.canPlayType('video/mp4; codecs="avc1.42E01E"')
   })));
   const enter=page=>page.evaluate(()=>{
     const r=document.querySelector(".research-carousel__viewport").getBoundingClientRect();
@@ -38,9 +35,7 @@ async function checkCarouselRuntime(browser) {
       const delta=b.currentTime>=a.currentTime?b.currentTime-a.currentTime:b.duration-a.currentTime+b.currentTime;
       assert(delta>0.1&&delta<2,"Decoded video time must continue increasing");
       assert.equal(b.paused,false);assert.equal(b.error,null);
-      assert.equal(b.soundText,b.muted?"Unmute":"Mute");
-      assert.equal(b.soundPressed,String(!b.muted));
-      assert.equal(b.soundLabel,b.muted?"Unmute video":"Mute video");
+      assert(b.muted && b.defaultMuted,"Research videos must remain muted for autoplay");
     }
     return samples;
   };
@@ -173,12 +168,9 @@ async function checkCarouselRuntime(browser) {
       await page.locator('[data-go="0"]').click(); await page.waitForTimeout(400); await allPaused(page);
       assert((await state(page)).every(v=>v.paused),"Manual pause must persist when returning from another research item");
       await page.locator("[data-video-toggle]").first().click();item.steps.manualPlay=await progress(page,0);
-      await page.locator("[data-sound-toggle]").first().click();
-      assert.equal((await state(page))[0].muted,false);
-      assert.equal(await page.locator("[data-sound-toggle]").first().innerText(),"Mute");
-      await page.locator("[data-sound-toggle]").first().click();
-      assert.equal((await state(page))[0].muted,true);
-      assert.equal(await page.locator("[data-sound-toggle]").first().innerText(),"Unmute");
+      assert.equal(await page.locator("[data-sound-toggle], .research-video-actions").count(),0,
+        "Silent research films must not add an audio or control toolbar");
+      assert((await state(page))[0].muted,"Manual playback should stay muted");
       await page.evaluate(()=>{for(let i=0;i<12;i++) document.querySelector('[data-go="'+((i+1)%3)+'"]').click();});
       item.steps.rapidSwitches=await progress(page,0);
       await page.locator("#contact").scrollIntoViewIfNeeded();await allPaused(page);
@@ -398,6 +390,14 @@ async function checkCarouselRuntime(browser) {
       ]);
       assert.equal(await page.locator(".research-index .card-meta, .research-index h3, .research-index .research-slide__authors, .research-index .research-slide__venue, .research-index .text-link").count(),0,"Directory must contain only the three short titles");
       assert.equal(await page.locator("[data-prev], [data-next], [data-carousel-controls], .research-carousel__controls").count(),0,"Previous/Next and their layout must be removed");
+      assert.equal(await page.locator(".research-slide__video-toggle").count(),2,
+        "Retain a compact manual play/pause fallback directly on each video");
+      assert.equal(await page.locator(".research-slide__links [data-full-video]").count(),2,
+        "Full-size links must move into compact publication details");
+      assert.equal(await page.locator(".research-video-actions, [data-sound-toggle]").count(),0,
+        "Remove the redundant audio and bottom control rows");
+      assert(await page.locator(".research-slide__meta").evaluateAll(rows=>rows.every(el=>getComputedStyle(el).display==="flex")),
+        "Publication status and journal/year should share one metadata row");
       const directoryLayout=await page.locator(".research-carousel").evaluate(root=>{
         const media=root.querySelector(".research-carousel__viewport").getBoundingClientRect(),index=root.querySelector(".research-index").getBoundingClientRect();
         return {mediaLeft:media.left,mediaRight:media.right,indexLeft:index.left,indexTop:index.top,mediaBottom:media.bottom};
@@ -478,7 +478,7 @@ async function checkCarouselRuntime(browser) {
       assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__authors, .publication-author, a[href*='doi.org']").count(),0);
       assert.equal(await page.locator("[data-slide]").nth(2).locator(".card-meta").textContent(),"Ongoing Research");
       assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__title").textContent(),"Phase-field modelling of soil desiccation cracking");
-      assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__venue").textContent(),"Numerical modelling · Ongoing");
+      assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__venue").textContent(),"Numerical modelling");
       assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__paper").getAttribute("href"),"/research/#ongoing");
       // Autoplay is viewport-gated: it starts only if the carousel is visible on arrival.
       if(initialCarouselVisible) {
@@ -582,8 +582,8 @@ async function checkCarouselRuntime(browser) {
       await playing(0);
       await recordMedia(0);
       assert.equal(await page.locator("video").nth(1).getAttribute("src"),null);
-      await page.locator("[data-sound-toggle]").first().click();
-      assert.equal(await page.locator("video").first().evaluate(v=>v.muted),false);
+      assert.equal(await page.locator("[data-sound-toggle]").count(),0);
+      assert.equal(await page.locator("video").first().evaluate(v=>v.muted),true);
       await page.locator('[data-go="1"]').click(); await active(1); await playing(1);
       assert.equal(await page.locator("video").first().evaluate(v=>v.paused),true,"Previous slide video must pause when switching");
       assert.equal(await page.locator("video").nth(1).evaluate(v=>!v.paused),true,"New active slide video must autoplay");

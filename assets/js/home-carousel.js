@@ -17,15 +17,12 @@
       return !document.hidden && inView && slides[index].contains(video) &&
         !manualPause.has(video);
     }
-    function soundState(video) {
-      var sound = video.closest("[data-slide]").querySelector("[data-sound-toggle]");
-      if (!sound) return;
-      sound.textContent = video.muted ? "Unmute" : "Mute";
-      sound.setAttribute("aria-label", video.muted ? "Unmute video" : "Mute video");
-      sound.setAttribute("aria-pressed", String(!video.muted));
-    }
     function buttonState(video) {
-      soundState(video);
+      var media = video.closest(".research-slide__media");
+      if (media) {
+        media.classList.toggle("is-paused", video.paused);
+        media.classList.toggle("is-error", failures.has(video));
+      }
       var button = video.closest("[data-slide]").querySelector("[data-video-toggle]");
       if (!button) return;
       button.hidden = false;
@@ -182,12 +179,6 @@
       video.muted = true;
       video.defaultMuted = true;
       video.playsInline = true;
-      var sound = video.closest("[data-slide]").querySelector("[data-sound-toggle]");
-      if (sound) {
-        sound.addEventListener("click", function () { video.muted = !video.muted; soundState(video); });
-        video.addEventListener("volumechange", function () { soundState(video); });
-        soundState(video);
-      }
       video.addEventListener("loadedmetadata", function () {
         if (!loaded.has(video) || !video.getAttribute("src")) return;
         var time = resumeTimes.get(video) || 0;
@@ -241,7 +232,7 @@
       });
     });
     root.addEventListener("keydown", function (event) {
-      if (event.target.closest("video, [data-video-toggle], [data-sound-toggle]") ||
+      if (event.target.closest("video, [data-video-toggle]") ||
           (event.target.closest("a") && !event.target.closest("[data-go]"))) return;
       var next = index;
       if (event.key === "ArrowDown" || event.key === "ArrowRight") next++;

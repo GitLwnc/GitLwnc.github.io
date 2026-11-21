@@ -15,32 +15,38 @@
               <video muted playsinline loop preload="none" data-src="{{ item.video | relative_url }}" aria-label="{{ research_title | escape }} research video"{% if item.poster %} poster="{{ item.poster | relative_url }}"{% endif %}>
                 Your browser does not support video.
               </video>
+              <button type="button" class="research-slide__video-toggle" data-video-toggle aria-label="Play video">Play video</button>
               {% elsif item.image and item.image != '' %}
               <img src="{{ item.image | relative_url }}" alt="Phase-field simulation of drying-induced fracture in clay" loading="lazy">
               {% else %}
               <div class="research-placeholder research-placeholder--ongoing">
-                <strong>Phase-field modelling</strong>
-                <span>Simulation image coming soon</span>
+                <span>Simulation visualization in preparation</span>
               </div>
               {% endif %}
             </div>
             <div class="research-slide__body">
-              <p class="card-meta">{{ item.label }}</p>
-              <h3 class="research-slide__title">{{ research_title | escape }}</h3>
-              {% if research_paper %}
-              <p class="research-slide__authors">{% include publication-authors.html paper=research_paper %}</p>
-              <p class="research-slide__venue">{{ research_paper.venue }} · {{ research_paper.year }}</p>
-              <a class="text-link research-slide__paper" href="https://doi.org/{{ research_paper.doi }}">Read paper</a>
-              {% else %}
-              <p class="research-slide__venue">{{ item.venue }}</p>
-              <a class="text-link research-slide__paper" href="{{ base_path }}{{ item.url }}">Explore ongoing research</a>
-              {% endif %}
-              {% if item.video %}
-              <div class="research-video-actions" aria-label="Video controls">
-                <button type="button" data-video-toggle aria-label="Play research video">Play video</button>
-                <button type="button" data-sound-toggle aria-label="Unmute video" aria-pressed="false">Unmute</button>
-                <a href="{{ item.video | relative_url }}" data-full-video target="_blank" rel="noopener">Full-size video</a>
+              <div class="research-slide__meta">
+                <span class="card-meta">{{ item.label }}</span>
+                <span class="research-slide__meta-divider" aria-hidden="true">·</span>
+                <span class="research-slide__venue">{% if research_paper %}{{ research_paper.venue }} · {{ research_paper.year }}{% else %}{{ item.venue | remove: ' · Ongoing' }}{% endif %}</span>
               </div>
+              <h3 class="research-slide__title">{{ research_title | escape }}</h3>
+              <div class="research-slide__footer{% unless research_paper %} research-slide__footer--ongoing{% endunless %}">
+                {% if research_paper %}
+                <p class="research-slide__authors">{% include publication-authors.html paper=research_paper %}</p>
+                {% endif %}
+                <div class="research-slide__links">
+                  {% if research_paper %}
+                  <a class="text-link research-slide__paper" href="https://doi.org/{{ research_paper.doi }}">Read paper</a>
+                  {% else %}
+                  <a class="text-link research-slide__paper" href="{{ base_path }}{{ item.url }}">Explore ongoing research</a>
+                  {% endif %}
+                  {% if item.video %}
+                  <a class="research-slide__full-video" href="{{ item.video | relative_url }}" data-full-video target="_blank" rel="noopener">Full-size video</a>
+                  {% endif %}
+                </div>
+              </div>
+              {% if item.video %}
               <p class="research-video-message" data-video-message role="status" hidden></p>
               {% endif %}
             </div>
