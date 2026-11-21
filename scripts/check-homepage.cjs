@@ -46,23 +46,37 @@ async function checkCarouselRuntime(browser) {
   };
   const animation=async(page,selector)=> {
     const result=await page.evaluate(selector=>new Promise(resolve=>{
-      const track=document.querySelector(".research-carousel__track");
-      const x=()=>new DOMMatrixReadOnly(getComputedStyle(track).transform).m41;
-      const before=x(),duration=getComputedStyle(track).transitionDuration,positions=[before];
-      const start=performance.now();let running=false;
+      const root=document.querySelector("[data-carousel]"),slides=Array.from(root.querySelectorAll("[data-slide]"));
+      const before=Number(root.dataset.activeIndex),next=Number(document.querySelector(selector).dataset.go);
+      const positions=()=>Array.from(document.querySelectorAll(".research-index [data-go]"),el=>{
+        const r=el.getBoundingClientRect();return {top:r.top+scrollY,left:r.left,width:r.width,height:r.height};
+      });
+      const directoryBefore=positions(),heightBefore=root.getBoundingClientRect().height;
       document.querySelector(selector).click();
+      const incoming=slides[next],outgoing=slides[before],samples=[],timings=incoming.getAnimations().map(a=>a.effect.getTiming());
+      const start=performance.now();let running=false;
       function sample() {
-        positions.push(x());
-        running=running||track.getAnimations().some(a=>a.playState==="running");
-        if(performance.now()-start<460) requestAnimationFrame(sample);
-        else resolve({duration,before,after:x(),positions,running});
+        const style=getComputedStyle(incoming),old=getComputedStyle(outgoing),m=new DOMMatrixReadOnly(style.transform);
+        samples.push({y:m.m42,x:m.m41,opacity:Number(style.opacity),oldOpacity:Number(old.opacity)});
+        running=running||incoming.getAnimations().some(a=>a.playState==="running");
+        if(performance.now()-start<370) requestAnimationFrame(sample);
+        else resolve({before,next,samples,timings,running,directoryBefore,directoryAfter:positions(),
+          heightBefore,heightAfter:root.getBoundingClientRect().height,transitioning:root.dataset.transitioning});
       }
-      requestAnimationFrame(sample);
+      sample();
     }),selector);
-    assert.equal(result.duration,"0.36s");
-    assert(result.running,"A real transform transition must run");
-    assert(Math.abs(result.after-result.before)>10,"Slide must move horizontally");
-    assert(result.positions.some(x=>Math.abs(x-result.before)>1&&Math.abs(x-result.after)>1),"Transition must have intermediate horizontal positions");
+    const direction=result.next>result.before?1:-1;
+    assert(result.running,"A real card animation must run");
+    assert(result.timings.some(t=>t.duration>=220&&t.duration<=300),"Card transition must last 220–300ms");
+    assert(result.samples.some(s=>direction*s.y>1&&direction*s.y<14),"Incoming card must travel a short distance vertically in the navigation direction");
+    assert(result.samples.some(s=>s.opacity>0.05&&s.opacity<0.95),"Fade must have real intermediate opacity");
+    assert(result.samples.some(s=>s.oldOpacity>0.05&&s.oldOpacity<0.95),"Previous card must fade out");
+    assert(result.samples.every(s=>Math.abs(s.x)<0.1),"Cards must not slide horizontally");
+    const last=result.samples.at(-1);
+    assert(Math.abs(last.y)<0.1&&last.opacity===1,"Incoming card must settle fully visible");
+    assert.equal(result.transitioning,"false");
+    assert(Math.abs(result.heightBefore-result.heightAfter)<1,"Changing research must not shift the card height");
+    assert(result.directoryBefore.every((r,i)=>Object.keys(r).every(k=>Math.abs(r[k]-result.directoryAfter[i][k])<1)),"Directory positions must stay fixed");
     return result;
   };
   const instrument=async(context,abortMode)=>{
@@ -115,10 +129,17 @@ async function checkCarouselRuntime(browser) {
       await enter(page);
       item.steps.first=await progress(page,0);
       assert(item.steps.first[0].muted&&item.steps.first[0].defaultMuted);
-      item.steps.nextAnimation=await animation(page,"[data-next]");
+      const playsBefore=await page.evaluate(()=>window.__runtime.plays.length);
+      await page.locator('[data-go="0"]').evaluate(el=>el.click());
+      await page.waitForTimeout(320);
+      assert.equal(await page.evaluate(()=>window.__runtime.plays.length),playsBefore,"Selecting the current title must not reload or replay video");
+      assert.equal(await page.locator("[data-carousel]").getAttribute("data-transitioning"),"false");
+      assert.equal(await page.locator("[data-slide]").evaluateAll(els=>els.reduce((n,el)=>n+el.getAnimations().length,0)),0,"Repeated selection must not animate");
+      item.steps.nextAnimation=await animation(page,'[data-go="1"]');
       item.steps.second=await progress(page,1);
-      item.steps.previousAnimation=await animation(page,"[data-prev]");
+      item.steps.previousAnimation=await animation(page,'[data-go="0"]');
       item.steps.returnFirst=await progress(page,0);
+      assert(item.steps.returnFirst[0].currentTime>=item.steps.first[0].currentTime-0.2,"Returning to a film must preserve playback position");
       item.steps.dotAnimation=await animation(page,'[data-go="2"]');
       await allPaused(page);item.steps.third=await state(page);
       await animation(page,'[data-go="0"]');item.steps.returnFromThird=await progress(page,0);
@@ -130,11 +151,27 @@ async function checkCarouselRuntime(browser) {
       });
       await allPaused(page);item.steps.captionOnly=await state(page);
       assert(item.steps.captionOnly.every(v=>v.src===null),"Caption-only visibility must release media");
+      if(width===390&&reducedMotion==="no-preference") {
+        await page.locator('[data-go="1"]').click();
+        await page.waitForFunction(()=>{
+          const r=document.querySelector('[data-slide][aria-hidden="false"] .research-slide__media').getBoundingClientRect();
+          return r.top>=-1&&r.top<24;
+        });
+        item.steps.mobileScrollToMedia=await progress(page,1);
+        const beforeScroll=await page.evaluate(()=>scrollY);
+        await page.locator('[data-go="0"]').click();
+        await page.waitForTimeout(500);
+        assert(Math.abs(await page.evaluate(()=>scrollY)-beforeScroll)<1,"Selecting with visible media must not scroll again");
+        item.steps.mobileVisibleSwitch=await progress(page,0);
+      }
       await enter(page);item.steps.reenter=await progress(page,0);
       await page.locator("[data-video-toggle]").first().click();await allPaused(page);
       await page.locator("#contact").scrollIntoViewIfNeeded();await allPaused(page);
       await enter(page);await page.waitForTimeout(700);
       assert((await state(page)).every(v=>v.paused),"Manual pause must persist after re-entry");
+      await page.locator('[data-go="1"]').click(); await progress(page,1);
+      await page.locator('[data-go="0"]').click(); await page.waitForTimeout(400); await allPaused(page);
+      assert((await state(page)).every(v=>v.paused),"Manual pause must persist when returning from another research item");
       await page.locator("[data-video-toggle]").first().click();item.steps.manualPlay=await progress(page,0);
       await page.locator("[data-sound-toggle]").first().click();
       assert.equal((await state(page))[0].muted,false);
@@ -142,7 +179,7 @@ async function checkCarouselRuntime(browser) {
       await page.locator("[data-sound-toggle]").first().click();
       assert.equal((await state(page))[0].muted,true);
       assert.equal(await page.locator("[data-sound-toggle]").first().innerText(),"Unmute");
-      await page.evaluate(()=>{for(let i=0;i<12;i++) document.querySelector("[data-next]").click();});
+      await page.evaluate(()=>{for(let i=0;i<12;i++) document.querySelector('[data-go="'+((i+1)%3)+'"]').click();});
       item.steps.rapidSwitches=await progress(page,0);
       await page.locator("#contact").scrollIntoViewIfNeeded();await allPaused(page);
       item.steps.leave=await state(page);
@@ -354,7 +391,13 @@ async function checkCarouselRuntime(browser) {
       const projects=page.locator(".research-index [data-go]");
       assert.equal(await projects.count(),3);
       for(const project of await projects.all()) assert(await project.isVisible(),"All project titles must be visible without switching");
-      assert.equal(await page.locator(".research-index__item").nth(2).locator(".card-meta").innerText(),"Ongoing Research");
+      assert.deepEqual(await projects.allTextContents(),[
+        "How heterogeneity shapes desiccation cracking",
+        "New method for measuring fracture toughness of clayey soils",
+        "Phase-field modelling of desiccation cracking"
+      ]);
+      assert.equal(await page.locator(".research-index .card-meta, .research-index h3, .research-index .research-slide__authors, .research-index .research-slide__venue, .research-index .text-link").count(),0,"Directory must contain only the three short titles");
+      assert.equal(await page.locator("[data-prev], [data-next], [data-carousel-controls], .research-carousel__controls").count(),0,"Previous/Next and their layout must be removed");
       const directoryLayout=await page.locator(".research-carousel").evaluate(root=>{
         const media=root.querySelector(".research-carousel__viewport").getBoundingClientRect(),index=root.querySelector(".research-index").getBoundingClientRect();
         return {mediaLeft:media.left,mediaRight:media.right,indexLeft:index.left,indexTop:index.top,mediaBottom:media.bottom};
@@ -425,12 +468,18 @@ async function checkCarouselRuntime(browser) {
       assert.deepEqual(publishedRecords.slice(0,3).map(p=>p.record_id),["fracture-toughness-measurement","suction-volume-evolution","stress-stiffness-anisotropies"]);
       assert(publishedRecords.every((p,i,ps)=>i===0||ps[i-1].year>=p.year));
       for(const [slide,recordId] of [[0,"nucleation-percolation"],[1,"fracture-toughness-measurement"]]) {
-        const record=publicationRecords.find(p=>p.record_id===recordId),item=page.locator("[data-research-item]").nth(slide);
+        const record=publicationRecords.find(p=>p.record_id===recordId),item=page.locator("[data-slide]").nth(slide);
         assert.equal(await item.locator(".research-slide__authors").innerText(),markedAuthors(record));
-        assert.equal(normalized(await item.locator(".research-slide__venue").innerText()),markedAuthors(record)+" · "+record.venue+" · "+record.year);
-        assert.equal(await item.locator(":scope > .text-link").getAttribute("href"),"https://doi.org/"+record.doi);
+        assert.equal(await item.locator(".research-slide__title").innerText(),record.title);
+        assert.equal(await item.locator(".card-meta").innerText(),"Published Research");
+        assert.equal(normalized(await item.locator(".research-slide__venue").innerText()),record.venue+" · "+record.year);
+        assert.equal(await item.locator(".research-slide__paper").getAttribute("href"),"https://doi.org/"+record.doi);
       }
-      assert.equal(await page.locator("[data-research-item]").nth(2).locator(".research-slide__authors").count(),0);
+      assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__authors, .publication-author, a[href*='doi.org']").count(),0);
+      assert.equal(await page.locator("[data-slide]").nth(2).locator(".card-meta").innerText(),"Ongoing Research");
+      assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__title").innerText(),"Phase-field modelling of soil desiccation cracking");
+      assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__venue").innerText(),"Numerical modelling · Ongoing");
+      assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__paper").getAttribute("href"),"/research/#ongoing");
       // Autoplay is viewport-gated: it starts only if the carousel is visible on arrival.
       if(initialCarouselVisible) {
         await page.waitForFunction(() => {
@@ -454,6 +503,9 @@ async function checkCarouselRuntime(browser) {
       const active = async n => {
         await page.waitForFunction(n => document.querySelectorAll("[data-slide]")[n].getAttribute("aria-hidden")==="false",n);
         assert.equal(await page.locator('[data-slide][aria-hidden="false"]').count(),1);
+        assert.equal(await page.locator('[data-go="'+n+'"]').getAttribute("aria-current"),"true");
+        assert.equal(await page.locator('[data-go="'+n+'"]').getAttribute("aria-controls"),"research-slide-"+n);
+        assert(await page.locator('[data-slide][aria-hidden="true"]').evaluateAll(els=>els.every(el=>el.inert&&Array.from(el.querySelectorAll("a,button")).every(node=>node.tabIndex===-1))),"Inactive cards must leave the keyboard tab order");
       };
       if(width===1440) {
         for(const path of await page.locator("video").evaluateAll(ss=>ss.map(s=>s.dataset.src))) {
@@ -522,35 +574,28 @@ async function checkCarouselRuntime(browser) {
       assert.equal(await page.locator("video").nth(1).getAttribute("src"),null);
       await page.locator("[data-sound-toggle]").first().click();
       assert.equal(await page.locator("video").first().evaluate(v=>v.muted),false);
-      await page.locator("[data-next]").click(); await active(1); await playing(1);
+      await page.locator('[data-go="1"]').click(); await active(1); await playing(1);
       assert.equal(await page.locator("video").first().evaluate(v=>v.paused),true,"Previous slide video must pause when switching");
       assert.equal(await page.locator("video").nth(1).evaluate(v=>!v.paused),true,"New active slide video must autoplay");
       await recordMedia(1);
       assert.equal(await page.locator("video").first().getAttribute("src"),null);
-      await page.locator("[data-next]").click(); await active(2); await playing(-1);
+      await page.locator('[data-go="2"]').click(); await active(2); await playing(-1);
       assert(await page.locator("video").evaluateAll(ss=>ss.every(s=>!s.hasAttribute("src"))));
-      await page.locator("[data-next]").click(); await active(0); await playing(0);
-      await page.locator("[data-prev]").click(); await active(2);
+      await page.locator('[data-go="0"]').click(); await active(0); await playing(0);
+      await page.locator('[data-go="2"]').click(); await active(2);
       await page.locator('[data-go="1"]').click(); await active(1);
       await carousel.focus(); await page.keyboard.press("ArrowLeft"); await active(0);
       await page.locator("[data-video-toggle]").first().click(); await playing(-1);
       await page.locator("[data-video-toggle]").first().click(); await playing(0);
       // Exercise rapid switches while play() promises may still be pending.
-      await page.evaluate(() => {for(let i=0;i<8;i++) document.querySelector("[data-next]").click();});
+      await page.evaluate(() => {for(let i=0;i<8;i++) document.querySelector('[data-go="'+((i+1)%3)+'"]').click();});
       await active(2); await playing(-1);
       await page.locator('[data-go="0"]').click(); await playing(0);
       await page.locator("#contact").scrollIntoViewIfNeeded(); await playing(-1);
       assert(await page.locator("video").evaluateAll(vs=>vs.every(v=>v.paused)),"Videos must pause when the carousel leaves the viewport");
       await carousel.scrollIntoViewIfNeeded(); await playing(0);
-      if(width<768) {
-        // Pointer events verify the swipe recognizer; physical-device gestures still need manual review.
-        await page.locator(".research-carousel__viewport").evaluate(el => {
-          el.setPointerCapture=()=>{};
-          el.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true,pointerType:"touch",pointerId:1,clientX:250,clientY:80}));
-          el.dispatchEvent(new PointerEvent("pointerup",{bubbles:true,pointerType:"touch",pointerId:1,clientX:70,clientY:85}));
-        });
-        await active(1); await playing(1);
-      }
+      await page.locator('[data-go="1"]').focus(); await page.keyboard.press("Enter"); await active(1); await playing(1);
+      await page.locator('[data-go="0"]').focus(); await page.keyboard.press("Space"); await active(0); await playing(0);
       await page.locator('[data-go="2"]').click(); await active(2);
       await page.waitForTimeout(450);
       const dimensions = await page.locator("[data-slide]").evaluateAll(els => els.map(el => ({w:el.offsetWidth,h:el.offsetHeight})));
@@ -631,6 +676,27 @@ async function checkCarouselRuntime(browser) {
       reports.push({width,result:"passed",dimensions,mediaDimensions,publicationLayout,activityLayout,footerLayout,consoleErrors:errors});
       await context.close();
     }
+    // Progressive enhancement: every complete research story and ordinary link survives without JS.
+    for(const width of [1440,390]) {
+      const nojsContext=await browser.newContext({javaScriptEnabled:false,viewport:{width,height:1000}});
+      const nojsPage=await nojsContext.newPage();
+      await nojsPage.goto("http://127.0.0.1:4000/",{waitUntil:"domcontentloaded"});
+      assert.equal(await nojsPage.locator("[data-slide]").count(),3);
+      for(const card of await nojsPage.locator("[data-slide]").all()) {
+        assert(await card.isVisible());
+        assert(await card.locator(".research-slide__title").isVisible());
+        assert(await card.locator(".research-slide__paper").isVisible());
+        const href=await card.locator(".research-slide__paper").getAttribute("href");
+        if(href.startsWith("/")) assert((await nojsPage.request.get(new URL(href,nojsPage.url()).href)).ok());
+        else assert(href.startsWith("https://doi.org/"));
+      }
+      assert.equal(await nojsPage.locator('[data-slide][aria-hidden="true"]').count(),0);
+      await nojsPage.locator('[data-go="2"]').click();
+      assert.equal(new URL(nojsPage.url()).hash,"#research-slide-2");
+      await nojsPage.locator("#highlights").screenshot({path:"qa-output/research-nojs-"+width+".png"});
+      assert(await nojsPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+      await nojsContext.close();
+    }
     // The homepage keeps muted autoplay and slide transitions active
     // even when the OS/browser requests reduced motion.
     const context = await browser.newContext({reducedMotion:"reduce"});
@@ -638,12 +704,9 @@ async function checkCarouselRuntime(browser) {
     await page.goto("http://127.0.0.1:4000/");
     await page.locator("[data-carousel]").scrollIntoViewIfNeeded();
     await page.waitForFunction(()=>{const v=document.querySelector("video");return !v.paused&&!v.error&&v.readyState>=2&&v.currentTime>0.1;});
-    const track=page.locator(".research-carousel__track");
-    assert.equal(await track.evaluate(el=>getComputedStyle(el).transitionDuration),"0.36s",
-      "Research carousel slide transition must remain enabled");
-    await page.locator("[data-next]").click();
-    await page.waitForFunction(()=>Array.from(document.querySelector(".research-carousel__track").getAnimations())
-      .some(animation=>animation.playState==="running"),null,{timeout:1000});
+    await page.locator('[data-go="1"]').click();
+    await page.waitForFunction(()=>Array.from(document.querySelector('[data-slide][aria-hidden="false"]').getAnimations())
+      .some(animation=>animation.playState==="running"&&animation.effect.getTiming().duration===260),null,{timeout:1000});
     assert(await page.locator("video").first().evaluate(v=>v.paused),
       "Previous video must pause during the slide transition");
     await page.waitForFunction(()=>{const v=document.querySelectorAll("video")[1];return !v.paused&&!v.error&&v.readyState>=2&&v.currentTime>0.1;});

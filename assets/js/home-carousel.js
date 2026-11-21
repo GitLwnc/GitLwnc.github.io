@@ -3,10 +3,10 @@
   "use strict";
   document.querySelectorAll("[data-carousel]").forEach(function (root) {
     var slides = Array.from(root.querySelectorAll("[data-slide]"));
-    var track = root.querySelector(".research-carousel__track");
     var dots = Array.from(root.querySelectorAll("[data-go]"));
     var videos = Array.from(root.querySelectorAll("video"));
-    var index = 0, inView = false, start = null;
+    var index = 0, inView = false, initialized = false;
+    var animations = [], transitionToken = 0;
     var manualPlay = new WeakSet(), manualPause = new WeakSet();
     var loaded = new WeakSet(), resumeTimes = new WeakMap();
     var generations = new WeakMap(), pending = new WeakMap(), failures = new WeakSet();
@@ -123,8 +123,20 @@
       });
     }
     function show(next, announce) {
-      index = (next + slides.length) % slides.length;
-      track.style.transform = "translateX(-" + (index * 100) + "%)";
+      next = (next + slides.length) % slides.length;
+      if (initialized && next === index) return false;
+      var outgoing = initialized ? slides[index] : null;
+      var outgoingStyle = outgoing ? getComputedStyle(outgoing) : null;
+      var fromOpacity = outgoingStyle ? outgoingStyle.opacity : "1";
+      var fromTransform = outgoingStyle && outgoingStyle.transform !== "none" ? outgoingStyle.transform : "translateY(0px)";
+      var direction = next > index ? 1 : -1;
+      var token = ++transitionToken;
+      animations.forEach(function (animation) { animation.cancel(); });
+      animations = [];
+      slides.forEach(function (slide) { slide.classList.remove("is-leaving"); });
+      index = next;
+      initialized = true;
+      root.dataset.activeIndex = String(index);
       slides.forEach(function (slide, i) {
         slide.setAttribute("aria-hidden", String(i !== index));
         slide.inert = i !== index;
@@ -135,8 +147,36 @@
       });
       dots.forEach(function (dot, i) { dot.setAttribute("aria-current", String(i === index)); });
       if (announce) root.querySelector("[data-carousel-status]").textContent = slides[index].getAttribute("aria-label");
+      root.dataset.transitioning = "false";
+      if (outgoing && announce && typeof slides[index].animate === "function") {
+        outgoing.classList.add("is-leaving");
+        var timing = { duration: 260, easing: "ease-out", fill: "both" };
+        animations = [
+          outgoing.animate([
+            { opacity: fromOpacity, transform: fromTransform },
+            { opacity: 0, transform: "translateY(" + (-direction * 14) + "px)" }
+          ], timing),
+          slides[index].animate([
+            { opacity: 0, transform: "translateY(" + (direction * 14) + "px)" },
+            { opacity: 1, transform: "translateY(0px)" }
+          ], timing)
+        ];
+        root.dataset.transitioning = "true";
+        Promise.all(animations.map(function (animation) {
+          return animation.finished.catch(function () {});
+        })).then(function () {
+          if (token !== transitionToken) return;
+          outgoing.classList.remove("is-leaving");
+          animations.forEach(function (animation) { animation.cancel(); });
+          animations = [];
+          root.dataset.transitioning = "false";
+          updateVisibility();
+        });
+      }
+      // Keep the existing video state machine: only the current, visible film may play.
       inView = mediaVisible();
       syncMedia();
+      return true;
     }
     videos.forEach(function (video) {
       video.muted = true;
@@ -183,40 +223,41 @@
         buttonState(video);
       });
     });
-    root.querySelector("[data-prev]").addEventListener("click", function () { show(index - 1, true); });
-    root.querySelector("[data-next]").addEventListener("click", function () { show(index + 1, true); });
+    var viewport = root.querySelector(".research-carousel__viewport");
     dots.forEach(function (dot) {
-      dot.addEventListener("click", function () {
-        show(Number(dot.dataset.go), true);
-        // On narrow layouts, selecting a project below the media brings its picture back into view.
-        if (window.matchMedia("(max-width: 900px)").matches) viewport.scrollIntoView({ behavior: "smooth", block: "center" });
+      dot.addEventListener("click", function (event) {
+        event.preventDefault();
+        var changed = show(Number(dot.dataset.go), true);
+        // A visible media band needs no scroll, even when the directory is below the card.
+        if (changed && window.matchMedia("(max-width: 900px)").matches && !mediaVisible()) {
+          viewport.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+      dot.addEventListener("keydown", function (event) {
+        // Links already support Enter; add Space without scrolling the page.
+        if (event.key === " ") { event.preventDefault(); dot.click(); }
       });
     });
     root.addEventListener("keydown", function (event) {
-      if (event.target.closest("video, [data-sound-toggle]")) return;
-      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-        event.preventDefault(); show(index + (event.key === "ArrowRight" ? 1 : -1), true);
-      }
+      if (event.target.closest("video, [data-video-toggle], [data-sound-toggle]") ||
+          (event.target.closest("a") && !event.target.closest("[data-go]"))) return;
+      var next = index;
+      if (event.key === "ArrowDown" || event.key === "ArrowRight") next++;
+      else if (event.key === "ArrowUp" || event.key === "ArrowLeft") next--;
+      else if (event.key === "Home") next = 0;
+      else if (event.key === "End") next = slides.length - 1;
+      else return;
+      event.preventDefault();
+      var target = dots[(next + slides.length) % slides.length];
+      target.focus({ preventScroll: true });
+      target.click();
     });
-    var viewport = root.querySelector(".research-carousel__viewport");
-    viewport.addEventListener("pointerdown", function (event) {
-      if (event.pointerType === "mouse" || event.target.closest("button, a")) return;
-      start = { x: event.clientX, y: event.clientY, id: event.pointerId };
-      viewport.setPointerCapture(event.pointerId);
-    });
-    viewport.addEventListener("pointerup", function (event) {
-      if (!start || start.id !== event.pointerId) return;
-      var dx = event.clientX - start.x, dy = event.clientY - start.y; start = null;
-      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) show(index + (dx < 0 ? 1 : -1), true);
-    });
-    viewport.addEventListener("pointercancel", function () { start = null; });
     function mediaVisible() {
-      // The fixed viewport stays in place while its slides translate horizontally.
-      // Only its picture band counts: a visible caption must not keep a hidden film playing.
-      var rect = viewport.getBoundingClientRect();
+      // Read the active picture itself; the enlarged paper body and directory never count.
       var media = slides[index].querySelector(".research-slide__media");
-      var height = media ? media.getBoundingClientRect().height : rect.height;
-      return rect.width > 0 && height > 0 && rect.top + height > 0 &&
+      if (!media) return false;
+      var rect = media.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0 && rect.bottom > 0 &&
         rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth;
     }
     function updateVisibility() {
@@ -235,7 +276,6 @@
       new IntersectionObserver(updateVisibility, { threshold: [0, 0.1] }).observe(viewport);
     }
     root.classList.add("is-enhanced");
-    root.querySelector("[data-carousel-controls]").hidden = false;
     show(0, false);
   });
 }());

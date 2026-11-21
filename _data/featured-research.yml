@@ -1,16 +1,19 @@
 # Published research resolves title, authors, journal and DOI from _publications.
 - kind: published
   label: Published Research
+  short_title: How heterogeneity shapes desiccation cracking
   publication_id: nucleation-percolation
   video: /images/research/nucleation-percolation-v4.mp4
   poster: /images/research/pre-poster-v4.jpg
 - kind: published
   label: Published Research
+  short_title: New method for measuring fracture toughness of clayey soils
   publication_id: fracture-toughness-measurement
   video: /images/research/fracture-toughness-v4.mp4
   poster: /images/research/fracture-poster-v4.jpg
 - kind: ongoing
   label: Ongoing Research
+  short_title: Phase-field modelling of desiccation cracking
   title: Phase-field modelling of soil desiccation cracking
   venue: Numerical modelling · Ongoing
   url: /research/#ongoing
