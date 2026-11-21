@@ -469,16 +469,16 @@ async function checkCarouselRuntime(browser) {
       assert(publishedRecords.every((p,i,ps)=>i===0||ps[i-1].year>=p.year));
       for(const [slide,recordId] of [[0,"nucleation-percolation"],[1,"fracture-toughness-measurement"]]) {
         const record=publicationRecords.find(p=>p.record_id===recordId),item=page.locator("[data-slide]").nth(slide);
-        assert.equal(await item.locator(".research-slide__authors").innerText(),markedAuthors(record));
-        assert.equal(await item.locator(".research-slide__title").innerText(),record.title);
-        assert.equal(await item.locator(".card-meta").innerText(),"Published Research");
-        assert.equal(normalized(await item.locator(".research-slide__venue").innerText()),record.venue+" · "+record.year);
+        assert.equal(normalized(await item.locator(".research-slide__authors").textContent()),markedAuthors(record));
+        assert.equal(await item.locator(".research-slide__title").textContent(),record.title);
+        assert.equal(await item.locator(".card-meta").textContent(),"Published Research");
+        assert.equal(normalized(await item.locator(".research-slide__venue").textContent()),record.venue+" · "+record.year);
         assert.equal(await item.locator(".research-slide__paper").getAttribute("href"),"https://doi.org/"+record.doi);
       }
       assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__authors, .publication-author, a[href*='doi.org']").count(),0);
-      assert.equal(await page.locator("[data-slide]").nth(2).locator(".card-meta").innerText(),"Ongoing Research");
-      assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__title").innerText(),"Phase-field modelling of soil desiccation cracking");
-      assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__venue").innerText(),"Numerical modelling · Ongoing");
+      assert.equal(await page.locator("[data-slide]").nth(2).locator(".card-meta").textContent(),"Ongoing Research");
+      assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__title").textContent(),"Phase-field modelling of soil desiccation cracking");
+      assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__venue").textContent(),"Numerical modelling · Ongoing");
       assert.equal(await page.locator("[data-slide]").nth(2).locator(".research-slide__paper").getAttribute("href"),"/research/#ongoing");
       // Autoplay is viewport-gated: it starts only if the carousel is visible on arrival.
       if(initialCarouselVisible) {
@@ -503,6 +503,8 @@ async function checkCarouselRuntime(browser) {
       const active = async n => {
         await page.waitForFunction(n => document.querySelectorAll("[data-slide]")[n].getAttribute("aria-hidden")==="false",n);
         assert.equal(await page.locator('[data-slide][aria-hidden="false"]').count(),1);
+        assert(await page.locator("[data-slide]").nth(n).locator(".research-slide__title").isVisible(),"The current card must show its matching research title");
+        if(n<2) assert(await page.locator("[data-slide]").nth(n).locator(".research-slide__authors").isVisible(),"Current paper authors must be visible");
         assert.equal(await page.locator('[data-go="'+n+'"]').getAttribute("aria-current"),"true");
         assert.equal(await page.locator('[data-go="'+n+'"]').getAttribute("aria-controls"),"research-slide-"+n);
         assert(await page.locator('[data-slide][aria-hidden="true"]').evaluateAll(els=>els.every(el=>el.inert&&Array.from(el.querySelectorAll("a,button")).every(node=>node.tabIndex===-1))),"Inactive cards must leave the keyboard tab order");
