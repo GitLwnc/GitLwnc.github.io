@@ -321,7 +321,7 @@ async function checkCarouselRuntime(browser) {
       assert(heroLayout.paragraphGaps.every(g=>g>=16&&g<=20)&&Math.abs(heroLayout.paragraphGaps[0]-heroLayout.paragraphGaps[1])<0.75,"Research paragraph spacing must stay consistent within 16–20px");
       assert.equal(heroLayout.researchTitle.size,await page.locator("#highlights-title").evaluate(el=>parseFloat(getComputedStyle(el).fontSize)),"Hero and Featured Research headings must use the same font size");
       assert.equal(heroLayout.researchTitle.weight,"600");
-      assert(heroLayout.firstParagraph.top-heroLayout.researchTitle.bottom>=11.5,"Research title must sit above the paragraphs");
+      assert(heroLayout.firstParagraph.top-heroLayout.researchTitle.bottom>=23.5&&heroLayout.firstParagraph.top-heroLayout.researchTitle.bottom>Math.max(...heroLayout.paragraphGaps),"Research title spacing must be at least 24px and exceed paragraph spacing");
       assert(heroLayout.schools.every(g=>Math.abs(g.roleType.line-1.45)<0.01&&Math.abs(g.supervisorType.line-1.45)<0.01),"School information should use compact, readable line height");
       assert(heroLayout.portrait.right<heroLayout.name.left,"Photo must be left of the name");
       assert(heroLayout.links.top>=heroLayout.name.bottom);

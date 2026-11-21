@@ -28,7 +28,7 @@
 .hero-background__supervisor { color: var(--text-muted); font-size: var(--font-meta); }
 .hero-background__supervisor a { color: inherit; }
 .hero-research { display: flex; flex-direction: column; padding-top: var(--space-1); }
-.home-v2 .hero-research__title { margin: 0 0 12px; font-size: var(--font-h2); font-weight: 600; line-height: var(--leading-heading); }
+.home-v2 .hero-research__title { margin: 0 0 var(--space-3); font-size: var(--font-h2); font-weight: 600; line-height: var(--leading-heading); }
 .hero-v2__bio { max-width: 34rem; font-size: var(--hero-research-size); font-weight: 400; line-height: var(--hero-research-leading); }
 .hero-v2__bio strong { font-weight: 600; }
 .hero-v2__bio p + p { margin-top: 18px; }
