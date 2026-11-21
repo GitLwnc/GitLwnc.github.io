@@ -502,7 +502,15 @@ async function checkCarouselRuntime(browser) {
       },null,{timeout:15000});
       const active = async n => {
         await page.waitForFunction(n => document.querySelectorAll("[data-slide]")[n].getAttribute("aria-hidden")==="false",n);
+        await page.waitForFunction(()=>document.querySelector("[data-carousel]").dataset.transitioning==="false");
         assert.equal(await page.locator('[data-slide][aria-hidden="false"]').count(),1);
+        if(n<2&&!await page.locator("[data-slide]").nth(n).locator(".research-slide__authors").isVisible()) console.log("ACTIVE_CARD",JSON.stringify(await page.locator("[data-slide]").nth(n).evaluate(el=>({
+          label:el.getAttribute("aria-label"),state:el.getAttribute("aria-hidden"),
+          authors:Array.from(el.querySelectorAll(".research-slide__authors"),node=>({
+            text:node.textContent,visibility:getComputedStyle(node).visibility,display:getComputedStyle(node).display,
+            rect:node.getBoundingClientRect().toJSON(),parent:node.parentElement.outerHTML
+          }))
+        }))));
         assert(await page.locator("[data-slide]").nth(n).locator(".research-slide__title").isVisible(),"The current card must show its matching research title");
         if(n<2) assert(await page.locator("[data-slide]").nth(n).locator(".research-slide__authors").isVisible(),"Current paper authors must be visible");
         assert.equal(await page.locator('[data-go="'+n+'"]').getAttribute("aria-current"),"true");
