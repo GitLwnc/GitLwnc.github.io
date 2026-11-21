@@ -241,7 +241,8 @@ async function checkCarouselRuntime(browser) {
       assert.equal(await hero.locator(".hero-background__institution").nth(0).locator('a').getAttribute("href"),"https://chaozhanghnu.github.io/");
       assert.equal(await hero.locator(".hero-background__institution").nth(1).locator('a').getAttribute("href"),"https://fil.kaist.ac.kr/");
       assert.equal(await hero.locator(".hero-identity__links a").first().getAttribute("href"),"mailto:yhyang@hnu.edu.cn");
-      assert.equal(await hero.locator(".hero-identity__links a").count(),1,"No verified Scholar URL is configured; do not show a guessed profile");
+      assert.deepEqual(await hero.locator(".hero-identity__links a").allTextContents(),["Email","Google Scholar"]);
+      assert.equal(await hero.locator(".hero-identity__links a").nth(1).getAttribute("href"),"https://scholar.google.com/citations?user=yfE9jJkAAAAJ&hl=zh-CN");
       assert(!(await hero.locator(".hero-identity__person").innerText()).includes("Ph.D. Candidate"),"Doctoral identity belongs to Hunan University");
       assert.equal(await hero.locator(".hero-background .hero-research, .hero-background .hero-v2__bio").count(),0);
       assert.equal(await hero.locator("h2").count(),1);
