@@ -227,12 +227,14 @@
     dots.forEach(function (dot) {
       dot.addEventListener("click", function (event) {
         event.preventDefault();
+        // Keep the legacy site-wide smooth-scroll plugin out of this local switcher.
+        event.stopImmediatePropagation();
         var changed = show(Number(dot.dataset.go), true);
         // A visible media band needs no scroll, even when the directory is below the card.
         if (changed && window.matchMedia("(max-width: 900px)").matches && !mediaVisible()) {
           viewport.scrollIntoView({ behavior: "smooth", block: "start" });
         }
-      });
+      }, true);
       dot.addEventListener("keydown", function (event) {
         // Links already support Enter; add Space without scrolling the page.
         if (event.key === " ") { event.preventDefault(); dot.click(); }
