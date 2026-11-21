@@ -7,10 +7,12 @@
         <div>
           <h1 id="hero-title">Yuhan Yang</h1>
           <div class="hero-identity__links">
-            <a href="mailto:{{ site.author.email }}">Email</a>
-            {% if site.author.googlescholar and site.author.googlescholar != '' %}
-            <span aria-hidden="true">·</span><a href="{{ site.author.googlescholar }}" rel="noopener">Google Scholar</a>
-            {% endif %}
+            <p class="hero-identity__email">{{ site.author.email }}</p>
+            <div class="hero-identity__profiles">
+              <a href="{{ site.author.googlescholar }}" rel="noopener">Google Scholar</a>
+              <span aria-hidden="true">·</span>
+              <a href="{{ site.author.researchgate }}" rel="noopener">ResearchGate</a>
+            </div>
           </div>
         </div>
       </div>

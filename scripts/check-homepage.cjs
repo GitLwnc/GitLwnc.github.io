@@ -240,9 +240,13 @@ async function checkCarouselRuntime(browser) {
       ]);
       assert.equal(await hero.locator(".hero-background__institution").nth(0).locator('a').getAttribute("href"),"https://chaozhanghnu.github.io/");
       assert.equal(await hero.locator(".hero-background__institution").nth(1).locator('a').getAttribute("href"),"https://fil.kaist.ac.kr/");
-      assert.equal(await hero.locator(".hero-identity__links a").first().getAttribute("href"),"mailto:yhyang@hnu.edu.cn");
-      assert.deepEqual(await hero.locator(".hero-identity__links a").allTextContents(),["Email","Google Scholar"]);
-      assert.equal(await hero.locator(".hero-identity__links a").nth(1).getAttribute("href"),"https://scholar.google.com/citations?user=yfE9jJkAAAAJ&hl=zh-CN");
+      assert.equal(await hero.locator(".hero-identity__email").innerText(),"yhyang@hnu.edu.cn");
+      assert.equal(await hero.locator(".hero-identity__email a, a[href^='mailto:']").count(),0,"Hero email must be plain text");
+      assert.deepEqual(await hero.locator(".hero-identity__profiles a").allTextContents(),["Google Scholar","ResearchGate"]);
+      assert.deepEqual(await hero.locator(".hero-identity__profiles a").evaluateAll(els=>els.map(el=>el.getAttribute("href"))),[
+        "https://scholar.google.com/citations?user=yfE9jJkAAAAJ&hl=zh-CN",
+        "https://www.researchgate.net/profile/Yuhan-Yang-16"
+      ]);
       assert(!(await hero.locator(".hero-identity__person").innerText()).includes("Ph.D. Candidate"),"Doctoral identity belongs to Hunan University");
       assert.equal(await hero.locator(".hero-background .hero-research, .hero-background .hero-v2__bio").count(),0);
       assert.equal(await hero.locator("h2").count(),1);
@@ -304,6 +308,7 @@ async function checkCarouselRuntime(browser) {
             supervisorType:info(group.querySelector(".hero-background__supervisor")),roleType:info(group.querySelector(".hero-background__role"))
           })),
           linkType:info(pick(".hero-identity__links a")),
+          email:rect(pick(".hero-identity__email")),profiles:rect(pick(".hero-identity__profiles")),
           height:el.getBoundingClientRect().height,pageHeight:document.documentElement.scrollHeight
         };
       });
@@ -326,6 +331,7 @@ async function checkCarouselRuntime(browser) {
       assert(heroLayout.schools.every(g=>Math.abs(g.roleType.line-1.45)<0.01&&Math.abs(g.supervisorType.line-1.45)<0.01),"School information should use compact, readable line height");
       assert(heroLayout.portrait.right<heroLayout.name.left,"Photo must be left of the name");
       assert(heroLayout.links.top>=heroLayout.name.bottom);
+      assert(heroLayout.email.bottom<=heroLayout.profiles.top,"Profile links must sit on the row below the plain-text email");
       assert(heroLayout.portrait.width>=90&&heroLayout.portrait.width<=100);
       assert(heroLayout.shell.width<=1120);
       if(width>900) {
